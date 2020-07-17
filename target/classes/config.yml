@@ -1,0 +1,20 @@
+world:
+  sizeMap: 800
+  preload:
+    enabled: true
+    sizePreload: 600
+  spawn:
+    location: world, 0, 200, 0, 180, 0
+nether:
+  sizeMap: 600
+  sizePreload: 600
+sql:
+  host: "178.32.113.35"
+  database: "minesr_36001"
+  username: "minesr_36001"
+  password: "upzw8TjH"
+  port: 3306
+game:
+  slot: 30
+  autostart: 10
+  autostarttime: 30

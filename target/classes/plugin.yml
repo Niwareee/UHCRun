@@ -1,0 +1,8 @@
+name: UHCRun
+version: 2.0
+author: Niware
+main: fr.lifecraft.uhcrun.Main
+load: STARTUP
+commands:
+  game:
+    description: Commande principale de la partie.
