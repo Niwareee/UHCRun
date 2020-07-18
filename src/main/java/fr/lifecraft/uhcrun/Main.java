@@ -2,12 +2,14 @@ package fr.lifecraft.uhcrun;
 
 import fr.lifecraft.uhcrun.database.SQLManager;
 import fr.lifecraft.uhcrun.game.WinManager;
-import fr.lifecraft.uhcrun.listeners.WorldEvent;
-import fr.lifecraft.uhcrun.manager.*;
-import fr.lifecraft.uhcrun.structure.Structure;
+import fr.lifecraft.uhcrun.listeners.WorldListener;
+import fr.lifecraft.uhcrun.register.*;
+import fr.lifecraft.uhcrun.player.PlayerManager;
+import fr.lifecraft.uhcrun.rank.RankManager;
 import fr.lifecraft.uhcrun.structure.StructureLoader;
 import fr.lifecraft.uhcrun.utils.Title;
 import fr.lifecraft.uhcrun.world.BiomesPatcher;
+import fr.lifecraft.uhcrun.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -22,7 +24,7 @@ public class Main extends JavaPlugin {
 
     public static Main instance;
 
-    public Game game;
+    private Game game;
     private Title title;
 
     private ScoreboardManager scoreboardManager;
@@ -36,12 +38,11 @@ public class Main extends JavaPlugin {
     private PlayerManager playerManager;
     private StructureLoader structureLoader;
 
-
     private SQLManager sqlManager;
 
     @Override
     public void onLoad() {
-        new BiomesPatcher();
+        BiomesPatcher.removeBiomes();
     }
 
     @Override
@@ -54,7 +55,7 @@ public class Main extends JavaPlugin {
         executorMonoThread = Executors.newScheduledThreadPool(1);
         scoreboardManager = new ScoreboardManager();
 
-        this.getServer().getPluginManager().registerEvents(new WorldEvent(), this);
+        this.getServer().getPluginManager().registerEvents(new WorldListener(), this);
 
         Bukkit.getScheduler().runTaskLater(this, () -> {
             this.sqlManager = new SQLManager(this);

@@ -1,4 +1,4 @@
-package fr.lifecraft.uhcrun.manager;
+package fr.lifecraft.uhcrun.rank;
 
 import fr.lifecraft.uhcrun.database.SQLManager;
 import fr.lifecraft.uhcrun.rank.Rank;

@@ -5,6 +5,7 @@ import fr.lifecraft.uhcrun.utils.State;
 import net.minecraft.server.v1_8_R3.MinecraftServer;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.*;
@@ -49,6 +50,11 @@ public class Game {
 	private int preLoad;
 	private int preLoadNether;
 
+	// PRELOAD
+
+	private final List<Block> blocks;
+	private final Map<UUID, Location> stayLocs;
+
 	public Game(Main main){
 
 		State.setState(State.PREGEN);
@@ -66,6 +72,9 @@ public class Game {
 
 		this.alivePlayers = new ArrayList<>();
 		this.decoPlayers = new ArrayList<>();
+
+		this.blocks = new ArrayList<>();
+		this.stayLocs = new HashMap<>();
 	}
 
     //---------------------------------------------------//
@@ -215,5 +224,13 @@ public class Game {
 
 	public int getPreLoad() {
 		return preLoad;
+	}
+
+	public Map<UUID, Location> getStayLocs() {
+		return stayLocs;
+	}
+
+	public List<Block> getBlocks() {
+		return blocks;
 	}
 }

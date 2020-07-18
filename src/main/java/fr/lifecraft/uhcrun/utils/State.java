@@ -9,10 +9,11 @@ public enum State {
     PVP(true),
     FINISH(false);
 
-    private static boolean isInGame;
+    private final boolean isInGame;
     private static State current = WAITING;
 
     State(boolean isInGame) {
+        this.isInGame = isInGame;
     }
 
     public static boolean isState(State state) {
@@ -24,7 +25,7 @@ public enum State {
     }
 
     public static boolean isInGame() {
-        return isInGame;
+        return current.isInGame;
     }
 }
 

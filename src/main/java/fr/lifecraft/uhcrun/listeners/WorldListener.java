@@ -11,7 +11,7 @@ import org.bukkit.generator.BlockPopulator;
 import fr.lifecraft.uhcrun.Main;
 import fr.lifecraft.uhcrun.world.OrePopulator;
 
-public class WorldEvent implements Listener {
+public class WorldListener implements Listener {
 
     private final Main main = Main.getInstance();
 

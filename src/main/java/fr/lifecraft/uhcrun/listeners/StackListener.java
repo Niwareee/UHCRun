@@ -10,11 +10,11 @@ import org.bukkit.event.entity.ItemSpawnEvent;
 
 import java.util.List;
 
-public class StackEvent implements Listener {
+public class StackListener implements Listener {
 
 	private int radius;
 
-	public StackEvent(int radius) {
+	public StackListener(int radius) {
 		this.radius = radius;
 	}
 

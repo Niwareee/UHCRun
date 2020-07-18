@@ -20,30 +20,27 @@ public class Scatter extends BukkitRunnable {
 
     private final Game game;
 
-    private final List<Block> blocks;
-    private final Map<UUID, Location> stayLocs;
     private final List<Player> players;
-    private final int b;
-    private boolean j;
-    private final boolean start;
 
-    public Scatter(boolean start, int b) {
-        this.blocks = new ArrayList<>();
-        this.stayLocs = new HashMap<>();
-        this.players =new ArrayList<>();
+    private final boolean isStart;
+    private boolean isAdd;
 
-        this.b = b;
-        this.j = true;
-        this.start = start;
+    public Scatter(boolean start) {
+        this.players = new ArrayList<>();
+
+        this.isAdd = true;
+        this.isStart = start;
 
         this.game = Main.getInstance().getGame();
+        System.out.print("Scatter");
     }
 
     public void run() {
 
-        if (this.j) {
-            game.getAlivePlayers().forEach(uuid -> this.players.add(Bukkit.getPlayer(uuid)));
-            this.j = false;
+        System.out.print("DD");
+        if (this.isAdd) {
+            this.players.addAll(Bukkit.getOnlinePlayers());
+            this.isAdd = false;
         }
 
         if (this.players.size() == 0) {
@@ -63,11 +60,11 @@ public class Scatter extends BukkitRunnable {
                 playerToTp.teleport(randomLocation());
                 playerToTp.setVelocity(new Vector(0, 2, 0));
 
-                if (this.start) {
+                if (this.isStart) {
                     int pourcent = Math.round((float) 100 / this.players.size());
                     new ActionBar("§7Téléportation...  §6(" + pourcent + "%)").sendToAll();
                     playerToTp.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 3 * 20, 1, false, false));
-                    playerToTp.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 3 * 20, 9, false, false));
+                    playerToTp.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 30, 9, false, false));
                     setSpawnSpot(playerToTp);
                 }
             }
@@ -77,8 +74,9 @@ public class Scatter extends BukkitRunnable {
 
     private Location randomLocation() {
         Random random = new Random();
-        int x = (random.nextInt(2) == 0 ? +1 : -1) * random.nextInt(b / 2);
-        int z = (random.nextInt(2) == 0 ? +1 : -1) * random.nextInt(b / 2);
+        int sizeTP = (this.isStart ? game.getTPBorder() * 2 - 10 : (int) (game.getWorld().getWorldBorder().getSize() - 10) / 2);
+        int x = (random.nextInt(2) == 0 ? +1 : -1) * random.nextInt(sizeTP);
+        int z = (random.nextInt(2) == 0 ? +1 : -1) * random.nextInt(sizeTP);
         Location location = game.getWorld().getHighestBlockAt(x, z).getLocation();
         location.setY(location.getY() + 35);
         if (!location.getChunk().isLoaded()) {
@@ -95,19 +93,12 @@ public class Scatter extends BukkitRunnable {
                 block.setType(Material.STAINED_GLASS);
                 if (x == -3 || x == 2 || z == -3 || z == 2)
                     block.setData((byte) 6);
-                blocks.add(block);
+                game.getBlocks().add(block);
             }
         }
 
-        stayLocs.put(player.getUniqueId(), player.getLocation().clone().add(0, -4, 0));
+        game.getStayLocs().put(player.getUniqueId(), player.getLocation().clone().add(0, -4, 0));
 
     }
 
-    public List<Block> getBlocks() {
-        return blocks;
-    }
-
-    public Map<UUID, Location> getStayLocs() {
-        return stayLocs;
-    }
 }

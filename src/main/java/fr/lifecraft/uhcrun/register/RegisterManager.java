@@ -1,4 +1,4 @@
-package fr.lifecraft.uhcrun.manager;
+package fr.lifecraft.uhcrun.register;
 
 import fr.lifecraft.uhcrun.Main;
 import fr.lifecraft.uhcrun.commands.CommandMain;
@@ -29,11 +29,11 @@ public class RegisterManager {
         PluginManager pm = Bukkit.getPluginManager();
         List<Listener> listeners = new ArrayList<Listener>();
 
-        listeners.add(new WorldEvent());
-        listeners.add(new ChatEvent());
-        listeners.add(new JoinQuitEvent(main));
-        listeners.add(new NoMoveEvent().listener);
-        listeners.add(new GameEvents(main));
+        listeners.add(new WorldListener());
+        listeners.add(new ChatListener());
+        listeners.add(new ConnectionListener(main));
+        listeners.add(new NoMoveListener().listener);
+        listeners.add(new GameListener(main));
 
         for (Listener listener : listeners) {
             pm.registerEvents(listener, main);

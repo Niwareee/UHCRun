@@ -24,12 +24,12 @@ import org.bukkit.inventory.ItemStack;
 import fr.lifecraft.uhcrun.Main;
 
 @SuppressWarnings("deprecation")
-public class BlockEvent implements Listener {
+public class BlockListener implements Listener {
 
 	private final Main main;
 	private List<ItemStack> dropItems;
 
-	public BlockEvent(Main main){
+	public BlockListener(Main main){
 		this.main = main;
 		this.dropItems = new ArrayList<>();
 

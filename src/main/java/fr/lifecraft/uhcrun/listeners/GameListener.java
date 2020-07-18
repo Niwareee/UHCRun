@@ -28,12 +28,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class GameEvents implements Listener {
+public class GameListener implements Listener {
 
     private final Main main;
     private final Game game;
 
-    public GameEvents(Main main){
+    public GameListener(Main main){
         this.main = main;
         this.game = main.getGame();
     }

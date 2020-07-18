@@ -16,23 +16,22 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 
 public class WorldLoader implements Runnable {
 
-    private Main main;
+    private final Main main;
 
     public static int loaded;
     public static int area;
-    private World world;
-    private int width;
-    private int depth;
+    private final World world;
+    private final int width;
+    private final int depth;
     private int x;
     private int z;
     private long sprint;
-    private Thread thread;
-    private int offset;
+    private final int offset;
     private boolean pause;
 
-    private long start;
+    private final long start;
 
-    private ChunkProviderServer provider;
+    private final ChunkProviderServer provider;
 
     public final Listener listener = new Listener() {
         @EventHandler(priority = EventPriority.LOW)
@@ -66,13 +65,14 @@ public class WorldLoader implements Runnable {
 
     @Override
     public void run() {
-        (this.thread = new Thread()).start();
+        Thread thread;
+        (thread = new Thread()).start();
         try {
-            this.thread.join();
+            thread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        synchronized (this.thread) {
+        synchronized (thread) {
             this.sprint = System.currentTimeMillis();
             this.setPause(false);
             while (this.z < this.depth) {
@@ -97,7 +97,7 @@ public class WorldLoader implements Runnable {
                         try {
                             this.world.save();
                             Chunk[] chunks;
-                            for (int j = (chunks = (Chunk[]) ((CraftWorld)world).getLoadedChunks()).length, i = 0; i < j; ++i) {
+                            for (int j = (chunks = (Chunk[]) world.getLoadedChunks()).length, i = 0; i < j; ++i) {
                                 final Chunk c = chunks[i];
                                 provider.loadChunk(c.locX, c.locZ);
                             }
@@ -113,7 +113,7 @@ public class WorldLoader implements Runnable {
 
             setPause(true);
             long stop = System.currentTimeMillis();
-            main.log("§aFinish preload " + world.getName() + " in " + (stop - start) / 1000 + "s");
+            main.log("§aFinish preload " + world.getName() + " in " + (stop - start) / 1000 + " seconds");
             Bukkit.getScheduler().cancelAllTasks();
 
             if (world.getEnvironment() == World.Environment.NETHER) {

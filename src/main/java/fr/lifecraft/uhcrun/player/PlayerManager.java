@@ -1,4 +1,4 @@
-package fr.lifecraft.uhcrun.manager;
+package fr.lifecraft.uhcrun.player;
 
 import fr.lifecraft.uhcrun.game.Game;
 import fr.lifecraft.uhcrun.player.UHCPlayer;
@@ -24,11 +24,11 @@ import java.util.UUID;
 public class PlayerManager {
 
     private final Main main;
-    private Game game;
-    private World world;
+    private final Game game;
+    private final World world;
 
     private final ScoreboardManager scoreboardManager;
-    private Scoreboard scoreboard;
+    private final Scoreboard scoreboard;
 
     private final Map<UUID, UHCPlayer> players;
 

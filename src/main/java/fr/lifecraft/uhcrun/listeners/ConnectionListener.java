@@ -3,8 +3,8 @@ package fr.lifecraft.uhcrun.listeners;
 import fr.lifecraft.uhcrun.Main;
 import fr.lifecraft.uhcrun.game.Game;
 import fr.lifecraft.uhcrun.game.PreGameManager;
-import fr.lifecraft.uhcrun.manager.PlayerManager;
-import fr.lifecraft.uhcrun.manager.RankManager;
+import fr.lifecraft.uhcrun.player.PlayerManager;
+import fr.lifecraft.uhcrun.rank.RankManager;
 import fr.lifecraft.uhcrun.player.UHCPlayer;
 import fr.lifecraft.uhcrun.rank.Rank;
 import fr.lifecraft.uhcrun.utils.ActionBar;
@@ -20,13 +20,13 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-public class JoinQuitEvent implements Listener {
+public class ConnectionListener implements Listener {
 
     private final Game game;
     private final RankManager rankManager;
     private final PlayerManager playerManager;
 
-    public JoinQuitEvent(Main main) {
+    public ConnectionListener(Main main) {
         this.game = main.getGame();
         this.rankManager = main.getRankManager();
         this.playerManager = main.getPlayerManager();

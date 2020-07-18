@@ -1,11 +1,11 @@
 package fr.lifecraft.uhcrun.game;
 
 import fr.lifecraft.uhcrun.Main;
-import fr.lifecraft.uhcrun.listeners.BlockEvent;
-import fr.lifecraft.uhcrun.listeners.DeathEvent;
-import fr.lifecraft.uhcrun.listeners.RunEvent;
-import fr.lifecraft.uhcrun.listeners.StackEvent;
-import fr.lifecraft.uhcrun.manager.WorldManager;
+import fr.lifecraft.uhcrun.listeners.BlockListener;
+import fr.lifecraft.uhcrun.listeners.DeathListener;
+import fr.lifecraft.uhcrun.listeners.RunListener;
+import fr.lifecraft.uhcrun.listeners.StackListener;
+import fr.lifecraft.uhcrun.world.WorldManager;
 import fr.lifecraft.uhcrun.utils.ActionBar;
 import fr.lifecraft.uhcrun.utils.Scatter;
 import fr.lifecraft.uhcrun.utils.State;
@@ -29,12 +29,10 @@ public class PreGameManager {
     private final Main main;
 
     private final Game game;
-    private final Scatter scatter;
     private final Title title;
 
     private final WorldManager worldManager;
 
-    public int timer;
     private int task;
 
 
@@ -42,15 +40,12 @@ public class PreGameManager {
         this.main = Main.getInstance();
 
         this.game = main.getGame();
-        this.scatter = new Scatter(false, 1);
         this.title = new Title();
 
         this.worldManager = main.getWorldManager();
-        this.timer = game.getAutoStartTime();
 
         main.getGame().setRunnable(true);
         game.setStart(true);
-
 
         Bukkit.getOnlinePlayers().forEach(all -> {
             all.playSound(all.getLocation(), Sound.ORB_PICKUP, 1, 4);
@@ -58,23 +53,23 @@ public class PreGameManager {
         });
 
         Bukkit.broadcastMessage(" ");
-        Bukkit.broadcastMessage("§dUHCRun §7» §aLa partie va démarrer dans §6" + timer + " §asecondes.");
+        Bukkit.broadcastMessage("§dUHCRun §7» §aLa partie va démarrer dans §6" + game.getTimer() + " §asecondes.");
         Bukkit.broadcastMessage(" ");
 
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(main, () -> {
             if (!game.getRunnable()) {
                 return;
             }
-            timer--;
 
-            //game.setTimer(game.getTimer() - 1);
+            int timer = game.getTimer();
+            game.setTimer(game.getTimer() - 1);
+
             if (timer == 0) {
                 if (!(Bukkit.getOnlinePlayers().size() >= game.getAutoStart()) && !game.isForcestart()) {
                     Bukkit.broadcastMessage("§dUHCRun §7» §cIl n'y a pas assez de joueurs pour démarrer.");
 
                     Bukkit.getScheduler().cancelTask(task);
-                    //game.setTimer(game.getAutoStartTime());
-                    timer = game.getAutoStartTime();
+                    game.setTimer(game.getAutoStartTime());
                     game.setStart(false);
                     return;
                 }
@@ -91,11 +86,11 @@ public class PreGameManager {
                 Bukkit.getOnlinePlayers().forEach(players -> {
                     players.setLevel(0);
                     players.playSound(players.getLocation(), Sound.EAT, 3F, 3F);
-                    new ActionBar("§7Téléportation...").sendToAll();
+                    new ActionBar("§7Téléportation...").sendToPlayer(players);
                     players.getInventory().clear();
                 });
 
-                new Scatter(true, (int) game.getWorld().getWorldBorder().getSize() - 5).runTaskTimer(main, 0L, 2);
+                new Scatter(true).runTaskTimer(main, 0L, 10L);
 
             }
 
@@ -115,9 +110,10 @@ public class PreGameManager {
 
                 worldManager.registerObjectives();
 
-                scatter.getStayLocs().clear();
-                scatter.getBlocks().forEach(block -> block.setType(Material.AIR));
-                scatter.getBlocks().clear();
+                System.out.print("TEST");
+                game.getStayLocs().clear();
+                game.getBlocks().forEach(block -> block.setType(Material.AIR));
+                game.getBlocks().clear();
 
                 for (UUID uuid : game.getAlivePlayers()) {
 
@@ -145,10 +141,10 @@ public class PreGameManager {
                 Bukkit.broadcastMessage("§7§m+---------------------------------------+");
 
                 PluginManager pluginManager = Bukkit.getPluginManager();
-                pluginManager.registerEvents(new RunEvent(), main);
-                pluginManager.registerEvents(new BlockEvent(main), main);
-                pluginManager.registerEvents(new DeathEvent(main), main);
-                pluginManager.registerEvents(new StackEvent(3), main);
+                pluginManager.registerEvents(new RunListener(), main);
+                pluginManager.registerEvents(new BlockListener(main), main);
+                pluginManager.registerEvents(new DeathListener(main), main);
+                pluginManager.registerEvents(new StackListener(3), main);
 
                 Bukkit.getScheduler().runTaskLater(main, () -> {
 
@@ -188,7 +184,6 @@ public class PreGameManager {
         new BukkitRunnable() {
             @Override
             public void run() {
-
                 for (int i = 0; i < 200; i++) {
                     if (toRemove.isEmpty()) {
                         cancel();

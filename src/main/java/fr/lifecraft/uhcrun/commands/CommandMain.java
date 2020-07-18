@@ -4,7 +4,8 @@ import fr.lifecraft.uhcrun.Main;
 import fr.lifecraft.uhcrun.game.Game;
 import fr.lifecraft.uhcrun.game.PreGameManager;
 import fr.lifecraft.uhcrun.game.WinManager;
-import fr.lifecraft.uhcrun.manager.WorldManager;
+import fr.lifecraft.uhcrun.utils.Scatter;
+import fr.lifecraft.uhcrun.world.WorldManager;
 import fr.lifecraft.uhcrun.structure.StructureLoader;
 import fr.lifecraft.uhcrun.utils.State;
 import org.bukkit.Location;
@@ -19,7 +20,7 @@ public class CommandMain implements CommandExecutor {
     private final WinManager winManager;
     private final StructureLoader structureLoader;
 
-    public CommandMain(Main main){
+    public CommandMain(Main main) {
         this.game = main.getGame();
         this.winManager = main.getWinManager();
         this.structureLoader = main.getStructureLoader();
@@ -29,7 +30,8 @@ public class CommandMain implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String msg, String[] args) {
         if (sender instanceof Player) {
             if (cmd.getName().equalsIgnoreCase("game")) {
-                if(args.length == 0){
+                if (args.length == 0) {
+                    System.out.print("DD" + game.getBlocks().size());
                     sender.sendMessage("§cUtilisation: /game start.");
                     return true;
                 }

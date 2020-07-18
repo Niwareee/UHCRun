@@ -2,9 +2,8 @@ package fr.lifecraft.uhcrun.game;
 
 import fr.lifecraft.uhcrun.Main;
 import fr.lifecraft.uhcrun.database.SQLManager;
-import fr.lifecraft.uhcrun.manager.PlayerManager;
-import fr.lifecraft.uhcrun.manager.WorldManager;
-import fr.lifecraft.uhcrun.structure.StructureLoader;
+import fr.lifecraft.uhcrun.player.PlayerManager;
+import fr.lifecraft.uhcrun.world.WorldManager;
 import fr.lifecraft.uhcrun.utils.State;
 import net.minecraft.server.v1_8_R3.MinecraftServer;
 import org.bukkit.*;
@@ -12,6 +11,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Map;
 import java.util.UUID;
@@ -24,6 +24,8 @@ public class WinManager {
     private final PlayerManager playerManager;
     private final Game game;
     private final SQLManager sqlManager;
+
+    private int task = 0;
 
     public WinManager(Main main){
         this.main = main;
@@ -98,9 +100,12 @@ public class WinManager {
             Bukkit.broadcastMessage("§f§m+------§c§m---------------§f§m------+");
 
             launchWinFireworks();
+            task = Bukkit.getScheduler().scheduleSyncRepeatingTask(main, () -> {
+                System.out.print(task);
+                Bukkit.getOnlinePlayers().forEach(all -> playerManager.teleportServer(all, "uhchub"));
+            }, 0L, 25 * 20L);
 
-            Bukkit.getScheduler().runTaskLater(main, () -> Bukkit.getOnlinePlayers().forEach(all -> playerManager.teleportServer(all,"uhchub")), 25 * 20);
-            Bukkit.getScheduler().runTaskLater(main, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "stop"), 27 * 20);
+            Bukkit.getScheduler().runTaskLaterAsynchronously(main, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "stop"), 27 * 20);
         }, 10);
     }
 

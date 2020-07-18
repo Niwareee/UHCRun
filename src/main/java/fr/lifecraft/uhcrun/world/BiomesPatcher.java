@@ -4,11 +4,7 @@ import net.minecraft.server.v1_8_R3.BiomeBase;
 
 public class BiomesPatcher {
 
-    public BiomesPatcher() {
-        removeBiomes();
-    }
-
-    public void removeBiomes() {
+    public static void removeBiomes() {
         try {
             java.lang.reflect.Field biomesField = BiomeBase.class.getDeclaredField("biomes");
             biomesField.setAccessible(true);

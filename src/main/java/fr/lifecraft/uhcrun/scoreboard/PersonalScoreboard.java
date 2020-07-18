@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 import fr.lifecraft.uhcrun.Main;
 import fr.lifecraft.uhcrun.utils.State;
-import fr.lifecraft.uhcrun.manager.WorldManager;
+import fr.lifecraft.uhcrun.world.WorldManager;
 
 import java.util.UUID;
 

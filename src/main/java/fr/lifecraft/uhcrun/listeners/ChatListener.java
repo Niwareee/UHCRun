@@ -1,7 +1,7 @@
 package fr.lifecraft.uhcrun.listeners;
 
 import fr.lifecraft.uhcrun.Main;
-import fr.lifecraft.uhcrun.manager.PlayerManager;
+import fr.lifecraft.uhcrun.player.PlayerManager;
 import fr.lifecraft.uhcrun.rank.Rank;
 import fr.lifecraft.uhcrun.utils.State;
 import org.bukkit.Bukkit;
@@ -11,11 +11,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-public class ChatEvent implements Listener {
+public class ChatListener implements Listener {
 
 	private final PlayerManager playerManager;
 
-	public ChatEvent(){
+	public ChatListener(){
 		this.playerManager = Main.getInstance().getPlayerManager();
 	}
 

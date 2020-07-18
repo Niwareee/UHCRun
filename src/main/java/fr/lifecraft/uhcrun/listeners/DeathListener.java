@@ -12,10 +12,10 @@ import org.bukkit.potion.PotionEffectType;
 
 import fr.lifecraft.uhcrun.Main;
 import fr.lifecraft.uhcrun.game.WinManager;
-import fr.lifecraft.uhcrun.manager.PlayerManager;
+import fr.lifecraft.uhcrun.player.PlayerManager;
 import org.bukkit.scoreboard.Scoreboard;
 
-public class DeathEvent implements Listener {
+public class DeathListener implements Listener {
 
     private final Main main;
 
@@ -25,7 +25,7 @@ public class DeathEvent implements Listener {
     private final PlayerManager playerManager;
     private final WinManager winManager;
 
-    public DeathEvent(Main main) {
+    public DeathListener(Main main) {
         this.main = main;
 
         this.game = main.getGame();
@@ -55,6 +55,7 @@ public class DeathEvent implements Listener {
 
         event.setDeathMessage("§aUHC §8» §c" + player.getName() + " §7" + (player.getKiller() == null ? "est mort." : "a été tué par §a" + player.getKiller().getName() + "§7."));
 
+        //scheduleSyncDelayedTask
         Bukkit.getScheduler().scheduleSyncDelayedTask(main, winManager::checkWin, 10);
     }
 }

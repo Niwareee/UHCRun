@@ -24,7 +24,8 @@ public class GameManager {
         this.main = Main.getInstance();
         this.game = main.getGame();
 
-        Bukkit.getScheduler().runTaskTimer(main, () -> {
+        // runTaskTimer
+        Bukkit.getScheduler().runTaskTimerAsynchronously(main, () -> {
             if (State.isState(State.MINING)) {
                 int timer = game.getTimer();
                 game.setTimer(timer + 1);
@@ -54,7 +55,7 @@ public class GameManager {
         State.setState(State.TELEPORT);
         game.getWorld().setPVP(true);
     	
-        new Scatter(false, game.getTPBorder() * 2 - 10).runTaskTimer(main, 0L, 2);
+        new Scatter(false).runTaskTimer(main, 0L, 5L);
 
         Bukkit.broadcastMessage("§7§m+------------------------------------+");
         Bukkit.broadcastMessage(" §f» §6Le PvP est désormais §aactivé§6.");
