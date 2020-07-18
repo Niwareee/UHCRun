@@ -9,10 +9,10 @@ nether:
   sizeMap: 600
   sizePreload: 600
 sql:
-  host: "178.32.113.35"
-  database: "minesr_36001"
-  username: "minesr_36001"
-  password: "upzw8TjH"
+  host: "ip"
+  database: "database"
+  username: "username"
+  password: "password"
   port: 3306
 game:
   slot: 30

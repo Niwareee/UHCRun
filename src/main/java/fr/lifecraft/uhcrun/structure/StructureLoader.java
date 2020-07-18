@@ -21,13 +21,17 @@ public class StructureLoader {
 
     private final Main main;
 
-    private final Map<String, Structure> structures;
     private int changes = 0;
     private Thread thread;
+
+    private final Map<String, Structure> structures;
+    private final String path;
+
 
     public StructureLoader(Main main) {
         this.main = main;
         this.structures = new HashMap<>();
+        this.path = main.getDataFolder().getPath();
     }
 
     @SuppressWarnings("deprecation")
@@ -38,7 +42,7 @@ public class StructureLoader {
 
         long start = System.currentTimeMillis();
 
-        File schematic = new File(Main.getInstance().getDataFolder().getPath() + "/schematics/" + fileName + ".yml");
+        File schematic = new File(path + "/schematics/" + fileName + ".yml");
         if (!schematic.exists()) {
             try {
                 schematic.createNewFile();
@@ -114,7 +118,7 @@ public class StructureLoader {
         }
 
         long stop = System.currentTimeMillis();
-        main.log("§eFile " + fileName + ".yml saved in " + (stop - start) + "ms.");
+        main.log("§eFile " + fileName + ".yml saved in " + (stop - start) + " ms");
 
         return true;
     }
@@ -125,7 +129,7 @@ public class StructureLoader {
 
         structures.remove(fileName);
 
-        File schematic = new File(Main.getInstance().getDataFolder().getPath() + "/schematics/" + fileName + ".yml");
+        File schematic = new File(path + "/schematics/" + fileName + ".yml");
 
         if (!schematic.exists()) return false;
 
@@ -154,7 +158,7 @@ public class StructureLoader {
         structures.put(fileName, structure);
 
         long stop = System.currentTimeMillis();
-        main.log("§eStructure " + fileName + " loaded in " + (stop - start) + "ms.");
+        main.log("§eStructure " + fileName + " loaded in " + (stop - start) + " ms");
 
         return true;
     }
@@ -204,7 +208,7 @@ public class StructureLoader {
 	        }
 	
 	        long stop = System.currentTimeMillis();
-	        main.log("§eStructure " + fileName + " pasted in " + (stop - start) + "ms. (" + changes + " blocks changed).");
+	        main.log("§eStructure " + fileName + " pasted in " + (stop - start) + " ms (" + changes + " blocks changed)");
 	        return true;
 		}
     }

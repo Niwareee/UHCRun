@@ -27,7 +27,6 @@ public class JoinQuitEvent implements Listener {
     private final PlayerManager playerManager;
 
     public JoinQuitEvent(Main main) {
-
         this.game = main.getGame();
         this.rankManager = main.getRankManager();
         this.playerManager = main.getPlayerManager();

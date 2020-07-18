@@ -1,13 +1,13 @@
 package fr.lifecraft.uhcrun.world;
 
 import fr.lifecraft.uhcrun.Main;
-import fr.lifecraft.uhcrun.structure.StructureLoader;
 import fr.lifecraft.uhcrun.utils.State;
+import net.minecraft.server.v1_8_R3.ChunkProviderServer;
 import net.minecraft.server.v1_8_R3.MinecraftServer;
+import net.minecraft.server.v1_8_R3.Chunk;
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
@@ -29,7 +29,10 @@ public class WorldLoader implements Runnable {
     private Thread thread;
     private int offset;
     private boolean pause;
+
     private long start;
+
+    private ChunkProviderServer provider;
 
     public final Listener listener = new Listener() {
         @EventHandler(priority = EventPriority.LOW)
@@ -50,7 +53,9 @@ public class WorldLoader implements Runnable {
         area = (this.width >> 4) * 2 * ((this.depth >> 4) * 2);
         this.offset = offset;
 
-        if (world.getEnvironment() == World.Environment.NORMAL) this.start = System.currentTimeMillis();
+        this.provider = ((CraftWorld)world).getHandle().chunkProviderServer;
+
+        start = System.currentTimeMillis();
 
         this.main = Main.getInstance();
 
@@ -61,7 +66,6 @@ public class WorldLoader implements Runnable {
 
     @Override
     public void run() {
-
         (this.thread = new Thread()).start();
         try {
             this.thread.join();
@@ -80,8 +84,9 @@ public class WorldLoader implements Runnable {
                     if (this.isPause()) {
                         return;
                     }
-                    final Chunk chunk = this.world.getChunkAt(this.offset + this.x >> 4, this.z >> 4);
-                    chunk.load(true);
+                    final Chunk chunk = this.provider.getChunkAt(this.offset + this.x >> 4, this.z >> 4);
+                    //chunk.load(true);
+                    this.provider.loadChunk(chunk.locX, chunk.locZ);
                     ++loaded;
                     if (loaded % 100 == 0) {
                         int percent = (int) ((((float) loaded) / ((float) area)) * 100.0);
@@ -92,9 +97,9 @@ public class WorldLoader implements Runnable {
                         try {
                             this.world.save();
                             Chunk[] chunks;
-                            for (int j = (chunks = this.world.getLoadedChunks()).length, i = 0; i < j; ++i) {
+                            for (int j = (chunks = (Chunk[]) ((CraftWorld)world).getLoadedChunks()).length, i = 0; i < j; ++i) {
                                 final Chunk c = chunks[i];
-                                c.load();
+                                provider.loadChunk(c.locX, c.locZ);
                             }
                         } catch (Exception ignored) {
                         }
@@ -107,11 +112,11 @@ public class WorldLoader implements Runnable {
         if (loaded >= area) {
 
             setPause(true);
+            long stop = System.currentTimeMillis();
+            main.log("§aFinish preload " + world.getName() + " in " + (stop - start) / 1000 + "s");
             Bukkit.getScheduler().cancelAllTasks();
 
             if (world.getEnvironment() == World.Environment.NETHER) {
-                double stop = System.currentTimeMillis();
-                main.log("§aFinish preload " + world.getName() + " in " + (stop - start) / 1000 + "s");
                 main.log("§aSetup finish. Ready to use.");
 
                 State.setState(State.WAITING);
@@ -145,6 +150,4 @@ public class WorldLoader implements Runnable {
     public int getArea() {
         return area;
     }
-
-
 }

@@ -24,21 +24,21 @@ import java.util.UUID;
 public class PlayerManager {
 
     private final Main main;
-    private final Game game;
-    private final World world;
+    private Game game;
+    private World world;
 
     private final ScoreboardManager scoreboardManager;
-    private final Scoreboard scoreboard;
+    private Scoreboard scoreboard;
 
     private final Map<UUID, UHCPlayer> players;
 
     public PlayerManager(Main main) {
         this.main = main;
         this.game = main.getGame();
-        this.world = game.getWorld();
 
         this.scoreboardManager = main.getScoreboardManager();
         this.scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+        this.world = game.getWorld();
 
         this.players = new HashMap<>();
     }

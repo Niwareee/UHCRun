@@ -1,15 +1,14 @@
 package fr.lifecraft.uhcrun.game;
 
+import fr.lifecraft.uhcrun.Main;
+import fr.lifecraft.uhcrun.utils.Scatter;
+import fr.lifecraft.uhcrun.utils.State;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.WorldBorder;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
-
-import fr.lifecraft.uhcrun.Main;
-import fr.lifecraft.uhcrun.utils.Scatter;
-import fr.lifecraft.uhcrun.utils.State;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,15 +30,15 @@ public class GameManager {
                 game.setTimer(timer + 1);
                 
                 if ((timer + 30) == game.getPvPTime() * 60) {
-                    Bukkit.broadcastMessage("§dUHCRun §8» §7Téléportation dans §e30 §7secondes.");
+                    Bukkit.broadcastMessage("§dUHCRun §7» §eTéléportation dans §f30 §7secondes.");
                 }
                 
                 if ((timer + 10) == game.getPvPTime() * 60) {
-                    Bukkit.broadcastMessage("§dUHCRun §8» §7Téléportation dans §e10 §7secondes.");
+                    Bukkit.broadcastMessage("§dUHCRun §7» §eTéléportation dans §f10 §7secondes.");
                 }
                 
                 if ((timer + 5) == game.getPvPTime() * 60) {
-                    Bukkit.broadcastMessage("§dUHCRun §8» §7Téléportation dans §e5 §7secondes.");
+                    Bukkit.broadcastMessage("§dUHCRun §7» §eTéléportation dans §f5 §7secondes.");
                 }
 
                 if (timer == game.getPvPTime() * 60) {
@@ -59,7 +58,7 @@ public class GameManager {
 
         Bukkit.broadcastMessage("§7§m+------------------------------------+");
         Bukkit.broadcastMessage(" §f» §6Le PvP est désormais §aactivé§6.");
-        Bukkit.broadcastMessage(" §f» §6Tous les joueurs ont reçu un heal final.");
+        Bukkit.broadcastMessage(" §f» §6Tous les joueurs ont été soignés.");
         Bukkit.broadcastMessage("§7§m+------------------------------------+");
         
         for (UUID uuid : game.getAlivePlayers()) {
@@ -69,11 +68,12 @@ public class GameManager {
             player.setWalkSpeed(0.2f);
             player.removePotionEffect(PotionEffectType.FAST_DIGGING);
             
-            player.setHealth(Bukkit.getPlayer(uuid).getMaxHealth());
-            player.playSound(Bukkit.getPlayer(uuid).getLocation(), Sound.WOLF_GROWL, 2F, 2F);
+            player.setHealth(20D);
+            player.playSound(player.getLocation(), Sound.WOLF_GROWL, 2F, 2F);
         }
         
     	border();
+        kickOffline();
         
         Bukkit.getScheduler().runTaskLater(main, () -> {
         	game.setInvincibility(false);
@@ -86,14 +86,12 @@ public class GameManager {
     }
 
     public void border() {
-        Bukkit.broadcastMessage("§dUHCRun §8» §7Réduction de la bordure en cours.");
-        Bukkit.broadcastMessage("§dUHCRun §8» §7Rapprochez vous du §ecentre §7sous peine de dégats.");
+        Bukkit.broadcastMessage("§dUHCRun §7» §7Réduction de la bordure en cours.");
+        Bukkit.broadcastMessage("§dUHCRun §7» §7Rapprochez vous du centre sous peine de §cdégats§a.");
         
-        WorldBorder wb = game.getWorld().getWorldBorder();
-        wb.setSize(game.getTPBorder() * 2);
-        wb.setSize(game.getFinalBorderSize() * 2, game.getBorderMoveTime() * 60);
-
-        kickOffline();
+        WorldBorder worldBorder = game.getWorld().getWorldBorder();
+        worldBorder.setSize(game.getTPBorder() * 2);
+        worldBorder.setSize(game.getFinalBorderSize() * 2, game.getBorderMoveTime() * 60);
     }
 
     public void kickOffline() {
@@ -105,7 +103,7 @@ public class GameManager {
             }
         }
 
-        Bukkit.getScheduler().runTaskLaterAsynchronously(main, () -> Bukkit.broadcastMessage("§dUHCRun §8» §7Les joueurs déconnectés ont été §céliminés§7."), 2);
+        Bukkit.broadcastMessage("§dUHCRun §7» §cLes joueurs déconnectés ont été éliminés.");
         main.getWinManager().checkWin();
    }
 

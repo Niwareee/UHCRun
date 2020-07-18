@@ -9,6 +9,7 @@ import fr.lifecraft.uhcrun.manager.WorldManager;
 import fr.lifecraft.uhcrun.utils.ActionBar;
 import fr.lifecraft.uhcrun.utils.Scatter;
 import fr.lifecraft.uhcrun.utils.State;
+import fr.lifecraft.uhcrun.utils.Title;
 import net.minecraft.server.v1_8_R3.MinecraftServer;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -26,34 +27,50 @@ import java.util.UUID;
 public class PreGameManager {
 
     private final Main main;
+
     private final Game game;
-    private final WorldManager worldManager;
     private final Scatter scatter;
+    private final Title title;
+
+    private final WorldManager worldManager;
 
     public int timer;
     private int task;
 
+
     public PreGameManager() {
         this.main = Main.getInstance();
-        this.game = main.getGame();
-        this.worldManager = main.getWorldManager();
-        this.scatter = new Scatter(false, 1);
 
+        this.game = main.getGame();
+        this.scatter = new Scatter(false, 1);
+        this.title = new Title();
+
+        this.worldManager = main.getWorldManager();
         this.timer = game.getAutoStartTime();
+
         main.getGame().setRunnable(true);
         game.setStart(true);
 
+
+        Bukkit.getOnlinePlayers().forEach(all -> {
+            all.playSound(all.getLocation(), Sound.ORB_PICKUP, 1, 4);
+            title.sendTitle(all, 10, 60, 10, "§6Démarrage", "§aPréparez-vous !");
+        });
+
+        Bukkit.broadcastMessage(" ");
+        Bukkit.broadcastMessage("§dUHCRun §7» §aLa partie va démarrer dans §6" + timer + " §asecondes.");
+        Bukkit.broadcastMessage(" ");
+
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(main, () -> {
-            if (!main.getGame().getRunnable()) {
+            if (!game.getRunnable()) {
                 return;
             }
-
             timer--;
 
             //game.setTimer(game.getTimer() - 1);
             if (timer == 0) {
                 if (!(Bukkit.getOnlinePlayers().size() >= game.getAutoStart()) && !game.isForcestart()) {
-                    Bukkit.broadcastMessage("§dUHCRun §8» §cIl n'y a pas assez de joueurs pour démarrer.");
+                    Bukkit.broadcastMessage("§dUHCRun §7» §cIl n'y a pas assez de joueurs pour démarrer.");
 
                     Bukkit.getScheduler().cancelTask(task);
                     //game.setTimer(game.getAutoStartTime());
@@ -123,8 +140,8 @@ public class PreGameManager {
                 }
 
                 Bukkit.broadcastMessage("§7§m+---------------------------------------+");
-                Bukkit.broadcastMessage(" §8» §7Les alliances entre joueurs sont §cinterdites§7.");
-                Bukkit.broadcastMessage(" §8» §7Vous êtes invincible pendant §e30 §7secondes.");
+                Bukkit.broadcastMessage(" §7» §aLes alliances entre joueurs sont §cinterdites§7.");
+                Bukkit.broadcastMessage(" §7» §aVous êtes invincible pendant §e30 §asecondes.");
                 Bukkit.broadcastMessage("§7§m+---------------------------------------+");
 
                 PluginManager pluginManager = Bukkit.getPluginManager();
@@ -159,7 +176,7 @@ public class PreGameManager {
 
                 Bukkit.getScheduler().runTaskLaterAsynchronously(main, () -> {
                     game.setInvincibility(false);
-                    Bukkit.broadcastMessage("§dUHCRun §7» §eVous êtes désormais vulnérables aux §9dégâts§e.");
+                    Bukkit.broadcastMessage("§dUHCRun §7» §aVous êtes désormais vulnérables aux §9dégâts§e.");
                 }, 20 * 30);
             }
         }, 0, 20);

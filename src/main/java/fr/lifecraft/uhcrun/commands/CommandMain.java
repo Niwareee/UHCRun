@@ -1,28 +1,26 @@
 package fr.lifecraft.uhcrun.commands;
 
-import org.bukkit.Bukkit;
+import fr.lifecraft.uhcrun.Main;
+import fr.lifecraft.uhcrun.game.Game;
+import fr.lifecraft.uhcrun.game.PreGameManager;
+import fr.lifecraft.uhcrun.game.WinManager;
+import fr.lifecraft.uhcrun.manager.WorldManager;
+import fr.lifecraft.uhcrun.structure.StructureLoader;
+import fr.lifecraft.uhcrun.utils.State;
 import org.bukkit.Location;
-import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import fr.lifecraft.uhcrun.Main;
-import fr.lifecraft.uhcrun.game.PreGameManager;
-import fr.lifecraft.uhcrun.game.WinManager;
-import fr.lifecraft.uhcrun.structure.StructureLoader;
-import fr.lifecraft.uhcrun.utils.State;
-import fr.lifecraft.uhcrun.manager.WorldManager;
-
 public class CommandMain implements CommandExecutor {
 
-    private final Main main;
+    private final Game game;
     private final WinManager winManager;
     private final StructureLoader structureLoader;
 
     public CommandMain(Main main){
-        this.main = main;
+        this.game = main.getGame();
         this.winManager = main.getWinManager();
         this.structureLoader = main.getStructureLoader();
     }
@@ -32,7 +30,7 @@ public class CommandMain implements CommandExecutor {
         if (sender instanceof Player) {
             if (cmd.getName().equalsIgnoreCase("game")) {
                 if(args.length == 0){
-                    sender.sendMessage("§cUtilisation: /game start");
+                    sender.sendMessage("§cUtilisation: /game start.");
                     return true;
                 }
 
@@ -57,19 +55,14 @@ public class CommandMain implements CommandExecutor {
 
                 } else if (args[0].equals("start")) {
                     if (State.isState(State.WAITING)) {
-                        if (!main.getGame().isForcestart()) {
-                            main.getGame().setForcestart(true);
+                        if (!game.isStarting() && !game.isForcestart()) {
+                            game.setForcestart(true);
 
-                            sender.sendMessage("§dUHCRun §8» §aVous avez forcé le démarrage.");
-                            Bukkit.broadcastMessage(" ");
-                            Bukkit.broadcastMessage("§dUHCRun §8» §aLe démarrage la partie a été forcée.");
-                            Bukkit.broadcastMessage(" ");
-
-                            Bukkit.getOnlinePlayers().forEach(all -> all.playSound(all.getLocation(), Sound.ORB_PICKUP, 1, 4));
-
+                            sender.sendMessage("§dUHCRun §7» §aVous avez forcé le démarrage de la partie.");
                             new PreGameManager();
+
                         } else {
-                            sender.sendMessage("§cErreur: Le redémarrage a déjà été forcé.");
+                            sender.sendMessage("§cErreur: Le partie est déjà en démarrage.");
                         }
                     } else {
                         sender.sendMessage("§cErreur: La partie a déjà commencée");

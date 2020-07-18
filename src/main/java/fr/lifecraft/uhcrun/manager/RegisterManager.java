@@ -29,6 +29,7 @@ public class RegisterManager {
         PluginManager pm = Bukkit.getPluginManager();
         List<Listener> listeners = new ArrayList<Listener>();
 
+        listeners.add(new WorldEvent());
         listeners.add(new ChatEvent());
         listeners.add(new JoinQuitEvent(main));
         listeners.add(new NoMoveEvent().listener);

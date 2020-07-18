@@ -2,9 +2,11 @@ package fr.lifecraft.uhcrun;
 
 import fr.lifecraft.uhcrun.database.SQLManager;
 import fr.lifecraft.uhcrun.game.WinManager;
+import fr.lifecraft.uhcrun.listeners.WorldEvent;
 import fr.lifecraft.uhcrun.manager.*;
 import fr.lifecraft.uhcrun.structure.Structure;
 import fr.lifecraft.uhcrun.structure.StructureLoader;
+import fr.lifecraft.uhcrun.utils.Title;
 import fr.lifecraft.uhcrun.world.BiomesPatcher;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -21,6 +23,7 @@ public class Main extends JavaPlugin {
     public static Main instance;
 
     public Game game;
+    private Title title;
 
     private ScoreboardManager scoreboardManager;
     private ScheduledExecutorService executorMonoThread;
@@ -32,6 +35,7 @@ public class Main extends JavaPlugin {
     private RankManager rankManager;
     private PlayerManager playerManager;
     private StructureLoader structureLoader;
+
 
     private SQLManager sqlManager;
 
@@ -50,18 +54,22 @@ public class Main extends JavaPlugin {
         executorMonoThread = Executors.newScheduledThreadPool(1);
         scoreboardManager = new ScoreboardManager();
 
-        this.sqlManager = new SQLManager(this);
-        this.game = new Game(this);
-        this.structureLoader = new StructureLoader(this);
-        this.propertiesManager = new PropertiesManager(this);
-        Bukkit.getScheduler().runTaskLater(this, () -> {
-            this.worldManager = new WorldManager(this);
-        }, 20);
-        this.winManager = new WinManager(this);
-        this.rankManager = new RankManager();
-        this.playerManager = new PlayerManager(this);
+        this.getServer().getPluginManager().registerEvents(new WorldEvent(), this);
 
-        new RegisterManager(this);
+        Bukkit.getScheduler().runTaskLater(this, () -> {
+            this.sqlManager = new SQLManager(this);
+            this.game = new Game(this);
+            this.structureLoader = new StructureLoader(this);
+            this.propertiesManager = new PropertiesManager(this);
+            this.playerManager = new PlayerManager(this);
+            this.worldManager = new WorldManager(this);
+            this.winManager = new WinManager(this);
+            this.rankManager = new RankManager();
+
+            new RegisterManager(this);
+        }, 40);
+
+        this.title = new Title();
 
         long stop = System.currentTimeMillis();
         this.log("Plugin successfully enabled in " + (stop - start) + " ms");
@@ -124,5 +132,9 @@ public class Main extends JavaPlugin {
 
     public void log(String message) {
         getServer().getConsoleSender().sendMessage("[" + getName() + "] " + message);
+    }
+
+    public Title getTitle() {
+        return title;
     }
 }

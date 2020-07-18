@@ -37,8 +37,6 @@ public class WorldManager {
         this.scoreboard = main.getServer().getScoreboardManager().getMainScoreboard();
         this.entityList = new ArrayList<>();
 
-        main.getServer().getPluginManager().registerEvents(new WorldEvent(), main);
-
         SPAWN = game.setSpawn(stringToLoc(main.getConfig().getString("world.spawn.location")));
         WORLD = game.setWorld(game.getSpawn().getWorld());
 
@@ -140,16 +138,17 @@ public class WorldManager {
             world.setThundering(false);
             world.setSpawnLocation(0, 200, 0);
 
-            WorldBorder wb = world.getWorldBorder();
-            wb.setSize(game.getSizeNether() * 2);
-            wb.setCenter(0.0D, 0.0D);
-            wb.setWarningDistance(10);
-            wb.setWarningTime(10);
-            wb.setDamageAmount(1D);
-            wb.setDamageBuffer(1D);
+            WorldBorder worldBorder = world.getWorldBorder();
+            worldBorder.setSize(game.getSizeNether() * 2);
+            worldBorder.setCenter(0D, 0L);
+            worldBorder.setWarningDistance(10);
+            worldBorder.setWarningTime(10);
+            worldBorder.setDamageAmount(1D);
+            worldBorder.setDamageBuffer(1D);
         }
 
         main.getServer().setSpawnRadius(0);
+        main.getServer().getWhitelistedPlayers().clear();
         main.getServer().setWhitelist(false);
 
         main.log("§aWorld successfully setup");
@@ -157,13 +156,7 @@ public class WorldManager {
         main.log("Preload maps is " + (regen ? "§aenabled" : "§cdisabled"));
 
         if (regen) {
-            Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> {
-                try {
-                    Bukkit.getScheduler().scheduleSyncRepeatingTask(main, new WorldLoader(WORLD, game.getPreLoad(), game.getPreLoad(), 0),  40, 200);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }, 20);
+            Bukkit.getScheduler().scheduleSyncRepeatingTask(main, new WorldLoader(WORLD, game.getPreLoad(), game.getPreLoad(), 0),  40, 200);
         }
     }
 

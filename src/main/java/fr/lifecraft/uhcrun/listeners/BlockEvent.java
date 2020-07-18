@@ -1,5 +1,7 @@
 package fr.lifecraft.uhcrun.listeners;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
@@ -24,20 +26,25 @@ import fr.lifecraft.uhcrun.Main;
 @SuppressWarnings("deprecation")
 public class BlockEvent implements Listener {
 
-	private Main main;
+	private final Main main;
+	private List<ItemStack> dropItems;
 
 	public BlockEvent(Main main){
 		this.main = main;
+		this.dropItems = new ArrayList<>();
+
 	}
 	
 	@EventHandler
 	public void onKill(EntityDeathEvent event) {
+
 		Entity entity = event.getEntity();
         final Random random = new Random();
         final double r = random.nextDouble();
+
 		if (entity.getType() == EntityType.CHICKEN) {
-			if(!event.getDrops().isEmpty())
-			for (ItemStack drops : event.getDrops()) {
+			dropItems = event.getDrops();
+			for (ItemStack drops : dropItems) {
 				if (drops.getType() == Material.RAW_CHICKEN) {
 					drops.setType(Material.COOKED_CHICKEN);
 					if(r <= 50 * 0.01) {
@@ -47,8 +54,8 @@ public class BlockEvent implements Listener {
 			}
 		}
 		else if (entity.getType() == EntityType.SHEEP) {
-			if(!event.getDrops().isEmpty())
-			for (ItemStack drops : event.getDrops()) {
+			dropItems = event.getDrops();
+			for (ItemStack drops : dropItems) {
 				if (drops.getType() == Material.MUTTON) {
 					drops.setType(Material.COOKED_MUTTON);
 					if(r <= 50 * 0.01) {
@@ -58,8 +65,8 @@ public class BlockEvent implements Listener {
 			}
 		}
 		else if (entity.getType() == EntityType.RABBIT) {
-			if(!event.getDrops().isEmpty())
-			for (ItemStack drops : event.getDrops()) {
+			dropItems = event.getDrops();
+			for (ItemStack drops : dropItems) {
 				if (drops.getType() == Material.RABBIT) {
 					drops.setType(Material.COOKED_RABBIT);
 					if(r <= 50 * 0.01) {
@@ -72,8 +79,8 @@ public class BlockEvent implements Listener {
 			}
 		}
 		else if (entity.getType() == EntityType.PIG) {
-			if(!event.getDrops().isEmpty())
-			for (ItemStack drops : event.getDrops()) {
+			dropItems = event.getDrops();
+			for (ItemStack drops : dropItems) {
 				if (drops.getType() == Material.PORK) {
 					drops.setType(Material.GRILLED_PORK);
 					if(r <= 50 * 0.01) {
@@ -82,22 +89,19 @@ public class BlockEvent implements Listener {
 				}
 			}
 		}
-		else if (entity.getType() == EntityType.PIG_ZOMBIE) {
-			event.getDrops().add(new ItemStack(Material.GOLD_INGOT, 1));
-		}
 		else if (entity.getType() == EntityType.ZOMBIE) {
-			if(!event.getDrops().isEmpty())
-			for (ItemStack drops : event.getDrops()) {
+			dropItems = event.getDrops();
+			for (ItemStack drops : dropItems) {
 				if (drops.getType() == Material.ROTTEN_FLESH) {
 					drops.setType(Material.COOKED_BEEF);
 				}
 			}
-			event.getEntity().getWorld().spawn(event.getEntity().getLocation(), ExperienceOrb.class).setExperience(3);
+			entity.getWorld().spawn(entity.getLocation(), ExperienceOrb.class).setExperience(3);
 			
 		}
 		else if (entity.getType() == EntityType.HORSE) {
-			if(!event.getDrops().isEmpty())
-			for (ItemStack drops : event.getDrops()) {
+			dropItems = event.getDrops();
+			for (ItemStack drops : dropItems) {
 				if (drops.getType() == Material.LEATHER) {
 					drops.setType(Material.BOOK);
 				}
@@ -105,8 +109,8 @@ public class BlockEvent implements Listener {
 			
 		}
 		else if (entity.getType() == EntityType.COW || entity.getType() == EntityType.MUSHROOM_COW) {
-			if(!event.getDrops().isEmpty())
-			for (ItemStack drops : event.getDrops()) {
+			dropItems = event.getDrops();
+			for (ItemStack drops : dropItems) {
 				if (drops.getType() == Material.RAW_BEEF) {
 					drops.setType(Material.COOKED_BEEF);
 				}
@@ -115,9 +119,12 @@ public class BlockEvent implements Listener {
 				}
 			}
 		}
+		else if (entity.getType() == EntityType.PIG_ZOMBIE) {
+			event.getDrops().add(new ItemStack(Material.GOLD_INGOT, 1));
+		}
 		else if (entity.getType() == EntityType.SQUID) {
-			if(!event.getDrops().isEmpty())
-			for (ItemStack drops : event.getDrops()) {
+			dropItems = event.getDrops();
+			for (ItemStack drops : dropItems) {
 				if (drops.getType() == Material.INK_SACK) {
 					drops.setType(Material.COOKED_FISH);
 				}
@@ -129,7 +136,7 @@ public class BlockEvent implements Listener {
 	public void onBreak(BlockBreakEvent e) {
 
 		Block block = e.getBlock();
-		Location loc = new Location(block.getWorld(), block.getLocation().getBlockX() + 0.5D, block.getLocation().getBlockY(), block.getLocation().getBlockZ() + 0.5D);
+		Location location = new Location(block.getWorld(), block.getLocation().getBlockX() + 0.5D, block.getLocation().getBlockY(), block.getLocation().getBlockZ() + 0.5D);
 		
         final Random random = new Random();
         final double r = random.nextDouble();
@@ -137,77 +144,77 @@ public class BlockEvent implements Listener {
         if (r <= 2 * 0.01 && block.getType() == Material.LEAVES && !e.getPlayer().getItemInHand().getType().equals(Material.SHEARS)) {
             block.setType(Material.AIR);
             block.getState().update();
-            block.getWorld().dropItemNaturally(loc, new ItemStack(Material.APPLE));
+            block.getWorld().dropItemNaturally(location, new ItemStack(Material.APPLE));
         }
         else if (block.getType() == Material.STONE) {
         	if(block.getData() == 1 || block.getData() == 3 || block.getData() == 5) {
 				block.setType(Material.AIR);
 				block.getState().update();
-				block.getWorld().dropItemNaturally(loc, new ItemStack(Material.COBBLESTONE, 1));
+				block.getWorld().dropItemNaturally(location, new ItemStack(Material.COBBLESTONE, 1));
         	}
 		}
         else if (block.getType() == Material.GRAVEL) {
             block.setType(Material.AIR);
             block.getState().update();
         	if(r <= 80 * 0.01) {
-	            block.getWorld().dropItemNaturally(loc, new ItemStack(Material.ARROW, 3));
+	            block.getWorld().dropItemNaturally(location, new ItemStack(Material.ARROW, 3));
         	}else {
-	            block.getWorld().dropItemNaturally(loc, new ItemStack(Material.FLINT, 1));
+	            block.getWorld().dropItemNaturally(location, new ItemStack(Material.FLINT, 1));
         	}
         }
         else if (block.getType() == Material.IRON_ORE) {
 			block.setType(Material.AIR);
 			block.getState().update();
-			block.getWorld().dropItemNaturally(loc, new ItemStack(Material.IRON_INGOT, 2));
-			block.getWorld().spawn(loc, ExperienceOrb.class).setExperience(3);
+			block.getWorld().dropItemNaturally(location, new ItemStack(Material.IRON_INGOT, 2));
+			block.getWorld().spawn(location, ExperienceOrb.class).setExperience(3);
 		}
         else if (block.getType() == Material.DIAMOND_ORE) {
 			block.setType(Material.AIR);
 			block.getState().update();
-			block.getWorld().dropItemNaturally(loc, new ItemStack(Material.DIAMOND, 2));
-			block.getWorld().spawn(loc, ExperienceOrb.class).setExperience(10);
+			block.getWorld().dropItemNaturally(location, new ItemStack(Material.DIAMOND, 2));
+			block.getWorld().spawn(location, ExperienceOrb.class).setExperience(10);
 		}
         else if (block.getType() == Material.GOLD_ORE) {
 			block.setType(Material.AIR);
 			block.getState().update();
-			block.getWorld().dropItemNaturally(loc, new ItemStack(Material.GOLD_INGOT, 2));
-			block.getWorld().spawn(loc, ExperienceOrb.class).setExperience(4);
+			block.getWorld().dropItemNaturally(location, new ItemStack(Material.GOLD_INGOT, 2));
+			block.getWorld().spawn(location, ExperienceOrb.class).setExperience(4);
 		} 
         else if (block.getType() == Material.COAL_ORE) {
             block.setType(Material.AIR);
             block.getState().update();
-            block.getWorld().dropItemNaturally(loc, new ItemStack(Material.TORCH, 3));
-            block.getWorld().spawn(loc, ExperienceOrb.class).setExperience(2);
+            block.getWorld().dropItemNaturally(location, new ItemStack(Material.TORCH, 3));
+            block.getWorld().spawn(location, ExperienceOrb.class).setExperience(2);
         }
         else if (block.getType() == Material.REDSTONE_ORE) {
-        	block.getWorld().spawn(loc, ExperienceOrb.class).setExperience(3);
+        	block.getWorld().spawn(location, ExperienceOrb.class).setExperience(3);
         }
         else if (block.getType() == Material.SAND) {
             block.setType(Material.AIR);
             block.getState().update();
-            block.getWorld().dropItemNaturally(loc, new ItemStack(Material.GLASS, 2));
+            block.getWorld().dropItemNaturally(location, new ItemStack(Material.GLASS, 2));
         }
         else if (block.getType() == Material.CACTUS) {
             block.setType(Material.AIR);
             block.getState().update();
-            block.getWorld().dropItemNaturally(loc, new ItemStack(Material.LOG, 2));
+            block.getWorld().dropItemNaturally(location, new ItemStack(Material.LOG, 2));
         }
         else if (block.getType() == Material.SUGAR_CANE || block.getType() == Material.SUGAR_CANE_BLOCK) {
             block.setType(Material.AIR);
             block.getState().update();
-            block.getWorld().dropItemNaturally(loc, new ItemStack(Material.BOOK, 1));
+            block.getWorld().dropItemNaturally(location, new ItemStack(Material.BOOK, 1));
         }
         else if (block.getType() == Material.DEAD_BUSH) {
             block.setType(Material.AIR);
             block.getState().update();
-            block.getWorld().dropItemNaturally(loc, new ItemStack(Material.STICK, 2));
+            block.getWorld().dropItemNaturally(location, new ItemStack(Material.STICK, 2));
         }
         else if (block.getType() == Material.LOG || block.getType() == Material.LOG_2) {
 			Location locc = e.getBlock().getLocation();
 			final World world = locc.getWorld();
-            final int x = loc.getBlockX();
-            final int y = loc.getBlockY();
-            final int z = loc.getBlockZ();
+            final int x = location.getBlockX();
+            final int y = location.getBlockY();
+            final int z = location.getBlockZ();
             if (!validChunk(world, x - 5, y - 5, z - 5, x + 5, y + 5, z + 5)) {
                 return;
             }

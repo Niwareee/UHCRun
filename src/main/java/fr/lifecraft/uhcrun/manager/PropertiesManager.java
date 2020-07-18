@@ -4,9 +4,11 @@ import fr.lifecraft.uhcrun.Main;
 import fr.lifecraft.uhcrun.hook.PotionAttackDamageNerf;
 import fr.lifecraft.uhcrun.hook.Reflection;
 import fr.lifecraft.uhcrun.hook.SlotPatcher;
+import fr.lifecraft.uhcrun.listeners.WorldEvent;
 import net.minecraft.server.v1_8_R3.GenericAttributes;
 import net.minecraft.server.v1_8_R3.MinecraftKey;
 import net.minecraft.server.v1_8_R3.MobEffectList;
+import org.bukkit.Bukkit;
 import org.bukkit.potion.PotionEffectType;
 
 import java.lang.reflect.Field;
