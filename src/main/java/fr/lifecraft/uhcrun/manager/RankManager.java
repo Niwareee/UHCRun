@@ -13,14 +13,15 @@ import java.util.*;
 
 public class RankManager {
 
-    private Main main;
-    private SQLManager sqlManager;
+    private final Main main;
+    private final SQLManager sqlManager;
 
-    public List<Rank> ranks = new ArrayList<>();
+    public List<Rank> ranks;
 
     public RankManager(){
         this.main = Main.getInstance();
         this.sqlManager = main.getSQLManager();
+        this.ranks = new ArrayList<>();
 
         initRanks();
     }
@@ -62,66 +63,7 @@ public class RankManager {
         sqlManager.update("UPDATE lifeplayers SET rankid='" + rank.getPower() + "' WHERE player_uuid='" + uuid + "'");
     }
 
-    public void addKills(UUID uuid, Rank rank) {
-        sqlManager.update("UPDATE lifeplayers SET kills='" + rank.getPower() + "' WHERE player_uuid='" + uuid + "'");
-    }
-
-    public void addDeath(UUID uuid, Rank rank) {
-        sqlManager.update("UPDATE lifeplayers SET rankid='" + rank.getPower() + "' WHERE player_uuid='" + uuid + "'");
-    }
-
     public Rank getFromPower(int power) {
         return ranks.stream().filter(rank -> rank.getPower() == power).findAny().orElse(ranks.get(0));
     }
-
-    /*public static RankManager getDatabaseRank(UUID uuid) {
-        RankManager rank = null;
-        try {
-            PreparedStatement sts = main.getConnection().prepareStatement("SELECT rankid FROM lifeplayers WHERE player_uuid=?");
-            sts.setString(1, uuid.toString());
-            ResultSet rs = sts.executeQuery();
-
-            if (rs.next()) {
-                rank = getFromPower(rs.getInt("rankid"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return rank;
-    }
-
-    public static Integer getDatabaseCoins(UUID uuid) {
-        int coins = 0;
-        try {
-            PreparedStatement sts = main.getConnection().prepareStatement("SELECT coins FROM lifeplayers WHERE player_uuid=?");
-            sts.setString(1, uuid.toString());
-            ResultSet rs = sts.executeQuery();
-
-            if (rs.next()) {
-                coins = rs.getInt("coins");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return coins;
-    }
-
-    public static void addCouronne(Player player, long coins) {
-        try {
-            PreparedStatement sts = Main.getInstance().getConnection().prepareStatement("SELECT coins FROM lifeplayers WHERE player_uuid=?");
-            sts.setString(1, player.getUniqueId().toString());
-            ResultSet rs = sts.executeQuery();
-
-            if (rs.next()) {
-                long money = rs.getLong("coins");
-                sts.close();
-                sts = Main.getInstance().getConnection().prepareStatement("UPDATE lifeplayers SET coins=? WHERE player_uuid=?");
-                sts.setLong(1, (coins + money));
-                sts.setString(2, player.getUniqueId().toString());
-                sts.executeUpdate();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }*/
 }

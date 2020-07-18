@@ -20,14 +20,18 @@ public class Scatter extends BukkitRunnable {
 
     private final Game game;
 
-    private final List<Block> blocks = new ArrayList<>();
-    private final Map<UUID, Location> stayLocs = new HashMap<>();
-    private final List<Player> players = new ArrayList<>();
+    private final List<Block> blocks;
+    private final Map<UUID, Location> stayLocs;
+    private final List<Player> players;
     private final int b;
     private boolean j;
     private final boolean start;
 
     public Scatter(boolean start, int b) {
+        this.blocks = new ArrayList<>();
+        this.stayLocs = new HashMap<>();
+        this.players =new ArrayList<>();
+
         this.b = b;
         this.j = true;
         this.start = start;
