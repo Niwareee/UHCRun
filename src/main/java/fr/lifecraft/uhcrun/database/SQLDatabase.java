@@ -49,11 +49,7 @@ public class SQLDatabase {
     public void updateTables() {
         try {
             if (isConnected()) {
-                main.getSQLManager().update("CREATE TABLE IF NOT EXISTS account_brainffa (" +
-                        "player_uuid VARCHAR(255) NOT NULL UNIQUE, " +
-                        "kills INT NOT NULL, " +
-                        "deaths INT NOT NULL, " +
-                        "kit TEXT NOT NULL)");
+                main.getSQLManager().update("TEST");
                 main.log("§aSuccessful update table !");
             }
         } catch (Exception e) {
