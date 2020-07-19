@@ -4,10 +4,10 @@ import fr.lifecraft.uhcrun.Main;
 import fr.lifecraft.uhcrun.game.Game;
 import fr.lifecraft.uhcrun.game.PreGameManager;
 import fr.lifecraft.uhcrun.game.WinManager;
-import fr.lifecraft.uhcrun.utils.Scatter;
-import fr.lifecraft.uhcrun.world.WorldManager;
 import fr.lifecraft.uhcrun.structure.StructureLoader;
 import fr.lifecraft.uhcrun.utils.State;
+import fr.lifecraft.uhcrun.world.WorldManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -31,44 +31,53 @@ public class CommandMain implements CommandExecutor {
         if (sender instanceof Player) {
             if (cmd.getName().equalsIgnoreCase("game")) {
                 if (args.length == 0) {
-                    System.out.print("DD" + game.getBlocks().size());
                     sender.sendMessage("§cUtilisation: /game start.");
                     return true;
                 }
 
-                if (args[0].equals("savestructure")) {
-                    String[] cos1 = args[2].split(",");
-                    String[] cos2 = args[3].split(",");
-                    Location location1 = new Location(WorldManager.WORLD, Double.parseDouble(cos1[0]), Double.parseDouble(cos1[1]), Double.parseDouble(cos1[2]));
-                    Location location2 = new Location(WorldManager.WORLD, Double.parseDouble(cos2[0]), Double.parseDouble(cos2[1]), Double.parseDouble(cos2[2]));
+                switch (args[0]) {
+                    case "savestructure":
+                        String[] cos1 = args[2].split(",");
+                        String[] cos2 = args[3].split(",");
+                        Location location1 = new Location(WorldManager.WORLD, Double.parseDouble(cos1[0]), Double.parseDouble(cos1[1]), Double.parseDouble(cos1[2]));
+                        Location location2 = new Location(WorldManager.WORLD, Double.parseDouble(cos2[0]), Double.parseDouble(cos2[1]), Double.parseDouble(cos2[2]));
 
-                    Player player = (Player) sender;
-                    Location location = player.getLocation();
-                    structureLoader.save(location1, location2, location, args[1]);
+                        Player player = (Player) sender;
+                        Location location = player.getLocation();
+                        structureLoader.save(location1, location2, location, args[1]);
 
-                } else if (args[0].equals("pastestructure")) {
-                    structureLoader.load(args[1]);
-                    structureLoader.paste(((Player) sender).getLocation(), args[1], true);
+                        break;
+                    case "pastestructure":
+                        structureLoader.load(args[1]);
+                        structureLoader.paste(((Player) sender).getLocation(), args[1], true);
 
-                } else if (args[0].equals("checkwin")) {
-                    sender.sendMessage("§dLancement du test . . .");
-                    winManager.checkWin();
-                    return true;
+                        break;
+                    case "checkwin":
+                        sender.sendMessage("§dLancement du test . . .");
+                        winManager.checkWin();
+                        return true;
 
-                } else if (args[0].equals("start")) {
-                    if (State.isState(State.WAITING)) {
-                        if (!game.isStarting() && !game.isForcestart()) {
-                            game.setForcestart(true);
-
-                            sender.sendMessage("§dUHCRun §7» §aVous avez forcé le démarrage de la partie.");
-                            new PreGameManager();
-
-                        } else {
+                    case "start":
+                        if (State.isState(State.STARTING)){
                             sender.sendMessage("§cErreur: Le partie est déjà en démarrage.");
+                            return true;
                         }
-                    } else {
-                        sender.sendMessage("§cErreur: La partie a déjà commencée");
-                    }
+
+                        if (!State.isInWait()) {
+                            sender.sendMessage("§cErreur: La partie a déjà commencée");
+                            return true;
+                        }
+
+                        if (Bukkit.getOnlinePlayers().size() < 2) {
+                            sender.sendMessage("§cErreur: Vous devez être minimum 2 joueurs.");
+                            return true;
+                        }
+
+                        game.setForceStart(true);
+                        sender.sendMessage("§dUHCRun §7» §aVous avez forcé le démarrage de la partie.");
+                        new PreGameManager();
+
+                        break;
                 }
             }
 

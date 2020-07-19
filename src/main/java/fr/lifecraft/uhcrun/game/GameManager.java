@@ -24,22 +24,21 @@ public class GameManager {
         this.main = Main.getInstance();
         this.game = main.getGame();
 
-        // runTaskTimer
-        Bukkit.getScheduler().runTaskTimerAsynchronously(main, () -> {
+        Bukkit.getScheduler().runTaskTimer(main, () -> {
             if (State.isState(State.MINING)) {
                 int timer = game.getTimer();
-                game.setTimer(timer + 1);
+                game.addTimer();
                 
                 if ((timer + 30) == game.getPvPTime() * 60) {
-                    Bukkit.broadcastMessage("§dUHCRun §7» §eTéléportation dans §f30 §7secondes.");
+                    Bukkit.broadcastMessage("§dUHCRun §7» §eTéléportation dans §f30 §esecondes.");
                 }
                 
                 if ((timer + 10) == game.getPvPTime() * 60) {
-                    Bukkit.broadcastMessage("§dUHCRun §7» §eTéléportation dans §f10 §7secondes.");
+                    Bukkit.broadcastMessage("§dUHCRun §7» §eTéléportation dans §f10 §esecondes.");
                 }
                 
                 if ((timer + 5) == game.getPvPTime() * 60) {
-                    Bukkit.broadcastMessage("§dUHCRun §7» §eTéléportation dans §f5 §7secondes.");
+                    Bukkit.broadcastMessage("§dUHCRun §7» §eTéléportation dans §f5 §esecondes.");
                 }
 
                 if (timer == game.getPvPTime() * 60) {
@@ -57,10 +56,18 @@ public class GameManager {
     	
         new Scatter(false).runTaskTimer(main, 0L, 5L);
 
-        Bukkit.broadcastMessage("§7§m+------------------------------------+");
-        Bukkit.broadcastMessage(" §f» §6Le PvP est désormais §aactivé§6.");
-        Bukkit.broadcastMessage(" §f» §6Tous les joueurs ont été soignés.");
-        Bukkit.broadcastMessage("§7§m+------------------------------------+");
+        Bukkit.broadcastMessage("§7§m+--------------------------------+");
+        Bukkit.broadcastMessage("              §6● §aPvP §6●");
+        Bukkit.broadcastMessage("");
+        Bukkit.broadcastMessage("  §f» §aPvP activé.");
+        Bukkit.broadcastMessage("  §f» §aFinalHeal appliqué.");
+        Bukkit.broadcastMessage("");
+        Bukkit.broadcastMessage("              §6● §aBordure §6●");
+        Bukkit.broadcastMessage("");
+        Bukkit.broadcastMessage(" §f» §aRéduction en cours.");
+        Bukkit.broadcastMessage(" §f» §aTaille finale: " + game.getFinalBorderSize());
+        Bukkit.broadcastMessage("");
+        Bukkit.broadcastMessage("§7§m+--------------------------------+");
         
         for (UUID uuid : game.getAlivePlayers()) {
             Player player = Bukkit.getPlayer(uuid);
@@ -87,9 +94,6 @@ public class GameManager {
     }
 
     public void border() {
-        Bukkit.broadcastMessage("§dUHCRun §7» §7Réduction de la bordure en cours.");
-        Bukkit.broadcastMessage("§dUHCRun §7» §7Rapprochez vous du centre sous peine de §cdégats§a.");
-        
         WorldBorder worldBorder = game.getWorld().getWorldBorder();
         worldBorder.setSize(game.getTPBorder() * 2);
         worldBorder.setSize(game.getFinalBorderSize() * 2, game.getBorderMoveTime() * 60);

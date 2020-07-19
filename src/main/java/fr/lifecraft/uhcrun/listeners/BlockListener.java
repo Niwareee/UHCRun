@@ -133,15 +133,15 @@ public class BlockListener implements Listener {
 	}
 
 	@EventHandler
-	public void onBreak(BlockBreakEvent e) {
+	public void onBreak(BlockBreakEvent event) {
 
-		Block block = e.getBlock();
-		Location location = new Location(block.getWorld(), block.getLocation().getBlockX() + 0.5D, block.getLocation().getBlockY(), block.getLocation().getBlockZ() + 0.5D);
+		Block block = event.getBlock();
+		Location location = new Location(block.getWorld(), block.getLocation().getBlockX() + 0.5D, block.getLocation().getBlockY() + 0.3D, block.getLocation().getBlockZ() + 0.5D);
 		
         final Random random = new Random();
         final double r = random.nextDouble();
 
-        if (r <= 2 * 0.01 && block.getType() == Material.LEAVES && !e.getPlayer().getItemInHand().getType().equals(Material.SHEARS)) {
+        if (r <= 2 * 0.01 && block.getType() == Material.LEAVES) {
             block.setType(Material.AIR);
             block.getState().update();
             block.getWorld().dropItemNaturally(location, new ItemStack(Material.APPLE));
@@ -167,6 +167,7 @@ public class BlockListener implements Listener {
 			block.getState().update();
 			block.getWorld().dropItemNaturally(location, new ItemStack(Material.IRON_INGOT, 2));
 			block.getWorld().spawn(location, ExperienceOrb.class).setExperience(3);
+			event.setExpToDrop(3);
 		}
         else if (block.getType() == Material.DIAMOND_ORE) {
 			block.setType(Material.AIR);
@@ -209,9 +210,14 @@ public class BlockListener implements Listener {
             block.getState().update();
             block.getWorld().dropItemNaturally(location, new ItemStack(Material.STICK, 2));
         }
+        else if (block.getType() == Material.QUARTZ_BLOCK){
+			event.setExpToDrop(20);
+			event.getBlock().breakNaturally(new ItemStack(Material.DIAMOND_PICKAXE));
+			event.setCancelled(true);
+		}
         else if (block.getType() == Material.LOG || block.getType() == Material.LOG_2) {
-			Location locc = e.getBlock().getLocation();
-			final World world = locc.getWorld();
+			Location blockLocation = event.getBlock().getLocation();
+			final World world = blockLocation.getWorld();
             final int x = location.getBlockX();
             final int y = location.getBlockY();
             final int z = location.getBlockZ();
@@ -229,7 +235,7 @@ public class BlockListener implements Listener {
                     }
                 }
             });
-            breakTree(e.getBlock(), e.getPlayer());
+            breakTree(event.getBlock(), event.getPlayer());
         }
     }
 

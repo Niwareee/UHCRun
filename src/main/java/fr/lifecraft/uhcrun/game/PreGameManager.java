@@ -3,8 +3,7 @@ package fr.lifecraft.uhcrun.game;
 import fr.lifecraft.uhcrun.Main;
 import fr.lifecraft.uhcrun.listeners.BlockListener;
 import fr.lifecraft.uhcrun.listeners.DeathListener;
-import fr.lifecraft.uhcrun.listeners.RunListener;
-import fr.lifecraft.uhcrun.listeners.StackListener;
+import fr.lifecraft.uhcrun.listeners.UHCRunListener;
 import fr.lifecraft.uhcrun.world.WorldManager;
 import fr.lifecraft.uhcrun.utils.ActionBar;
 import fr.lifecraft.uhcrun.utils.Scatter;
@@ -35,7 +34,6 @@ public class PreGameManager {
 
     private int task;
 
-
     public PreGameManager() {
         this.main = Main.getInstance();
 
@@ -44,8 +42,8 @@ public class PreGameManager {
 
         this.worldManager = main.getWorldManager();
 
-        main.getGame().setRunnable(true);
-        game.setStart(true);
+        game.setRunnable(true);
+        State.setState(State.STARTING);
 
         Bukkit.getOnlinePlayers().forEach(all -> {
             all.playSound(all.getLocation(), Sound.ORB_PICKUP, 1, 4);
@@ -53,24 +51,32 @@ public class PreGameManager {
         });
 
         Bukkit.broadcastMessage(" ");
-        Bukkit.broadcastMessage("§dUHCRun §7» §aLa partie va démarrer dans §6" + game.getTimer() + " §asecondes.");
+        Bukkit.broadcastMessage("§dUHCRun §7» §aLa partie va démarrer dans §6" + game.getCountdownStart() + " §asecondes.");
         Bukkit.broadcastMessage(" ");
 
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(main, () -> {
+
             if (!game.getRunnable()) {
                 return;
             }
 
-            int timer = game.getTimer();
-            game.setTimer(game.getTimer() - 1);
+            game.removeCountdownStart();
+            int countdown = game.getCountdownStart();
 
-            if (timer == 0) {
-                if (!(Bukkit.getOnlinePlayers().size() >= game.getAutoStart()) && !game.isForcestart()) {
+            System.out.print("Task: " + task);
+            System.out.print("Countdown: " + countdown);
+
+            if (countdown > 0) {
+                Bukkit.getOnlinePlayers().forEach(players -> players.setLevel(countdown));
+            }
+
+            if (countdown == 0) {
+                if (!(Bukkit.getOnlinePlayers().size() >= game.getAutoStart()) && !game.isForceStart()) {
                     Bukkit.broadcastMessage("§dUHCRun §7» §cIl n'y a pas assez de joueurs pour démarrer.");
 
                     Bukkit.getScheduler().cancelTask(task);
-                    game.setTimer(game.getAutoStartTime());
-                    game.setStart(false);
+                    game.resetCountdownStart();
+                    State.setState(State.WAITING);
                     return;
                 }
 
@@ -78,7 +84,6 @@ public class PreGameManager {
                 MinecraftServer.getServer().setMotd("§cEn cours");
                 Bukkit.setWhitelist(false);
                 game.setRunnable(false);
-                game.setTimer(0);
 
                 World world = game.getWorld();
                 world.getWorldBorder().setSize(game.getSize() * 2);
@@ -94,15 +99,15 @@ public class PreGameManager {
 
             }
 
-            if (timer == -7) {
+            if (countdown == -7) {
                 worldManager.clearAllCustomEntities();
             }
 
-            if (timer < -8 && timer > -12) {
-                new ActionBar("§7≫ §eDémarrage dans §f" + (timer + 12) + "s§e.").sendToAll();
+            if (countdown < -8 && countdown > -12) {
+                new ActionBar("§7≫ §eDémarrage dans §f" + (countdown + 12) + "s§e.").sendToAll();
             }
 
-            if (timer == -12) {
+            if (countdown == -12) {
                 new ActionBar("§7≫ §eQue le meilleur gagne !").sendToAll();
 
                 Bukkit.getScheduler().cancelTask(task);
@@ -110,44 +115,37 @@ public class PreGameManager {
 
                 worldManager.registerObjectives();
 
-                System.out.print("TEST");
                 game.getStayLocs().clear();
                 game.getBlocks().forEach(block -> block.setType(Material.AIR));
                 game.getBlocks().clear();
 
-                for (UUID uuid : game.getAlivePlayers()) {
+                Bukkit.getOnlinePlayers().forEach(players -> {
 
-                    Player player = Bukkit.getPlayer(uuid);
-                    if (player == null) continue;
+                    players.playSound(players.getLocation(), Sound.EXPLODE, 5F, 5F);
+                    players.getActivePotionEffects().clear();
 
-                    player.playSound(player.getLocation(), Sound.EXPLODE, 5F, 5F);
-                    player.getActivePotionEffects().clear();
-                    player.teleport(player.getLocation().clone().add(0, 2, 0));
+                    players.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 3, 1, false, false));
+                    players.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 999999, 0, false, false));
+                    players.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 999999, 0, false, false));
 
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 3, 1, false, false));
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 999999, 0, false, false));
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 999999, 0, false, false));
+                    players.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, 24));
 
-                    player.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, 24));
+                    players.setWalkSpeed(0.3f);
 
-                    player.setWalkSpeed(0.3f);
-
-                    player.setGameMode(GameMode.SURVIVAL);
-                }
+                    players.setGameMode(GameMode.SURVIVAL);
+                });
 
                 Bukkit.broadcastMessage("§7§m+---------------------------------------+");
-                Bukkit.broadcastMessage(" §7» §aLes alliances entre joueurs sont §cinterdites§7.");
-                Bukkit.broadcastMessage(" §7» §aVous êtes invincible pendant §e30 §asecondes.");
+                Bukkit.broadcastMessage("  §7» §aLes alliances entre joueurs sont §cinterdites§7.");
+                Bukkit.broadcastMessage("  §7» §aVous êtes invincible pendant §e30 §asecondes.");
                 Bukkit.broadcastMessage("§7§m+---------------------------------------+");
 
                 PluginManager pluginManager = Bukkit.getPluginManager();
-                pluginManager.registerEvents(new RunListener(), main);
+                pluginManager.registerEvents(new UHCRunListener(), main);
                 pluginManager.registerEvents(new BlockListener(main), main);
                 pluginManager.registerEvents(new DeathListener(main), main);
-                pluginManager.registerEvents(new StackListener(3), main);
 
                 Bukkit.getScheduler().runTaskLater(main, () -> {
-
                     List<Block> blocks = new ArrayList<>();
 
                     for (int x = -30; x < 30; x++) {
@@ -172,7 +170,7 @@ public class PreGameManager {
 
                 Bukkit.getScheduler().runTaskLaterAsynchronously(main, () -> {
                     game.setInvincibility(false);
-                    Bukkit.broadcastMessage("§dUHCRun §7» §aVous êtes désormais vulnérables aux §9dégâts§e.");
+                    Bukkit.broadcastMessage("§dUHCRun §7» §aVous êtes désormais vulnérables aux §bdégâts§a.");
                 }, 20 * 30);
             }
         }, 0, 20);

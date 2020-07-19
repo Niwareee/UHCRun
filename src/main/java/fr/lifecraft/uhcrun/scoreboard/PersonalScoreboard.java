@@ -40,10 +40,10 @@ public class PersonalScoreboard {
         WorldManager worldManager = main.getWorldManager();
         worldManager.updateHealth(player);
 
-        if (State.isState(State.WAITING)) {
+        if (State.isInWait()) {
             objectiveSign.setLine(0, "§7");
             objectiveSign.setLine(1, " §c» §7Joueurs: §e" + Bukkit.getOnlinePlayers().size() + "/" + game.getSlot());
-            objectiveSign.setLine(2, " §c» §7Démarrage: §b" + game.getTimer() + "s");
+            objectiveSign.setLine(2, " §c» §7Démarrage: §b" + game.getCountdownStart() + "s");
             objectiveSign.setLine(3, "§6");
             objectiveSign.setLine(4, ip);
             

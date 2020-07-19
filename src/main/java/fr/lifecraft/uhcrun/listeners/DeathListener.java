@@ -37,7 +37,6 @@ public class DeathListener implements Listener {
 
     @EventHandler
     public void onDeathEvent(PlayerDeathEvent event) {
-
         Player player = event.getEntity();
 
         // MODIFICATIONS SUR LE JOUEUR

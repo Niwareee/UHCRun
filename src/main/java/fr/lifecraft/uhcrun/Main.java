@@ -10,7 +10,6 @@ import fr.lifecraft.uhcrun.structure.StructureLoader;
 import fr.lifecraft.uhcrun.utils.Title;
 import fr.lifecraft.uhcrun.world.BiomesPatcher;
 import fr.lifecraft.uhcrun.world.WorldManager;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import fr.lifecraft.uhcrun.game.Game;
@@ -31,7 +30,6 @@ public class Main extends JavaPlugin {
     private ScheduledExecutorService executorMonoThread;
     private ScheduledExecutorService scheduledExecutorService;
 
-    private PropertiesManager propertiesManager;
     private WorldManager worldManager;
     private WinManager winManager;
     private RankManager rankManager;
@@ -57,11 +55,11 @@ public class Main extends JavaPlugin {
 
         this.getServer().getPluginManager().registerEvents(new WorldListener(), this);
 
-        Bukkit.getScheduler().runTaskLater(this, () -> {
+        getServer().getScheduler().runTaskLater(this, () -> {
             this.sqlManager = new SQLManager(this);
             this.game = new Game(this);
+            PropertiesManager.enablePatch();
             this.structureLoader = new StructureLoader(this);
-            this.propertiesManager = new PropertiesManager(this);
             this.playerManager = new PlayerManager(this);
             this.worldManager = new WorldManager(this);
             this.winManager = new WinManager(this);
@@ -131,11 +129,11 @@ public class Main extends JavaPlugin {
         return structureLoader;
     }
 
-    public void log(String message) {
-        getServer().getConsoleSender().sendMessage("[" + getName() + "] " + message);
-    }
-
     public Title getTitle() {
         return title;
+    }
+
+    public void log(String message) {
+        getServer().getConsoleSender().sendMessage("[" + getName() + "] " + message);
     }
 }

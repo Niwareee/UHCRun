@@ -14,41 +14,33 @@ import java.util.Map;
 
 public class PropertiesManager {
 
-    private final Main main;
+    public static void enablePatch() {
 
-    public PropertiesManager(Main main) {
-        this.main = main;
+        Main main = Main.getInstance();
 
-        enableSlotPatch();
+        // PATCH SLOT
 
-        try {
-            patchPotions();
-
-        } catch (ReflectiveOperationException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void enableSlotPatch() {
         try {
             new SlotPatcher().changeSlots(main.getGame().getSlot());
         } catch (ReflectiveOperationException e) {
             e.printStackTrace();
         }
         new SlotPatcher().updateServerProperties();
-    }
 
-    public void patchPotions() throws ReflectiveOperationException {
-        Reflection.setFinalStatic(PotionEffectType.class.getDeclaredField("acceptingNew"), true);
+        // PATCH POTIONS
 
-        Field byIdField = Reflection.getField(PotionEffectType.class, true, "byId");
-        Field byNameField = Reflection.getField(PotionEffectType.class, true, "byName");
-        ((Map<?, ?>) byNameField.get(null)).remove("increase_damage");
-        ((PotionEffectType[]) byIdField.get(null))[5] = null;
-        main.log("§6Patching Strength Potion (130% => 43.3%, 260% => 86.6%)");
-        Reflection.setFinalStatic(MobEffectList.class.getDeclaredField("INCREASE_DAMAGE"),
-                (new PotionAttackDamageNerf(5, new MinecraftKey("strength"), false, 9643043)).c("potion.damageBoost")
-                        .a(GenericAttributes.ATTACK_DAMAGE, "648D7064-6A60-4F59-8ABE-C2C23A6DD7A9", 2.5D, 2));
-        main.log("§6Potions patched !");
+        try {
+            Reflection.setFinalStatic(PotionEffectType.class.getDeclaredField("acceptingNew"), true);
+
+            Field byIdField = Reflection.getField(PotionEffectType.class, true, "byId");
+            Field byNameField = Reflection.getField(PotionEffectType.class, true, "byName");
+            ((Map<?, ?>) byNameField.get(null)).remove("increase_damage");
+            ((PotionEffectType[]) byIdField.get(null))[5] = null;
+            main.log("§6Patching Strength Potion (130% => 43.3%, 260% => 86.6%)");
+            Reflection.setFinalStatic(MobEffectList.class.getDeclaredField("INCREASE_DAMAGE"), (new PotionAttackDamageNerf(5, new MinecraftKey("strength"), false, 9643043)).c("potion.damageBoost").a(GenericAttributes.ATTACK_DAMAGE, "648D7064-6A60-4F59-8ABE-C2C23A6DD7A9", 2.5D, 2));
+            main.log("§6Potions patched !");
+        } catch (ReflectiveOperationException e) {
+            e.printStackTrace();
+        }
     }
 }

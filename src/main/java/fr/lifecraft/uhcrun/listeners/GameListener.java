@@ -5,12 +5,10 @@ import fr.lifecraft.uhcrun.game.Game;
 import fr.lifecraft.uhcrun.utils.ItemBuilder;
 import fr.lifecraft.uhcrun.utils.State;
 import org.bukkit.*;
-import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.*;
@@ -26,7 +24,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public class GameListener implements Listener {
 
@@ -101,7 +98,7 @@ public class GameListener implements Listener {
 
     @EventHandler
     public void onDrop(PlayerDropItemEvent e) {
-        if (State.isState(State.WAITING)) {
+        if (State.isInWait()) {
             e.setCancelled(true);
         }
     }
@@ -118,7 +115,7 @@ public class GameListener implements Listener {
         }
     }
 
-    @EventHandler
+   /* @EventHandler
 	public void appleRate(LeavesDecayEvent event) {
 		Block block = event.getBlock();
 		if (block.getType() == Material.LEAVES) {
@@ -131,7 +128,7 @@ public class GameListener implements Listener {
 				block.getWorld().dropItemNaturally(loc, new ItemStack(Material.APPLE, 1));
 			}
 		}
-    }
+    }*/
    
     @EventHandler
     public void onPortal(PlayerPortalEvent e) {

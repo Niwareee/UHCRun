@@ -32,12 +32,10 @@ public class Scatter extends BukkitRunnable {
         this.isStart = start;
 
         this.game = Main.getInstance().getGame();
-        System.out.print("Scatter");
     }
 
     public void run() {
 
-        System.out.print("DD");
         if (this.isAdd) {
             this.players.addAll(Bukkit.getOnlinePlayers());
             this.isAdd = false;

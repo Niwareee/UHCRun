@@ -73,7 +73,6 @@ public class WorldManager {
     }
 
     public Map<String, Integer> getTop10() {
-        Scoreboard scoreboard = Main.getInstance().getServer().getScoreboardManager().getMainScoreboard();
         Objective objective = scoreboard.getObjective("pkills");
 
         Map<String, Integer> stats = new HashMap<>();
@@ -86,7 +85,7 @@ public class WorldManager {
     }
 
     public void updateHealth(Player player) {
-        Objective showhealth = Bukkit.getScoreboardManager().getMainScoreboard().getObjective("showhealth");
+        Objective showhealth = scoreboard.getObjective("showhealth");
         if (showhealth == null) return;
 
         double newPHealth = player.getHealth();

@@ -9,16 +9,14 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.inventory.*;
-import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.EnchantingInventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
-public class RunListener implements Listener {
+public class UHCRunListener implements Listener {
 
     private final ItemStack lapis;
 
-    public RunListener() {
+    public UHCRunListener() {
         this.lapis = new ItemStack(Material.INK_SACK, 3, (short) 4);
     }
 
@@ -73,9 +71,9 @@ public class RunListener implements Listener {
     public void onCraftItem(CraftItemEvent e) {
         Player player = (Player) e.getWhoClicked();
 
-        Material itemType = e.getRecipe().getResult().getType();
+        ItemStack result = e.getRecipe().getResult();
 
-        if (itemType == Material.GOLDEN_APPLE && e.getRecipe().getResult().getDurability() == 1) {
+        if (result.getType() == Material.GOLDEN_APPLE && result.getDurability() == 1) {
             e.setCancelled(true);
             player.sendMessage("§cErreur: Ce craft est désactivé.");
         }
@@ -84,7 +82,7 @@ public class RunListener implements Listener {
 
     @EventHandler
     public void onPrepareItemCraft(PrepareItemCraftEvent e) {
-        if (e.getInventory() != null && e.getInventory() != null) {
+        if (e.getInventory() != null) {
             Material itemType = e.getInventory().getResult().getType();
             if (itemType.name().contains("AXE") || itemType.name().contains("PICKAXE") || itemType.name().contains("SPADE") || itemType.name().contains("HOE"))
                 e.getInventory().setResult(new ItemBuilder(itemType).addEnchant(Enchantment.DIG_SPEED, 3).addEnchant(Enchantment.DURABILITY, 3).toItemStack());

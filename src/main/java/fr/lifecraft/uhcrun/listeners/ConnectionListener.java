@@ -47,13 +47,13 @@ public class ConnectionListener implements Listener {
         new UHCPlayer(player.getUniqueId(), 0, rank);
         playerManager.onJoin(player);
 
-        if (State.isState(State.WAITING)) {
+        if (State.isInWait()) {
             playerManager.setJoinInventory(player);
 
-            new ActionBar("§a+ " + rank.getPrefix() + player.getName() + " §7a rejoint. §6(" + Bukkit.getOnlinePlayers().size() + "/" + Bukkit.getMaxPlayers() + ")").sendToAll();
+            new ActionBar("§a+ " + rank.getPrefix() + player.getName() + " §7a rejoint. §6(" + Bukkit.getOnlinePlayers().size() + "/" + game.getSlot() + ")").sendToAll();
             game.getAlivePlayers().add(player.getUniqueId());
 
-            if (Bukkit.getOnlinePlayers().size() >= game.getAutoStart() && !game.isStarting()) {
+            if (Bukkit.getOnlinePlayers().size() >= game.getAutoStart() && State.isState(State.WAITING)) {
                 new PreGameManager();
             }
 
@@ -82,7 +82,7 @@ public class ConnectionListener implements Listener {
 
         playerManager.onQuit(player);
 
-        if (State.isState(State.WAITING)) {
+        if (State.isInWait()) {
             game.getAlivePlayers().remove(player.getUniqueId());
 
             new ActionBar("§c- §e" + player.getName() + " §7a quitté la partie. §6(" + (Bukkit.getOnlinePlayers().size() - 1) + "/" + game.getSlot() + ")").sendToAll();
@@ -110,8 +110,8 @@ public class ConnectionListener implements Listener {
 
     @EventHandler
     public void onLogin(PlayerLoginEvent e) {
-        Player player = e.getPlayer();
-        if (State.isState(State.WAITING)) {
+        if (State.isInWait()) {
+            Player player = e.getPlayer();
             if (Bukkit.getOnlinePlayers().size() >= game.getSlot() && !player.isOp()) {
                 e.disallow(PlayerLoginEvent.Result.KICK_FULL, "§cLe serveur est plein.");
             }

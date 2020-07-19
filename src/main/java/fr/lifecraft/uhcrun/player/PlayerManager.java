@@ -1,16 +1,12 @@
 package fr.lifecraft.uhcrun.player;
 
+import fr.lifecraft.uhcrun.Main;
 import fr.lifecraft.uhcrun.game.Game;
-import fr.lifecraft.uhcrun.player.UHCPlayer;
-import fr.lifecraft.uhcrun.rank.Rank;
 import fr.lifecraft.uhcrun.scoreboard.ScoreboardManager;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
-
-import fr.lifecraft.uhcrun.Main;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
@@ -25,7 +21,6 @@ public class PlayerManager {
 
     private final Main main;
     private final Game game;
-    private final World world;
 
     private final ScoreboardManager scoreboardManager;
     private final Scoreboard scoreboard;
@@ -38,7 +33,6 @@ public class PlayerManager {
 
         this.scoreboardManager = main.getScoreboardManager();
         this.scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-        this.world = game.getWorld();
 
         this.players = new HashMap<>();
     }
@@ -61,8 +55,9 @@ public class PlayerManager {
 
     public void setJoinInventory(Player player) {
         setPlayInventory(player);
-        
-		player.teleport(game.getSpawn());
+
+        player.teleport(game.getSpawn());
+        player.setLevel(game.getCountdownStart());
         player.setGameMode(GameMode.ADVENTURE);
     }
 
@@ -78,11 +73,14 @@ public class PlayerManager {
         player.setLevel(0);
         player.setFireTicks(0);
     }
-    
+
     public void setSpec(Player player) {
-        player.setGameMode(GameMode.SPECTATOR);
-        player.teleport(new Location(world, 0, world.getHighestBlockYAt(0, 0), 0));
-    	setPlayInventory(player);
+        if (player != null) {
+            System.out.print("spectator");
+            player.setGameMode(GameMode.SPECTATOR);
+            player.teleport(new Location(player.getWorld(), 0, player.getWorld().getHighestBlockYAt(0, 0), 0));
+            setPlayInventory(player);
+        }
     }
 
     public void onJoin(Player player) {

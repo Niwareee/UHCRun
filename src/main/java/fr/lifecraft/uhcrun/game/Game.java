@@ -15,42 +15,44 @@ public class Game {
 	// PREGAME
     private boolean start = false;
 
-    // IMAGE
+    //
+
     private World world;
-    private List<UUID> alivePlayers;
-	private List<UUID> decoPlayers;
+    private final List<UUID> alivePlayers;
+	private final List<UUID> decoPlayers;
     
     // CONFIGURATION
 
-    private int pvp = 20;
-    private int border = 20;
-    private int bordermovetime = 10;
-    private int timer = 30;
+    private int pvpTime = 20;
+    private int borderTime = 20;
+    private int borderMoveTime = 10;
+	private int countdownStart;
+    private int timer = 0;
 
-    private int tpborder = 300;
-    private int finalborder = 50;
+    private int tpBorder = 300;
+    private int finalBorder = 50;
     
-    private int featherrate = 1;
-    private int stringrate = 1;
+    private int featherRate = 1;
+    private int stringRate = 1;
     
     private boolean invincibility = true;
     private boolean isBorder = true;
     
-    private boolean forcestart = false;
+    private boolean forceStart = false;
     
     private Location spawn;
 
 	private int slot;
-	private int autoStart;
-	private int autoStartTime;
+	private final int autoStart;
+	private final int autoStartTime;
 	private boolean runnable;
 
-	private int size;
-	private int sizeNether;
-	private int preLoad;
-	private int preLoadNether;
+	private final int size;
+	private final int sizeNether;
+	private final int preLoad;
+	private final int preLoadNether;
 
-	// PRELOAD
+	// PRELOAD BLOCS
 
 	private final List<Block> blocks;
 	private final Map<UUID, Location> stayLocs;
@@ -69,6 +71,7 @@ public class Game {
 		this.slot = config.getInt("game.slot");
 		this.autoStart = config.getInt("game.autostart");
 		this.autoStartTime = config.getInt("game.autostarttime");
+		this.countdownStart = autoStartTime;
 
 		this.alivePlayers = new ArrayList<>();
 		this.decoPlayers = new ArrayList<>();
@@ -92,24 +95,20 @@ public class Game {
 		return alivePlayers;
 	}
 
-	public int getBorder() {
-		return border;
-	}
-
 	public int getPvPTime() {
-		return pvp;
+		return pvpTime;
 	}
 	
 	public int getBorderTime() {
-		return border;
+		return borderTime;
 	}
 	
 	public int getFeatherRate() {
-		return featherrate;
+		return featherRate;
 	}
 	
 	public int getStringRate() {
-		return stringrate;
+		return stringRate;
 	}
 
 	public boolean isInvincibility() {
@@ -128,6 +127,22 @@ public class Game {
 		this.isBorder = isBorder;
 	}
 
+	public int getCountdownStart() {
+		return countdownStart;
+	}
+
+	public void setCountdownStart(int countdownStart) {
+		this.countdownStart = countdownStart;
+	}
+
+	public void removeCountdownStart() {
+		this.countdownStart--;
+	}
+
+	public void resetCountdownStart() {
+		this.countdownStart = autoStartTime;
+	}
+
 	public int getTimer() {
 		return timer;
 	}
@@ -136,27 +151,27 @@ public class Game {
 		this.timer = timer;
 	}
 
+	public void addTimer() {
+		this.timer++;
+	}
+
 	public int getFinalBorderSize() {
-		return finalborder;
+		return finalBorder;
 	}
 
 	public int getBorderMoveTime() {
-		return bordermovetime;
+		return borderMoveTime;
 	}
 
 	public int getSize() {
 		return size;
 	}
 
-	public void setSize(int size) {
-		this.size = size;
-	}
-	
 	public boolean isStarting() {
 		return start;
 	}
 	
-	public void setStart(boolean start) {
+	public void setStarting(boolean start) {
 		this.start = start;
 	}
 
@@ -170,19 +185,19 @@ public class Game {
 	}
 
 	public int getTPBorder() {
-		return tpborder;
+		return tpBorder;
 	}
 
-	public void setTPBorder(int tpborder) {
-		this.tpborder = tpborder;
+	public void setTPBorder(int tpBorder) {
+		this.tpBorder = tpBorder;
 	}
 
-	public boolean isForcestart() {
-		return forcestart;
+	public boolean isForceStart() {
+		return forceStart;
 	}
 
-	public void setForcestart(boolean forcestart) {
-		this.forcestart = forcestart;
+	public void setForceStart(boolean forceStart) {
+		this.forceStart = forceStart;
 	}
 
 	public int getSlot() {
@@ -192,7 +207,6 @@ public class Game {
 	public void setSlot(int slot) {
 		this.slot = slot;
 	}
-
 
 	public int getAutoStart() {
 		return autoStart;
@@ -206,8 +220,8 @@ public class Game {
 		return decoPlayers;
 	}
 
-    public void setRunnable(boolean b) {
-    	this.runnable = b;
+    public void setRunnable(boolean runnable) {
+    	this.runnable = runnable;
     }
 
     public boolean getRunnable() {
