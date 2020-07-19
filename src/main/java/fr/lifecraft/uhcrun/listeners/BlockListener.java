@@ -43,7 +43,7 @@ public class BlockListener implements Listener {
         final double r = random.nextDouble();
 
 		if (entity.getType() == EntityType.CHICKEN) {
-			dropItems = event.getDrops();
+			List<ItemStack> dropItems = new ArrayList<>(event.getDrops());
 			for (ItemStack drops : dropItems) {
 				if (drops.getType() == Material.RAW_CHICKEN) {
 					drops.setType(Material.COOKED_CHICKEN);
@@ -54,7 +54,7 @@ public class BlockListener implements Listener {
 			}
 		}
 		else if (entity.getType() == EntityType.SHEEP) {
-			dropItems = event.getDrops();
+			List<ItemStack> dropItems = new ArrayList<>(event.getDrops());
 			for (ItemStack drops : dropItems) {
 				if (drops.getType() == Material.MUTTON) {
 					drops.setType(Material.COOKED_MUTTON);
@@ -65,7 +65,7 @@ public class BlockListener implements Listener {
 			}
 		}
 		else if (entity.getType() == EntityType.RABBIT) {
-			dropItems = event.getDrops();
+			List<ItemStack> dropItems = new ArrayList<>(event.getDrops());
 			for (ItemStack drops : dropItems) {
 				if (drops.getType() == Material.RABBIT) {
 					drops.setType(Material.COOKED_RABBIT);
@@ -79,7 +79,7 @@ public class BlockListener implements Listener {
 			}
 		}
 		else if (entity.getType() == EntityType.PIG) {
-			dropItems = event.getDrops();
+			List<ItemStack> dropItems = new ArrayList<>(event.getDrops());
 			for (ItemStack drops : dropItems) {
 				if (drops.getType() == Material.PORK) {
 					drops.setType(Material.GRILLED_PORK);
@@ -90,7 +90,7 @@ public class BlockListener implements Listener {
 			}
 		}
 		else if (entity.getType() == EntityType.ZOMBIE) {
-			dropItems = event.getDrops();
+			List<ItemStack> dropItems = new ArrayList<>(event.getDrops());
 			for (ItemStack drops : dropItems) {
 				if (drops.getType() == Material.ROTTEN_FLESH) {
 					drops.setType(Material.COOKED_BEEF);
@@ -100,7 +100,7 @@ public class BlockListener implements Listener {
 			
 		}
 		else if (entity.getType() == EntityType.HORSE) {
-			dropItems = event.getDrops();
+			List<ItemStack> dropItems = new ArrayList<>(event.getDrops());
 			for (ItemStack drops : dropItems) {
 				if (drops.getType() == Material.LEATHER) {
 					drops.setType(Material.BOOK);
@@ -109,7 +109,7 @@ public class BlockListener implements Listener {
 			
 		}
 		else if (entity.getType() == EntityType.COW || entity.getType() == EntityType.MUSHROOM_COW) {
-			dropItems = event.getDrops();
+			List<ItemStack> dropItems = new ArrayList<>(event.getDrops());
 			for (ItemStack drops : dropItems) {
 				if (drops.getType() == Material.RAW_BEEF) {
 					drops.setType(Material.COOKED_BEEF);
@@ -123,7 +123,7 @@ public class BlockListener implements Listener {
 			event.getDrops().add(new ItemStack(Material.GOLD_INGOT, 1));
 		}
 		else if (entity.getType() == EntityType.SQUID) {
-			dropItems = event.getDrops();
+			List<ItemStack> dropItems = new ArrayList<>(event.getDrops());
 			for (ItemStack drops : dropItems) {
 				if (drops.getType() == Material.INK_SACK) {
 					drops.setType(Material.COOKED_FISH);
@@ -195,6 +195,9 @@ public class BlockListener implements Listener {
             block.getState().update();
             block.getWorld().dropItemNaturally(location, new ItemStack(Material.GLASS, 2));
         }
+		else if (block.getType() == Material.OBSIDIAN) {
+			block.getWorld().dropItemNaturally(location, new ItemStack(Material.OBSIDIAN, 1));
+		}
         else if (block.getType() == Material.CACTUS) {
             block.setType(Material.AIR);
             block.getState().update();
@@ -210,11 +213,6 @@ public class BlockListener implements Listener {
             block.getState().update();
             block.getWorld().dropItemNaturally(location, new ItemStack(Material.STICK, 2));
         }
-        else if (block.getType() == Material.QUARTZ_ORE){
-			event.setExpToDrop(20);
-			event.getBlock().breakNaturally(new ItemStack(Material.DIAMOND_PICKAXE));
-			event.setCancelled(true);
-		}
         else if (block.getType() == Material.LOG || block.getType() == Material.LOG_2) {
 			Location blockLocation = event.getBlock().getLocation();
 			final World world = blockLocation.getWorld();

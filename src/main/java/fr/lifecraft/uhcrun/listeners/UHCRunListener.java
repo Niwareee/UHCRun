@@ -21,43 +21,43 @@ public class UHCRunListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onInventoryOpen(InventoryOpenEvent e) {
+    public void onInventoryOpen(InventoryOpenEvent event) {
 
-        if (!(e.getInventory() instanceof EnchantingInventory)) {
+        if (!(event.getInventory() instanceof EnchantingInventory)) {
             return;
         }
-        ((EnchantingInventory) e.getInventory()).setSecondary(this.lapis);
+        ((EnchantingInventory) event.getInventory()).setSecondary(this.lapis);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onInventoryClick(InventoryClickEvent e) {
+    public void onInventoryClick(InventoryClickEvent event) {
 
-        if (!(e.getInventory() instanceof EnchantingInventory)) {
+        if (!(event.getInventory() instanceof EnchantingInventory)) {
             return;
         }
-        if ((e.getCurrentItem() != null) && (e.getCurrentItem().getType() != Material.INK_SACK)
-                && (e.getCurrentItem().getDurability() != 4)) {
+        if ((event.getCurrentItem() != null) && (event.getCurrentItem().getType() != Material.INK_SACK)
+                && (event.getCurrentItem().getDurability() != 4)) {
             return;
         }
-        e.setCancelled(true);
+        event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onInventoryClose(InventoryCloseEvent e) {
+    public void onInventoryClose(InventoryCloseEvent event) {
 
-        if (!(e.getInventory() instanceof EnchantingInventory)) {
+        if (!(event.getInventory() instanceof EnchantingInventory)) {
             return;
         }
-        ((EnchantingInventory) e.getInventory()).setSecondary(null);
+        ((EnchantingInventory) event.getInventory()).setSecondary(null);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onEnchantItem(EnchantItemEvent e) {
+    public void onEnchantItem(EnchantItemEvent event) {
 
-        if (!(e.getInventory() instanceof EnchantingInventory)) {
+        if (!(event.getInventory() instanceof EnchantingInventory)) {
             return;
         }
-        ((EnchantingInventory) e.getInventory()).setSecondary(this.lapis);
+        ((EnchantingInventory) event.getInventory()).setSecondary(this.lapis);
     }
 
     @EventHandler
@@ -68,24 +68,24 @@ public class UHCRunListener implements Listener {
     }
 
     @EventHandler
-    public void onCraftItem(CraftItemEvent e) {
-        Player player = (Player) e.getWhoClicked();
+    public void onCraftItem(CraftItemEvent event) {
+        Player player = (Player) event.getWhoClicked();
 
-        ItemStack result = e.getRecipe().getResult();
+        ItemStack result = event.getRecipe().getResult();
 
         if (result.getType() == Material.GOLDEN_APPLE && result.getDurability() == 1) {
-            e.setCancelled(true);
+            event.setCancelled(true);
             player.sendMessage("§cErreur: Ce craft est désactivé.");
         }
 
     }
 
     @EventHandler
-    public void onPrepareItemCraft(PrepareItemCraftEvent e) {
-        if (e.getInventory() != null) {
-            Material itemType = e.getInventory().getResult().getType();
+    public void onPrepareItemCraft(PrepareItemCraftEvent event) {
+        if (event.getInventory() != null) {
+            Material itemType = event.getInventory().getResult().getType();
             if (itemType.name().contains("AXE") || itemType.name().contains("PICKAXE") || itemType.name().contains("SPADE") || itemType.name().contains("HOE"))
-                e.getInventory().setResult(new ItemBuilder(itemType).addEnchant(Enchantment.DIG_SPEED, 3).addEnchant(Enchantment.DURABILITY, 3).toItemStack());
+                event.getInventory().setResult(new ItemBuilder(itemType).addEnchant(Enchantment.DIG_SPEED, 3).addEnchant(Enchantment.DURABILITY, 3).toItemStack());
         }
     }
 }

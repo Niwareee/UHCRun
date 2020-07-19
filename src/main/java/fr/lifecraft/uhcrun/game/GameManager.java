@@ -24,12 +24,13 @@ public class GameManager {
         this.game = main.getGame();
 
         Bukkit.getScheduler().runTaskTimer(main, () -> {
-            System.out.print("test");
             if (State.isInGame()) {
                 game.addTimer();
+
+                main.getGame().removePvPTime();
                 int pvpTime = game.getPvPTime();
                 
-                if (pvpTime == 60 || pvpTime == 10 || pvpTime == 5 || pvpTime == 4 || pvpTime == 3 || pvpTime == 2 || pvpTime == 1) {
+                if (pvpTime == 60 || pvpTime == 30 || pvpTime == 10 || pvpTime == 5 || pvpTime == 4 || pvpTime == 3 || pvpTime == 2 || pvpTime == 1) {
                     Bukkit.broadcastMessage("§dUHCRun §7» §eTéléportation dans §f" + pvpTime + " §e" + (pvpTime != 1 ? "secondes" : "seconde") + ".");
                 }
 

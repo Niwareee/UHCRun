@@ -72,7 +72,7 @@ public class Scatter extends BukkitRunnable {
 
     private Location randomLocation() {
         Random random = new Random();
-        int sizeTP = (this.isStart ? game.getTPBorder() * 2 - 10 : (int) (game.getWorld().getWorldBorder().getSize() - 10) / 2);
+        int sizeTP = (this.isStart ? game.getSizeMap() * 2 - 10 : game.getTPBorder() * 2 - 10);
         int x = (random.nextInt(2) == 0 ? +1 : -1) * random.nextInt(sizeTP);
         int z = (random.nextInt(2) == 0 ? +1 : -1) * random.nextInt(sizeTP);
         Location location = game.getWorld().getHighestBlockAt(x, z).getLocation();

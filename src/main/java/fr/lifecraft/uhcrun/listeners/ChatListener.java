@@ -20,23 +20,23 @@ public class ChatListener implements Listener {
 	}
 
 	@EventHandler
-	public void onChat(AsyncPlayerChatEvent e) {
-		Player player = e.getPlayer();
+	public void onChat(AsyncPlayerChatEvent event) {
+		Player player = event.getPlayer();
 
 		if (!State.isInGame()) {
 			Rank rank = playerManager.getPlayers().get(player.getUniqueId()).getRank();
 			if (rank.getPower() > 1) {
-				e.setFormat(rank.getPrefix() + "%1$s" + "§7: " + rank.getColor() + "%2$s");
+				event.setFormat(rank.getPrefix() + "%1$s" + "§7: " + rank.getColor() + "%2$s");
 			} else {
-				e.setFormat("§7" + "%1$s" + "§7: §7" + "%2$s");
+				event.setFormat("§7" + "%1$s" + "§7: §7" + "%2$s");
 			}
 		} else {
-			String message = e.getMessage();
+			String message = event.getMessage();
 			if (player.getGameMode() == GameMode.SPECTATOR) {
-				e.setCancelled(true);
+				event.setCancelled(true);
 				Bukkit.getOnlinePlayers().stream().filter(spec -> spec.getGameMode() == GameMode.SPECTATOR).forEach(spec -> spec.sendMessage("§f[Spec] §7" + player.getDisplayName() + " §f» §7" + message));
 			} else {
-				e.setFormat("§7[§c" + playerManager.getPlayers().get(player.getUniqueId()).getKills() + "§7] §e" + "%1$s" +  "§7: §f" + "%2$s");
+				event.setFormat("§7[§c" + playerManager.getPlayers().get(player.getUniqueId()).getKills() + "§7] §e" + "%1$s" +  "§7: §f" + "%2$s");
 			}
 		}
 	}

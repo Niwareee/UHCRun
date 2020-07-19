@@ -55,6 +55,7 @@ public class DeathListener implements Listener {
         event.setDeathMessage("§aUHC §8» §c" + player.getName() + " §7" + (player.getKiller() == null ? "est mort." : "a été tué par §a" + player.getKiller().getName() + "§7."));
 
         //scheduleSyncDelayedTask
+        System.out.print("test");
         Bukkit.getScheduler().scheduleSyncDelayedTask(main, winManager::checkWin, 10);
     }
 }

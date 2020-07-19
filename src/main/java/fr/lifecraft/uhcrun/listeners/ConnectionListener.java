@@ -3,6 +3,7 @@ package fr.lifecraft.uhcrun.listeners;
 import fr.lifecraft.uhcrun.Main;
 import fr.lifecraft.uhcrun.game.Game;
 import fr.lifecraft.uhcrun.game.PreGameManager;
+import fr.lifecraft.uhcrun.game.WinManager;
 import fr.lifecraft.uhcrun.player.PlayerManager;
 import fr.lifecraft.uhcrun.rank.RankManager;
 import fr.lifecraft.uhcrun.player.UHCPlayer;
@@ -25,11 +26,13 @@ public class ConnectionListener implements Listener {
     private final Game game;
     private final RankManager rankManager;
     private final PlayerManager playerManager;
+    private final WinManager winManager;
 
     public ConnectionListener(Main main) {
         this.game = main.getGame();
         this.rankManager = main.getRankManager();
         this.playerManager = main.getPlayerManager();
+        this.winManager = main.getWinManager();
     }
 
     @EventHandler
@@ -86,9 +89,10 @@ public class ConnectionListener implements Listener {
             game.getAlivePlayers().remove(player.getUniqueId());
 
             new ActionBar("§c- §e" + player.getName() + " §7a quitté la partie. §6(" + (Bukkit.getOnlinePlayers().size() - 1) + "/" + game.getSlot() + ")").sendToAll();
-
+            return;
         }
         if (State.isInGame()) {
+            winManager.checkWin();
             if (game.getAlivePlayers().contains(player.getUniqueId())) {
                 if (game.getTimer() < game.getBorderTime() * 60) {
                     game.getDecoPlayers().add(player.getUniqueId());

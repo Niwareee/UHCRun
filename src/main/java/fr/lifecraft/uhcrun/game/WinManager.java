@@ -21,7 +21,8 @@ public class WinManager {
     private final Game game;
     private final Title title;
 
-    private final Firework firework;
+    private int time = 0;
+    private int timeSecond = 0;
 
     public WinManager(Main main) {
         this.main = main;
@@ -30,23 +31,7 @@ public class WinManager {
         this.game = main.getGame();
         this.title = main.getTitle();
 
-        this.                    Firework f = (Firework) winner.getWorld().spawnEntity(winner.getLocation(), EntityType.FIREWORK);
-        f.detonate();
-        FireworkMeta fM = f.getFireworkMeta();
-        FireworkEffect effect = FireworkEffect.builder()
-                .flicker(true)
-                .withColor(Color.YELLOW)
-                .withFade(Color.ORANGE)
-                .with(FireworkEffect.Type.STAR)
-                .trail(true)
-                .build();
-
-        fM.setPower(2);
-        fM.addEffect(effect);
-        f.setFireworkMeta(fM);
     }
-
-    private static int time = 0;
 
     public void checkWin() {
         if (game.getAlivePlayers().size() <= 1) {
@@ -55,8 +40,6 @@ public class WinManager {
     }
 
     public void launchWin(UUID uuid) {
-
-        if (!State.isState(State.PVP)) return;
 
         Location winLocation = game.getSpawn();
         Player winner = Bukkit.getOfflinePlayer(uuid).getPlayer();
@@ -75,7 +58,7 @@ public class WinManager {
 
                 if (players.getUniqueId() == uuid)
                     players.playSound(players.getLocation(), Sound.WITHER_DEATH, 5.0F, 5.0F);
-                title.sendTitle(players, 10, 40, 10, players.getUniqueId() == id ? "§6Vous avez gagné" : "§6UHCRun", "§fVictoire de §a" + winner.getName());
+                title.sendTitle(players, 10, 40, 10, players.getUniqueId() == uuid ? "§6Vous avez gagné" : "§6UHCRun", "§fVictoire de §a" + winner.getName());
             }
 
             game.setInvincibility(true);
@@ -102,6 +85,7 @@ public class WinManager {
             Bukkit.broadcastMessage("§f§m+------§c§m---------------§f§m------+");
 
             launchWinFireworks(uuid);
+            launchStop();
 
         }, 10);
     }
@@ -134,10 +118,15 @@ public class WinManager {
     }
 
     public void launchStop() {
-        Bukkit.getScheduler().runTaskTimer(main, () -> {
+        Bukkit.getScheduler().runTaskTimerAsynchronously(main, () -> {
+            timeSecond++;
 
-        }, 0, 10);
-        Bukkit.getScheduler().runTaskTimerAsynchronously(main, () -> Bukkit.getOnlinePlayers().forEach(players -> playerManager.teleportServer(players, "uhchub")), 0L, 500L);
-        Bukkit.getScheduler().runTaskLaterAsynchronously(main, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "stop"), 27 * 20);
+            if(timeSecond == 25) Bukkit.getOnlinePlayers().forEach(players -> playerManager.teleportServer(players, "uhchub"));
+
+            if(timeSecond == 27) Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "stop");
+        }, 0, 20);
+
+        //Bukkit.getScheduler().runTaskTimerAsynchronously(main, () -> Bukkit.getOnlinePlayers().forEach(players -> playerManager.teleportServer(players, "uhchub")), 0L, 500L);
+        //Bukkit.getScheduler().runTaskLaterAsynchronously(main, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "stop"), 27 * 20);
     }
 }

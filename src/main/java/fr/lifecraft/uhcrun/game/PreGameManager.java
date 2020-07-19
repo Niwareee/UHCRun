@@ -4,15 +4,14 @@ import fr.lifecraft.uhcrun.Main;
 import fr.lifecraft.uhcrun.listeners.BlockListener;
 import fr.lifecraft.uhcrun.listeners.DeathListener;
 import fr.lifecraft.uhcrun.listeners.UHCRunListener;
-import fr.lifecraft.uhcrun.world.WorldManager;
 import fr.lifecraft.uhcrun.utils.ActionBar;
 import fr.lifecraft.uhcrun.utils.Scatter;
 import fr.lifecraft.uhcrun.utils.State;
 import fr.lifecraft.uhcrun.utils.Title;
+import fr.lifecraft.uhcrun.world.WorldManager;
 import net.minecraft.server.v1_8_R3.MinecraftServer;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.potion.PotionEffect;
@@ -21,7 +20,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class PreGameManager {
 
@@ -82,8 +80,7 @@ public class PreGameManager {
                 Bukkit.setWhitelist(false);
                 game.setRunnable(false);
 
-                World world = game.getWorld();
-                world.getWorldBorder().setSize(game.getSize() * 2);
+                game.getWorld().getWorldBorder().setSize(game.getSizeMap() * 2);
 
                 Bukkit.getOnlinePlayers().forEach(players -> {
                     players.setLevel(0);

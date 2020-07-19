@@ -61,6 +61,7 @@ public class WorldManager {
 
         Team team = scoreboard.registerNewTeam(String.valueOf(1));
         team.setPrefix("§7");
+        team.setSuffix("§r");
         main.getLogger().info("Tab teams successfully created");
     }
 

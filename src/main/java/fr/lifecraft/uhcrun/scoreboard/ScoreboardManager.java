@@ -40,7 +40,7 @@ public class ScoreboardManager {
     }
 
     private String colorIpAt() {
-        String ip = "play.lifecraftv2.fr";
+        String ip = "play.blabla.fr";
  
         if (cooldown > 0) {
             cooldown--;

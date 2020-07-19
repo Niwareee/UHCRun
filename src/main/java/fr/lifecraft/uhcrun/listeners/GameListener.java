@@ -30,43 +30,47 @@ public class GameListener implements Listener {
     private final Main main;
     private final Game game;
 
-    public GameListener(Main main){
+    public GameListener(Main main) {
         this.main = main;
         this.game = main.getGame();
     }
 
     @EventHandler
-    public void onWeatherChange(WeatherChangeEvent e) {
-        e.setCancelled(e.toWeatherState());
+    public void onWeatherChange(WeatherChangeEvent event) {
+        event.setCancelled(event.toWeatherState());
     }
-    
-	@EventHandler
-	public void onAchiev(PlayerAchievementAwardedEvent e) {
-		e.setCancelled(true);
-	}
-	
-	@EventHandler
-	public void onPlace(BlockPlaceEvent e) {
-		if(!State.isState(State.FINISH)) {
-			if(e.getBlock().getY() >= 130) {
-				e.getPlayer().sendMessage("§cErreur: Vous ne pouvez pas poser plus haut.");
-				e.setCancelled(true);
-			}
-		}
-	}
 
     @EventHandler
-    public void onDamage(EntityDamageByEntityEvent e) {
-        if (e.getCause() == DamageCause.PROJECTILE) {
-            if (e.getEntity() instanceof Player) {
-                Player damaged = (Player) e.getEntity();
-                if (((Projectile) e.getDamager()).getShooter() instanceof Player) {
-                    Player damager = (Player) ((Projectile) e.getDamager()).getShooter();
-                    if (damaged.getHealth() - e.getFinalDamage() > 0) {
-                        damager.sendMessage("§dUHCRun §8» §6" + damaged.getName() + " §7est à §c" + getPercent((int) (damaged.getHealth() - e.getFinalDamage()) * 5) + "% §7de sa vie.");
+    public void onAchiev(PlayerAchievementAwardedEvent event) {
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onPlace(BlockPlaceEvent event) {
+        if (!State.isState(State.FINISH)) {
+            if (event.getBlock().getY() >= 130) {
+                event.getPlayer().sendMessage("§cErreur: Vous ne pouvez pas poser plus haut.");
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onDamage(EntityDamageByEntityEvent event) {
+        if (event.getCause() == DamageCause.PROJECTILE) {
+            if (event.getEntity() instanceof Player) {
+                Player damaged = (Player) event.getEntity();
+                if (((Projectile) event.getDamager()).getShooter() instanceof Player) {
+                    Player damager = (Player) ((Projectile) event.getDamager()).getShooter();
+                    if (damaged.getHealth() - event.getFinalDamage() > 0) {
+                        damager.sendMessage("§dUHCRun §8» §6" + damaged.getName() + " §7est à §c" + getPercent((int) (damaged.getHealth() - event.getFinalDamage()) * 5) + "% §7de sa vie.");
                     }
                 }
             }
+            return;
+        }
+        if (event.getDamager().getType() == EntityType.ENDER_PEARL) {
+            event.setDamage(event.getDamage() / 2.5);
         }
     }
 
@@ -97,13 +101,6 @@ public class GameListener implements Listener {
     }
 
     @EventHandler
-    public void onDrop(PlayerDropItemEvent e) {
-        if (State.isInWait()) {
-            e.setCancelled(true);
-        }
-    }
-
-    @EventHandler
     public void onDeath(EntityDeathEvent event) {
         if (event.getEntity() instanceof Chicken) {
             int i = game.getFeatherRate();
@@ -129,33 +126,33 @@ public class GameListener implements Listener {
 			}
 		}
     }*/
-   
+
     @EventHandler
-    public void onPortal(PlayerPortalEvent e) {
+    public void onPortal(PlayerPortalEvent event) {
 
-	    if(!State.isState(State.MINING)) {
+        if (!State.isState(State.MINING)) {
 
-	    	Player player = e.getPlayer();
-		    player.sendMessage("§cErreur: Le nether est désactivé.");
-		    player.playSound(player.getLocation(), Sound.VILLAGER_NO, 2F, 2F);
-		    
-		    e.setCancelled(true);
-	    }
+            Player player = event.getPlayer();
+            player.sendMessage("§cErreur: Le nether est désactivé.");
+            player.playSound(player.getLocation(), Sound.VILLAGER_NO, 2F, 2F);
+
+            event.setCancelled(true);
+        }
     }
-	
-	@EventHandler
-	public void onEntitySpawn(EntitySpawnEvent event) {
-		if (event.getEntityType() == EntityType.WITCH || event.getEntityType() == EntityType.GUARDIAN || event.getEntityType() == EntityType.BAT) {
-			event.setCancelled(true);
-		}
-	}
 
-	@EventHandler
-	public void onItemConsume(PlayerItemConsumeEvent event) {
-		if (event.getItem().getType() == Material.GOLDEN_APPLE) {
-			event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 10 * 20, 1));
-		}
-	}
+    @EventHandler
+    public void onEntitySpawn(EntitySpawnEvent event) {
+        if (event.getEntityType() == EntityType.WITCH || event.getEntityType() == EntityType.GUARDIAN || event.getEntityType() == EntityType.BAT) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onItemConsume(PlayerItemConsumeEvent event) {
+        if (event.getItem().getType() == Material.GOLDEN_APPLE) {
+            event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 10 * 20, 1));
+        }
+    }
 
     @EventHandler
     public void onPlayerInteractEntityEvent(PlayerInteractEntityEvent event) {
@@ -204,39 +201,9 @@ public class GameListener implements Listener {
                 inv.setItem(49, targetInventory.getChestplate());
                 inv.setItem(50, targetInventory.getLeggings());
                 inv.setItem(51, targetInventory.getBoots());
-             
+
                 player.openInventory(inv);
             }
         }
     }
-    
-	/*@EventHandler
-	public void onBeginBreak(BlockDamageEvent event) {
-		event.getPlayer().removePotionEffect(PotionEffectType.SLOW_DIGGING);
-		if (event.getBlock().getType() == Material.OBSIDIAN) {
-			event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 20000, 2, true, true));
-		} else {
-			event.getPlayer().removePotionEffect(PotionEffectType.FAST_DIGGING);
-		}
-	}*/
-    
-    /*@EventHandler
-    public void onPotionFix(EntityDamageByEntityEvent e) {
-
-        if (!(e.getDamager() instanceof Player)) {
-            return;
-        }
-        Player damager = (Player) e.getDamager();
-        if (damager.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE)) {
-            e.setDamage(e.getDamage() * 0.7);
-        }
-
-        if (e.getEntity() instanceof Player) {
-            Player victim = (Player) e.getEntity();
-            if (victim.hasPotionEffect(PotionEffectType.DAMAGE_RESISTANCE)) {
-                e.setDamage(EntityDamageEvent.DamageModifier.RESISTANCE, e.getDamage(EntityDamageEvent.DamageModifier.RESISTANCE) * 1.2);
-            }
-        }
-    }*/
-   
 }
