@@ -82,8 +82,8 @@ public class GameListener implements Listener {
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
-            Player p = (Player) event.getEntity();
-            if (p.getGameMode() == GameMode.ADVENTURE || p.getGameMode() == GameMode.SPECTATOR || main.getGame().isInvincibility()) {
+            Player player = (Player) event.getEntity();
+            if (main.getGame().isInvincibility() || player.getGameMode() == GameMode.SPECTATOR) {
                 event.setCancelled(true);
             }
         }
@@ -91,7 +91,7 @@ public class GameListener implements Listener {
 
     @EventHandler
     public void onHungerMeterChange(FoodLevelChangeEvent event) {
-        if (!State.isInGame()) {
+        if (!State.isInGame() || State.isState(State.TELEPORT)) {
             event.setCancelled(true);
         }
     }
@@ -132,11 +132,12 @@ public class GameListener implements Listener {
    
     @EventHandler
     public void onPortal(PlayerPortalEvent e) {
+
 	    if(!State.isState(State.MINING)) {
-	    	
-	    	Player p = e.getPlayer();    	
-		    p.sendMessage("§cErreur: Le nether est désactivé.");
-		    p.playSound(p.getLocation(), Sound.VILLAGER_NO, 2F, 2F);
+
+	    	Player player = e.getPlayer();
+		    player.sendMessage("§cErreur: Le nether est désactivé.");
+		    player.playSound(player.getLocation(), Sound.VILLAGER_NO, 2F, 2F);
 		    
 		    e.setCancelled(true);
 	    }
@@ -174,23 +175,21 @@ public class GameListener implements Listener {
 
                 ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) SkullType.PLAYER.ordinal());
                 SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
-                skullMeta.setDisplayName("§a" + target.getName());
-                
                 skullMeta.setOwner(target.getName());
 
-                ItemStack t = new ItemBuilder(skull).setSkullOwner(target.getName()).setName("§a" + target.getName()).addLoreLine("§eVie: §c" + Math.ceil(target.getHealth() / 2) + " ❤").addLoreLine("§eNourriture: §d" + Math.ceil(target.getFoodLevel()) + "/§d20").addLoreLine("§eNiveau: §d" + target.getLevel()).toItemStack();
+                ItemStack head = new ItemBuilder(skull).setName("§a" + target.getName()).setSkullOwner(target.getName()).setName("§a" + target.getName()).addLoreLine("§eVie: §c" + Math.ceil(target.getHealth() / 2) + " ❤").addLoreLine("§eNourriture: §d" + Math.ceil(target.getFoodLevel()) + "/§d20").addLoreLine("§eNiveau: §d" + target.getLevel()).toItemStack();
 
                 List<String> lore = new ArrayList<>();
                 for (PotionEffect effect : target.getActivePotionEffects()) {
-                    int eff = effect.getDuration();
-                    String time = new SimpleDateFormat("mm:ss").format(eff * 50);
+                    int duration = effect.getDuration();
+                    String time = new SimpleDateFormat("mm:ss").format(duration * 50);
                     lore.add("§e" + effect.getType() + " " + effect.getAmplifier() + 1 + " §7(" + time + " min)");
                 }
 
-                ItemStack info = new ItemBuilder(Material.BREWING_STAND_ITEM).setName("§6Effets de potions").setLore((lore.isEmpty() ? (Collections.singletonList("§f» §7Aucun")) : lore)).toItemStack();
-                inv.setItem(46, info);
+                ItemStack potionsEffect = new ItemBuilder(Material.BREWING_STAND_ITEM).setName("§6Effets de potions").setLore((lore.isEmpty() ? (Collections.singletonList("§f» §7Aucun")) : lore)).toItemStack();
+                inv.setItem(46, potionsEffect);
                 ItemStack glass = new ItemBuilder(Material.STAINED_GLASS_PANE).setName("§f").toItemStack();
-                inv.setItem(45, t);
+                inv.setItem(45, head);
 
                 inv.setItem(36, glass);
                 inv.setItem(37, glass);

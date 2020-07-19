@@ -63,9 +63,6 @@ public class PreGameManager {
             game.removeCountdownStart();
             int countdown = game.getCountdownStart();
 
-            System.out.print("Task: " + task);
-            System.out.print("Countdown: " + countdown);
-
             if (countdown > 0) {
                 Bukkit.getOnlinePlayers().forEach(players -> players.setLevel(countdown));
             }

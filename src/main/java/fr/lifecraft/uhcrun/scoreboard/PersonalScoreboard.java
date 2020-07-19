@@ -60,7 +60,7 @@ public class PersonalScoreboard {
             objectiveSign.setLine(3, " §7» §eKills: §b" + kills);
             objectiveSign.setLine(4, "§6§9§7§m+--------------+");
             objectiveSign.setLine(5, " §7» §eDurée: §b" + time);
-            objectiveSign.setLine(6, " §7» §eTP: §b" + (State.isState(State.TELEPORT) ? "✔" : secondsToString(game.getPvPTime() * 60 - game.getTimer())));
+            objectiveSign.setLine(6, " §7» §eTP: §b" + (State.isState(State.TELEPORT) ? "✔" : secondsToString(game.getPvPTime())));
             objectiveSign.setLine(7, "§9§7§m+--------------+");
             objectiveSign.setLine(8, ip);
             

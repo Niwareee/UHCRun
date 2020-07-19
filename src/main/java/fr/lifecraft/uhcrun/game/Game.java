@@ -12,10 +12,7 @@ import java.util.*;
 
 public class Game {
 
-	// PREGAME
-    private boolean start = false;
-
-    //
+    // INIT
 
     private World world;
     private final List<UUID> alivePlayers;
@@ -23,21 +20,20 @@ public class Game {
     
     // CONFIGURATION
 
-    private int pvpTime = 20;
+    private int pvpTime = 1200;
     private int borderTime = 20;
     private int borderMoveTime = 10;
+
 	private int countdownStart;
     private int timer = 0;
 
     private int tpBorder = 300;
-    private int finalBorder = 50;
+    private int finalBorderSize = 50;
     
     private int featherRate = 1;
     private int stringRate = 1;
     
     private boolean invincibility = true;
-    private boolean isBorder = true;
-    
     private boolean forceStart = false;
     
     private Location spawn;
@@ -119,14 +115,6 @@ public class Game {
 		this.invincibility = invincibility;
 	}
 
-	public boolean isBorder() {
-		return isBorder;
-	}
-
-	public void setBorder(boolean isBorder) {
-		this.isBorder = isBorder;
-	}
-
 	public int getCountdownStart() {
 		return countdownStart;
 	}
@@ -156,7 +144,7 @@ public class Game {
 	}
 
 	public int getFinalBorderSize() {
-		return finalBorder;
+		return finalBorderSize;
 	}
 
 	public int getBorderMoveTime() {
@@ -165,14 +153,6 @@ public class Game {
 
 	public int getSize() {
 		return size;
-	}
-
-	public boolean isStarting() {
-		return start;
-	}
-	
-	public void setStarting(boolean start) {
-		this.start = start;
 	}
 
 	public Location getSpawn() {

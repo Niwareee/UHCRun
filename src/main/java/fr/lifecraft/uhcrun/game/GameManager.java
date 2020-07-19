@@ -5,7 +5,6 @@ import fr.lifecraft.uhcrun.utils.Scatter;
 import fr.lifecraft.uhcrun.utils.State;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
-import org.bukkit.World;
 import org.bukkit.WorldBorder;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
@@ -25,49 +24,42 @@ public class GameManager {
         this.game = main.getGame();
 
         Bukkit.getScheduler().runTaskTimer(main, () -> {
-            if (State.isState(State.MINING)) {
-                int timer = game.getTimer();
+            System.out.print("test");
+            if (State.isInGame()) {
                 game.addTimer();
+                int pvpTime = game.getPvPTime();
                 
-                if ((timer + 30) == game.getPvPTime() * 60) {
-                    Bukkit.broadcastMessage("§dUHCRun §7» §eTéléportation dans §f30 §esecondes.");
-                }
-                
-                if ((timer + 10) == game.getPvPTime() * 60) {
-                    Bukkit.broadcastMessage("§dUHCRun §7» §eTéléportation dans §f10 §esecondes.");
-                }
-                
-                if ((timer + 5) == game.getPvPTime() * 60) {
-                    Bukkit.broadcastMessage("§dUHCRun §7» §eTéléportation dans §f5 §esecondes.");
+                if (pvpTime == 60 || pvpTime == 10 || pvpTime == 5 || pvpTime == 4 || pvpTime == 3 || pvpTime == 2 || pvpTime == 1) {
+                    Bukkit.broadcastMessage("§dUHCRun §7» §eTéléportation dans §f" + pvpTime + " §e" + (pvpTime != 1 ? "secondes" : "seconde") + ".");
                 }
 
-                if (timer == game.getPvPTime() * 60) {
-                    if (State.isState(State.MINING)) PvP();
+                if (pvpTime == 0) {
+                    launchTeleport();
                 }
 
             }
         }, 0L, 20L);
     }
 
-    public void PvP() {
+    public void launchTeleport() {
         game.setInvincibility(true);
         State.setState(State.TELEPORT);
         game.getWorld().setPVP(true);
     	
         new Scatter(false).runTaskTimer(main, 0L, 5L);
 
-        Bukkit.broadcastMessage("§7§m+--------------------------------+");
-        Bukkit.broadcastMessage("              §6● §aPvP §6●");
-        Bukkit.broadcastMessage("");
+        Bukkit.broadcastMessage("§7§m+------------------------+");
+        Bukkit.broadcastMessage("              §6● §eCombats §6●");
+        Bukkit.broadcastMessage(" ");
         Bukkit.broadcastMessage("  §f» §aPvP activé.");
         Bukkit.broadcastMessage("  §f» §aFinalHeal appliqué.");
-        Bukkit.broadcastMessage("");
-        Bukkit.broadcastMessage("              §6● §aBordure §6●");
-        Bukkit.broadcastMessage("");
+        Bukkit.broadcastMessage(" ");
+        Bukkit.broadcastMessage("              §6● §eBordure §6●");
+        Bukkit.broadcastMessage(" ");
         Bukkit.broadcastMessage(" §f» §aRéduction en cours.");
-        Bukkit.broadcastMessage(" §f» §aTaille finale: " + game.getFinalBorderSize());
-        Bukkit.broadcastMessage("");
-        Bukkit.broadcastMessage("§7§m+--------------------------------+");
+        Bukkit.broadcastMessage(" §f» §aTaille finale: §b" + game.getFinalBorderSize());
+        Bukkit.broadcastMessage(" ");
+        Bukkit.broadcastMessage("§7§m+------------------------+");
         
         for (UUID uuid : game.getAlivePlayers()) {
             Player player = Bukkit.getPlayer(uuid);
@@ -85,10 +77,9 @@ public class GameManager {
         
         Bukkit.getScheduler().runTaskLater(main, () -> {
         	game.setInvincibility(false);
-        	
-        	World world = Bukkit.getWorld("world");
-    		world.setGameRuleValue("randomTickSpeed", "0");
-    		world.setGameRuleValue("doMobSpawning", "false");
+
+            game.getWorld().setGameRuleValue("randomTickSpeed", "0");
+            game.getWorld().setGameRuleValue("doMobSpawning", "false");
     		
         }, 10 * 20);
     }

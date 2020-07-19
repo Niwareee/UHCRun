@@ -2,7 +2,6 @@ package fr.lifecraft.uhcrun.world;
 
 import fr.lifecraft.uhcrun.Main;
 import fr.lifecraft.uhcrun.game.Game;
-import fr.lifecraft.uhcrun.world.WorldLoader;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
 import org.bukkit.entity.ArmorStand;

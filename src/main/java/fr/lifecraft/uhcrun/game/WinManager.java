@@ -1,84 +1,88 @@
 package fr.lifecraft.uhcrun.game;
 
 import fr.lifecraft.uhcrun.Main;
-import fr.lifecraft.uhcrun.database.SQLManager;
 import fr.lifecraft.uhcrun.player.PlayerManager;
-import fr.lifecraft.uhcrun.world.WorldManager;
 import fr.lifecraft.uhcrun.utils.State;
+import fr.lifecraft.uhcrun.utils.Title;
 import net.minecraft.server.v1_8_R3.MinecraftServer;
 import org.bukkit.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Map;
 import java.util.UUID;
 
-@SuppressWarnings("deprecation")
 public class WinManager {
 
     private final Main main;
-    private final WorldManager worldManager;
     private final PlayerManager playerManager;
     private final Game game;
-    private final SQLManager sqlManager;
+    private final Title title;
 
-    private int task = 0;
+    private final Firework firework;
 
-    public WinManager(Main main){
+    public WinManager(Main main) {
         this.main = main;
 
-        this.worldManager = main.getWorldManager();
         this.playerManager = main.getPlayerManager();
         this.game = main.getGame();
-        this.sqlManager = main.getSQLManager();
+        this.title = main.getTitle();
+
+        this.                    Firework f = (Firework) winner.getWorld().spawnEntity(winner.getLocation(), EntityType.FIREWORK);
+        f.detonate();
+        FireworkMeta fM = f.getFireworkMeta();
+        FireworkEffect effect = FireworkEffect.builder()
+                .flicker(true)
+                .withColor(Color.YELLOW)
+                .withFade(Color.ORANGE)
+                .with(FireworkEffect.Type.STAR)
+                .trail(true)
+                .build();
+
+        fM.setPower(2);
+        fM.addEffect(effect);
+        f.setFireworkMeta(fM);
     }
 
     private static int time = 0;
 
     public void checkWin() {
-		if (game.getAlivePlayers().size() <= 1) {
+        if (game.getAlivePlayers().size() <= 1) {
             launchWin(game.getAlivePlayers().get(0));
-		}
+        }
     }
-    
-    public void launchWin(UUID id) {
+
+    public void launchWin(UUID uuid) {
 
         if (!State.isState(State.PVP)) return;
 
-        Location loc = game.getSpawn();
-        Player winner = Bukkit.getOfflinePlayer(id).getPlayer();
+        Location winLocation = game.getSpawn();
+        Player winner = Bukkit.getOfflinePlayer(uuid).getPlayer();
 
-        winner.sendMessage("§6VICTOIRE: §aVous avez reçu §650 §acoins.");
         State.setState(State.FINISH);
         MinecraftServer.getServer().setMotd("§6Fin de la partie");
 
         Bukkit.getScheduler().runTaskLater(main, () -> {
 
-        	game.getWorld().getWorldBorder().setSize(400);
-        	main.getStructureLoader().paste(loc, "win", true);
+            game.getWorld().getWorldBorder().setSize(400);
+            main.getStructureLoader().paste(winLocation, "win", true);
 
-        	for (Player pl : Bukkit.getOnlinePlayers()) {
-        		pl.teleport(loc);
+            winner.playSound(winner.getLocation(), Sound.LEVEL_UP, 10.0F, 10.0F);
+            for (Player players : Bukkit.getOnlinePlayers()) {
+                players.teleport(winLocation);
 
-        		if (pl.getUniqueId() == id) {
-        			pl.setPlayerListName("§6Vainqueur " + pl.getName());
-                  	pl.sendTitle("§6Vous avez gagné", "§fVictoire de §a" + winner.getName());
-                  	pl.playSound(pl.getLocation(), Sound.LEVEL_UP, 10.0F, 10.0F);
-        		}else {
-                  	pl.sendTitle("", "§fVictoire de §a" + winner.getName());
-                  	pl.playSound(pl.getLocation(), Sound.WITHER_DEATH, 5.0F, 5.0F);
-                }
-                
-        	}
-        	
+                if (players.getUniqueId() == uuid)
+                    players.playSound(players.getLocation(), Sound.WITHER_DEATH, 5.0F, 5.0F);
+                title.sendTitle(players, 10, 40, 10, players.getUniqueId() == id ? "§6Vous avez gagné" : "§6UHCRun", "§fVictoire de §a" + winner.getName());
+            }
+
             game.setInvincibility(true);
-        	int kills = playerManager.getPlayers().get(winner.getUniqueId()).getKills();
-            
+            int kills = playerManager.getPlayers().get(winner.getUniqueId()).getKills();
+
             Bukkit.broadcastMessage("§f§m+------§c§m---------------§f§m------+");
-            Bukkit.broadcastMessage("          §d✦ §ePartie terminée §d✦ ");
+            Bukkit.broadcastMessage("          §d● §ePartie terminée §d● ");
             Bukkit.broadcastMessage(" ");
             Bukkit.broadcastMessage("§6Victoire de §3" + winner.getName() + "§6.");
             Bukkit.broadcastMessage("§6Avec un total de §7" + kills + " §6kills.");
@@ -86,56 +90,54 @@ public class WinManager {
 
             Bukkit.broadcastMessage("§aTop Kills:");
 
-            Map<String, Integer> top10 = worldManager.getTop10();
+            Map<String, Integer> top10 = main.getWorldManager().getTop10();
 
             for (int i = 0; i < 3; i++) {
                 if (top10.size() <= i) break;
                 String playerName = (String) top10.keySet().toArray()[i];
                 Bukkit.broadcastMessage("§a#" + (i + 1) + ". §e" + playerName + " §7» §f" + top10.get(playerName) + " kills");
-                Player player = Bukkit.getPlayer(playerName);
-                player.sendMessage("§aTop Kills: Vous avez reçu §630 §acoins.");
             }
 
             Bukkit.broadcastMessage(" ");
             Bukkit.broadcastMessage("§f§m+------§c§m---------------§f§m------+");
 
-            launchWinFireworks();
-            task = Bukkit.getScheduler().scheduleSyncRepeatingTask(main, () -> {
-                System.out.print(task);
-                Bukkit.getOnlinePlayers().forEach(all -> playerManager.teleportServer(all, "uhchub"));
-            }, 0L, 25 * 20L);
+            launchWinFireworks(uuid);
 
-            Bukkit.getScheduler().runTaskLaterAsynchronously(main, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "stop"), 27 * 20);
         }, 10);
     }
 
-    public void launchWinFireworks() {
+    public void launchWinFireworks(UUID id) {
         Bukkit.getScheduler().runTaskTimer(main, () -> {
+            if (time < 40) {
 
-            if (State.isState(State.FINISH)) {
-                if (time < 40) {
+                Player winner = Bukkit.getPlayer(id);
+                if(winner == null) return;
 
-                    Bukkit.getOnlinePlayers().stream().filter(op -> op.getGameMode() != GameMode.SPECTATOR).forEach(op -> {
-                        Firework f = (Firework) op.getWorld().spawnEntity(op.getLocation(), EntityType.FIREWORK);
-                        f.detonate();
-                        FireworkMeta fM = f.getFireworkMeta();
-                        FireworkEffect effect = FireworkEffect.builder()
-                                .flicker(true)
-                                .withColor(Color.YELLOW)
-                                .withFade(Color.ORANGE)
-                                .with(FireworkEffect.Type.STAR)
-                                .trail(true)
-                                .build();
+                    Firework f = (Firework) winner.getWorld().spawnEntity(winner.getLocation(), EntityType.FIREWORK);
+                    f.detonate();
+                    FireworkMeta fM = f.getFireworkMeta();
+                    FireworkEffect effect = FireworkEffect.builder()
+                            .flicker(true)
+                            .withColor(Color.YELLOW)
+                            .withFade(Color.ORANGE)
+                            .with(FireworkEffect.Type.STAR)
+                            .trail(true)
+                            .build();
 
-                        fM.setPower(2);
-                        fM.addEffect(effect);
-                        f.setFireworkMeta(fM);
-                    });
+                    fM.setPower(2);
+                    fM.addEffect(effect);
+                    f.setFireworkMeta(fM);
 
-                    time++;
-                }
+                time++;
             }
         }, 0, 10);
     }
 
+    public void launchStop() {
+        Bukkit.getScheduler().runTaskTimer(main, () -> {
+
+        }, 0, 10);
+        Bukkit.getScheduler().runTaskTimerAsynchronously(main, () -> Bukkit.getOnlinePlayers().forEach(players -> playerManager.teleportServer(players, "uhchub")), 0L, 500L);
+        Bukkit.getScheduler().runTaskLaterAsynchronously(main, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "stop"), 27 * 20);
+    }
 }

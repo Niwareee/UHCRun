@@ -65,7 +65,7 @@ public class PlayerManager {
         player.getInventory().clear();
         player.getInventory().setArmorContents(null);
         player.setWalkSpeed(0.2f);
-        player.getActivePotionEffects().clear();
+        player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
         player.setMaxHealth(20.0D);
         player.setHealth(20.0D);
         player.setFoodLevel(20);

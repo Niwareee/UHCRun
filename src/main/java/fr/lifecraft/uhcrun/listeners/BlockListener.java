@@ -139,9 +139,9 @@ public class BlockListener implements Listener {
 		Location location = new Location(block.getWorld(), block.getLocation().getBlockX() + 0.5D, block.getLocation().getBlockY() + 0.3D, block.getLocation().getBlockZ() + 0.5D);
 		
         final Random random = new Random();
-        final double r = random.nextDouble();
+        final double percent = random.nextDouble();
 
-        if (r <= 2 * 0.01 && block.getType() == Material.LEAVES) {
+        if (percent <= 2 * 0.01 && block.getType() == Material.LEAVES) {
             block.setType(Material.AIR);
             block.getState().update();
             block.getWorld().dropItemNaturally(location, new ItemStack(Material.APPLE));
@@ -156,7 +156,7 @@ public class BlockListener implements Listener {
         else if (block.getType() == Material.GRAVEL) {
             block.setType(Material.AIR);
             block.getState().update();
-        	if(r <= 80 * 0.01) {
+        	if(percent <= 80 * 0.01) {
 	            block.getWorld().dropItemNaturally(location, new ItemStack(Material.ARROW, 3));
         	}else {
 	            block.getWorld().dropItemNaturally(location, new ItemStack(Material.FLINT, 1));
@@ -210,7 +210,7 @@ public class BlockListener implements Listener {
             block.getState().update();
             block.getWorld().dropItemNaturally(location, new ItemStack(Material.STICK, 2));
         }
-        else if (block.getType() == Material.QUARTZ_BLOCK){
+        else if (block.getType() == Material.QUARTZ_ORE){
 			event.setExpToDrop(20);
 			event.getBlock().breakNaturally(new ItemStack(Material.DIAMOND_PICKAXE));
 			event.setCancelled(true);
@@ -333,8 +333,8 @@ public class BlockListener implements Listener {
 				event = new BlockBreakEvent(log.getRelative(face).getRelative(BlockFace.UP), player);
 				Bukkit.getServer().getPluginManager().callEvent(event);
 
-				log.getWorld().playEffect(log.getLocation(), Effect.STEP_SOUND, Material.LEAVES);
 			}
 		}
+		log.getWorld().playEffect(log.getLocation(), Effect.STEP_SOUND, Material.LEAVES);
 	}
 }
