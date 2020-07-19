@@ -91,6 +91,7 @@ public class PlayerManager {
 
     public void onQuit(Player player) {
         players.remove(player.getUniqueId());
+        game.getAlivePlayers().remove(player.getUniqueId());
         scoreboardManager.onLogout(player);
     }
 }

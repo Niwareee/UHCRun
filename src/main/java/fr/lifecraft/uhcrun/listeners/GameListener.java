@@ -94,10 +94,8 @@ public class GameListener implements Listener {
     }
 
     @EventHandler
-    public void onHungerMeterChange(FoodLevelChangeEvent event) {
-        if (!State.isInGame() || State.isState(State.TELEPORT)) {
-            event.setCancelled(true);
-        }
+    public void onLoseFood(FoodLevelChangeEvent event) {
+        event.setCancelled(!State.isInGame() || State.isState(State.TELEPORT));
     }
 
     @EventHandler

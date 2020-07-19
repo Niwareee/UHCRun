@@ -86,7 +86,6 @@ public class ConnectionListener implements Listener {
         playerManager.onQuit(player);
 
         if (State.isInWait()) {
-            game.getAlivePlayers().remove(player.getUniqueId());
 
             new ActionBar("§c- §e" + player.getName() + " §7a quitté la partie. §6(" + (Bukkit.getOnlinePlayers().size() - 1) + "/" + game.getSlot() + ")").sendToAll();
             return;
