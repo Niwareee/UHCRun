@@ -63,10 +63,11 @@ public class Main extends JavaPlugin {
             this.winManager = new WinManager(this);
             this.accountManager = new AccountManager();
             this.worldManager = new WorldManager(this);
-            this.title = new Title();
 
             new RegisterManager(this);
         }, 40);
+
+        this.title = new Title();
 
         this.log("Plugin successfully enabled in " + (System.currentTimeMillis() - start) + " ms");
 

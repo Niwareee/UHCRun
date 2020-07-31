@@ -110,8 +110,8 @@ public class WinManager {
                 Player winner = game.getWinner();
                 if (winner == null) return;
 
-                Firework fw = (Firework) winner.getWorld().spawnEntity(winner.getPlayer().getLocation(), EntityType.FIREWORK);
-                FireworkMeta fwm = fw.getFireworkMeta();
+                Firework firework = (Firework) winner.getWorld().spawnEntity(winner.getPlayer().getLocation(), EntityType.FIREWORK);
+                FireworkMeta fireworkMeta = firework.getFireworkMeta();
                 Random random = new Random();
                 int i = random.nextInt(4) + 1;
                 FireworkEffect.Type type = FireworkEffect.Type.BALL;
@@ -135,15 +135,15 @@ public class WinManager {
                     type = FireworkEffect.Type.STAR;
                 }
 
-                int r1i = random.nextInt(15) + 1;
-                int r2i = random.nextInt(15) + 1;
-                Color c1 = Color.fromRGB(r1i);
-                Color c2 = Color.fromRGB(r2i);
-                FireworkEffect effect = FireworkEffect.builder().flicker(random.nextBoolean()).withColor(c1).withFade(c2).with(type).trail(random.nextBoolean()).build();
-                fwm.addEffect(effect);
+                int randint_1 = random.nextInt(15) + 1;
+                int randint_2 = random.nextInt(15) + 1;
+                Color color_1 = Colors.getColor(randint_1);
+                Color color_2 = Colors.getColor(randint_2);
+                FireworkEffect effect = FireworkEffect.builder().flicker(random.nextBoolean()).withColor(color_1).withFade(color_2).with(type).trail(random.nextBoolean()).build();
+                fireworkMeta.addEffect(effect);
                 int power = random.nextInt(2) + 1;
-                fwm.setPower(power);
-                fw.setFireworkMeta(fwm);
+                fireworkMeta.setPower(power);
+                firework.setFireworkMeta(fireworkMeta);
                 time++;
             }
         }, 0, 5);
