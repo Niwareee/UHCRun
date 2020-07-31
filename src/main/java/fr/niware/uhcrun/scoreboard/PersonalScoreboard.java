@@ -59,10 +59,11 @@ public class PersonalScoreboard {
             objectiveSign.setLine(2, " §7» §eBordure: §b" + (int) game.getWorld().getWorldBorder().getSize() / 2);
             objectiveSign.setLine(3, " §7» §eKills: §b" + kills);
             objectiveSign.setLine(4, "§6§9§7§m+--------------+");
-            objectiveSign.setLine(5, " §7» §eDurée: §b" + time);
-            objectiveSign.setLine(6, " §7» §eTP: §b" + (State.isState(State.TELEPORT) ? "✔" : secondsToString(game.getPvPTime())));
-            objectiveSign.setLine(7, "§9§7§m+--------------+");
-            objectiveSign.setLine(8, ip);
+            objectiveSign.setLine(5, " §7» §eCentre: §b" + (int) Math.ceil(player.getLocation().distance(game.getSpawn())));
+            objectiveSign.setLine(6, " §7» §eDurée: §b" + time);
+            objectiveSign.setLine(7, " §7» §eTP: §b" + (State.isState(State.TELEPORT) ? "✔" : secondsToString(game.getPvPTime())));
+            objectiveSign.setLine(8, "§9§7§m+--------------+");
+            objectiveSign.setLine(9, ip);
             
             objectiveSign.updateLines();
             return;

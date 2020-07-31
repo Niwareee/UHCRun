@@ -4,7 +4,7 @@ import fr.niware.uhcrun.database.SQLManager;
 import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.game.WinManager;
 import fr.niware.uhcrun.hook.SlotPatcher;
-import fr.niware.uhcrun.listeners.WorldInitListener;
+import fr.niware.uhcrun.listeners.WorldListener;
 import fr.niware.uhcrun.game.player.PlayerManager;
 import fr.niware.uhcrun.account.AccountManager;
 import fr.niware.uhcrun.register.PropertiesManager;
@@ -52,7 +52,7 @@ public class Main extends JavaPlugin {
         executorMonoThread = Executors.newScheduledThreadPool(1);
         scoreboardManager = new ScoreboardManager();
 
-        this.getServer().getPluginManager().registerEvents(new WorldInitListener(), this);
+        this.getServer().getPluginManager().registerEvents(new WorldListener(), this);
 
         getServer().getScheduler().runTaskLater(this, () -> {
             this.sqlManager = new SQLManager(this);

@@ -61,7 +61,7 @@ public class GameManager {
         Bukkit.broadcastMessage("              §6● §eBordure §6●");
         Bukkit.broadcastMessage(" ");
         Bukkit.broadcastMessage(" §f» §aRéduction en cours.");
-        Bukkit.broadcastMessage(" §f» §aTaille finale: §b-" + game.getFinalBorderSize() + " §a/ §b" + game.getFinalBorderSize());
+        Bukkit.broadcastMessage(" §f» §aTaille finale: §b" + game.getFinalBorderSize() + " §a/ §b-" + game.getFinalBorderSize());
         Bukkit.broadcastMessage(" ");
         Bukkit.broadcastMessage("§7§m+---------------------+");
 

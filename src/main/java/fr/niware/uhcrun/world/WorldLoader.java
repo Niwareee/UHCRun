@@ -103,7 +103,7 @@ public class WorldLoader {
                                 State.setState(State.WAITING);
                                 MinecraftServer.getServer().setMotd("§bEn attente");
 
-                                main.log("§aSetup finish. Ready to use.");
+                                main.log("§aWorld ready. Ready to use.");
                                 return;
                             }
 

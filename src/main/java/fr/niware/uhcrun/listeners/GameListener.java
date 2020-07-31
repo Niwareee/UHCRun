@@ -98,18 +98,6 @@ public class GameListener implements Listener {
     }
 
     @EventHandler
-    public void onLeavesDecay(LeavesDecayEvent event) {
-        Block block = event.getBlock();
-        Location location = new Location(block.getWorld(), block.getLocation().getBlockX() + 0.5D, block.getLocation().getBlockY() + 0.3D, block.getLocation().getBlockZ() + 0.5D);
-        Random random = new Random();
-
-        if (random.nextDouble() <= 0.02) {
-            block.setType(Material.AIR);
-            block.getWorld().dropItemNaturally(location, new ItemStack(Material.APPLE, 1));
-        }
-    }
-
-    @EventHandler
     public void onPlaceLava(PlayerBucketEmptyEvent event) {
         if (event.getBucket().equals(Material.LAVA_BUCKET)) {
             for (Player players : Bukkit.getOnlinePlayers()) {
@@ -120,24 +108,6 @@ public class GameListener implements Listener {
                     }
                 }
             }
-        }
-    }
-
-    @EventHandler
-    public void onPortal(PlayerPortalEvent event) {
-        if (!State.isState(State.MINING)) {
-            Player player = event.getPlayer();
-
-            event.setCancelled(true);
-            player.sendMessage("§cErreur: Le nether est désactivé.");
-            player.playSound(player.getLocation(), Sound.VILLAGER_NO, 2F, 2F);
-        }
-    }
-
-    @EventHandler
-    public void onEntitySpawn(EntitySpawnEvent event) {
-        if (event.getEntityType() == EntityType.WITCH || event.getEntityType() == EntityType.GUARDIAN || event.getEntityType() == EntityType.BAT) {
-            event.setCancelled(true);
         }
     }
 
