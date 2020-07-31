@@ -1,8 +1,9 @@
-package fr.lifecraft.uhcrun.database;
+package fr.niware.uhcrun.database;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import fr.lifecraft.uhcrun.Main;
+import fr.niware.uhcrun.Main;
+import org.bukkit.Bukkit;
 
 import java.sql.Connection;
 
@@ -39,18 +40,23 @@ public class SQLDatabase {
                 hikariConfig.addDataSourceProperty("useSSL", false);
                 this.hikariDataSource = new HikariDataSource(hikariConfig);
                 main.log("§aSuccessful connected to database !");
+
+                updateTables();
             }
         } catch (Exception e) {
             main.log("§cError to connect to MySQL:");
-            main.getLogger().info(e.getMessage());
+            main.log(e.getMessage());
         }
     }
 
     public void updateTables() {
         try {
             if (isConnected()) {
-                main.getSQLManager().update("TEST");
-                main.log("§aSuccessful update table !");
+                Bukkit.getScheduler().runTaskLaterAsynchronously(main, () -> {
+                    main.getSQLManager().update("CREATE TABLE IF NOT EXISTS account_uhcrun (id int(11) AUTO_INCREMENT NOT NULL UNIQUE, player_uuid VARCHAR(255) NOT NULL UNIQUE, rankid INT NOT NULL, kills INT NOT NULL, wins INT NOT NULL, first_connection TIMESTAMP NOT NULL)");
+                    main.getSQLManager().update("CREATE TABLE IF NOT EXISTS games_uhcrun (id int(11) AUTO_INCREMENT NOT NULL UNIQUE, start TIMESTAMP NOT NULL, size_players INT NOT NULL, winner TEXT NOT NULL, finish TIMESTAMP NOT NULL)");
+                    main.log("§aSuccessful update table !");
+                }, 1L);
             }
         } catch (Exception e) {
             main.log("§cUnable to update table to MySQL:");

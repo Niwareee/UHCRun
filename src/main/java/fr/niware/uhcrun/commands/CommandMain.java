@@ -1,18 +1,19 @@
-package fr.lifecraft.uhcrun.commands;
+package fr.niware.uhcrun.commands;
 
-import fr.lifecraft.uhcrun.Main;
-import fr.lifecraft.uhcrun.game.Game;
-import fr.lifecraft.uhcrun.game.PreGameManager;
-import fr.lifecraft.uhcrun.game.WinManager;
-import fr.lifecraft.uhcrun.structure.StructureLoader;
-import fr.lifecraft.uhcrun.utils.State;
-import fr.lifecraft.uhcrun.world.WorldManager;
+import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.game.Game;
+import fr.niware.uhcrun.game.PreGameManager;
+import fr.niware.uhcrun.game.WinManager;
+import fr.niware.uhcrun.structure.StructureLoader;
+import fr.niware.uhcrun.utils.State;
+import fr.niware.uhcrun.world.OrePopulator;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.world.WorldInitEvent;
 
 public class CommandMain implements CommandExecutor {
 
@@ -36,26 +37,26 @@ public class CommandMain implements CommandExecutor {
                 }
 
                 switch (args[0]) {
-                    case "savestructure":
-                        String[] cos1 = args[2].split(",");
-                        String[] cos2 = args[3].split(",");
-                        Location location1 = new Location(WorldManager.WORLD, Double.parseDouble(cos1[0]), Double.parseDouble(cos1[1]), Double.parseDouble(cos1[2]));
-                        Location location2 = new Location(WorldManager.WORLD, Double.parseDouble(cos2[0]), Double.parseDouble(cos2[1]), Double.parseDouble(cos2[2]));
+                    case "revive":
+                        Player target = Bukkit.getPlayer(args[1]);
 
-                        Player player = (Player) sender;
-                        Location location = player.getLocation();
-                        structureLoader.save(location1, location2, location, args[1]);
+                        if (args.length != 2) {
+                            sender.sendMessage("§cUtilisation: /game revive <Joueur>");
+                            return true;
+                        }
 
+                        if (target == null) {
+                            sender.sendMessage("§cErreur: Le joueur '§f" + args[1] + "§c' n'est pas connecté.");
+                            return true;
+                        }
+
+                        if (game.getAlivePlayers().contains(target.getUniqueId())) {
+                            sender.sendMessage("§cErreur: Le joueur '" + args[1] + "' est déjà en vie.");
+                            return true;
+                        }
+
+                        game.getDeadPlayers().get(target.getUniqueId()).revive();
                         break;
-                    case "pastestructure":
-                        structureLoader.load(args[1]);
-                        structureLoader.paste(((Player) sender).getLocation(), args[1], true);
-
-                        break;
-                    case "checkwin":
-                        sender.sendMessage("§dLancement du test . . .");
-                        winManager.checkWin();
-                        return true;
 
                     case "start":
                         if (State.isState(State.STARTING)) {
@@ -68,15 +69,38 @@ public class CommandMain implements CommandExecutor {
                             return true;
                         }
 
-                        if (Bukkit.getOnlinePlayers().size() < 2) {
+                        /*if (Bukkit.getOnlinePlayers().size() < 2) {
                             sender.sendMessage("§cErreur: Vous devez être minimum 2 joueurs.");
+                            return true;
+                        }*/
+
+                        new PreGameManager(true);
+                        break;
+
+                    case "checkwin":
+                        if (State.isInWait()) {
+                            sender.sendMessage("§cErreur: La partie n'a pas encore commencé.");
                             return true;
                         }
 
-                        game.setForceStart(true);
-                        sender.sendMessage("§dUHCRun §7» §aVous avez forcé le démarrage de la partie.");
-                        new PreGameManager();
+                        sender.sendMessage("§dLancement du test...");
+                        winManager.checkWin();
+                        break;
 
+                    case "savestructure":
+                        String[] cos1 = args[2].split(",");
+                        String[] cos2 = args[3].split(",");
+                        Location location1 = new Location(game.getWorld(), Double.parseDouble(cos1[0]), Double.parseDouble(cos1[1]), Double.parseDouble(cos1[2]));
+                        Location location2 = new Location(game.getWorld(), Double.parseDouble(cos2[0]), Double.parseDouble(cos2[1]), Double.parseDouble(cos2[2]));
+
+                        Player player = (Player) sender;
+                        Location location = player.getLocation();
+                        structureLoader.save(location1, location2, location, args[1]);
+                        break;
+
+                    case "pastestructure":
+                        structureLoader.load(args[1]);
+                        structureLoader.paste(((Player) sender).getLocation(), args[1], true);
                         break;
                 }
             }

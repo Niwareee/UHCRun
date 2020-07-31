@@ -12,11 +12,11 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.EnchantingInventory;
 import org.bukkit.inventory.ItemStack;
 
-public class UHCRunListener implements Listener {
+public class AutoLapisListener implements Listener {
 
     private final ItemStack lapis;
 
-    public UHCRunListener() {
+    public AutoLapisListener() {
         this.lapis = new ItemStack(Material.INK_SACK, 3, (short) 4);
     }
 
@@ -57,12 +57,5 @@ public class UHCRunListener implements Listener {
             return;
         }
         ((EnchantingInventory) event.getInventory()).setSecondary(this.lapis);
-    }
-
-    @EventHandler
-    public void onBrew(BrewEvent event) {
-        if (event.getContents().getIngredient().getType() == Material.GLOWSTONE_DUST) {
-            event.setCancelled(true);
-        }
     }
 }

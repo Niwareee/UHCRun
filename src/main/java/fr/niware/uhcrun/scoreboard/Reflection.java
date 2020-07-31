@@ -1,4 +1,4 @@
-package fr.lifecraft.uhcrun.scoreboard;
+package fr.niware.uhcrun.scoreboard;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

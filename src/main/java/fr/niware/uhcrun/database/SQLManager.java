@@ -1,6 +1,6 @@
-package fr.lifecraft.uhcrun.database;
+package fr.niware.uhcrun.database;
 
-import fr.lifecraft.uhcrun.Main;
+import fr.niware.uhcrun.Main;
 import org.bukkit.Bukkit;
 
 import java.sql.Connection;
@@ -39,7 +39,7 @@ public class SQLManager {
     public void update(String qry) {
         try (Connection c = getRessource();
              PreparedStatement state = c.prepareStatement(qry)) {
-            state.executeUpdate();
+             state.executeUpdate();
         } catch (Exception ex) {
             Bukkit.getConsoleSender().sendMessage("§cUpdate Failed:");
             Bukkit.getConsoleSender().sendMessage(ex.getMessage());

@@ -1,7 +1,8 @@
-package fr.lifecraft.uhcrun.world;
+package fr.niware.uhcrun.world;
 
-import fr.lifecraft.uhcrun.Main;
-import fr.lifecraft.uhcrun.game.Game;
+import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.game.Game;
+import net.minecraft.server.v1_8_R3.MinecraftServer;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
 import org.bukkit.entity.ArmorStand;
@@ -23,8 +24,8 @@ public class WorldManager {
     private final Main main;
     private final Game game;
 
-    public static World WORLD;
     public static Location SPAWN;
+    public static World WORLD;
 
     private final Scoreboard scoreboard;
     private final List<Entity> entityList;
@@ -37,9 +38,10 @@ public class WorldManager {
 
         SPAWN = game.setSpawn(stringToLoc(main.getConfig().getString("world.spawn.location")));
         WORLD = game.setWorld(game.getSpawn().getWorld());
+        game.setSpecSpawn(WORLD.getHighestBlockAt(0, 0).getLocation());
 
         registerTabTeams();
-        createWorlds();
+        patchWorlds();
     }
 
     public void registerObjectives() {
@@ -107,21 +109,20 @@ public class WorldManager {
     }
 
     public void deleteWorld(File path) {
-        System.out.println("Deleting... " + path.getName());
+        main.log("Deleting... " + path.getName());
 
         World world = Bukkit.getWorld(path.getName());
         Bukkit.unloadWorld(world, false);
 
         try {
             FileUtils.forceDeleteOnExit(path);
-            System.out.println("World deleted: " + path.getName());
+            main.log("World deleted: " + path.getName());
         } catch (IOException e) {
-            System.out.println("Error while deleting world (" + path.getAbsolutePath() + ")\n" + e.getMessage());
+            main.log("Error while deleting world (" + path.getAbsolutePath() + ")\n" + e.getMessage());
         }
     }
 
-    public void createWorlds() {
-
+    public void patchWorlds() {
         for (World world : Bukkit.getWorlds()) {
 
             world.setDifficulty(Difficulty.NORMAL);
@@ -131,10 +132,10 @@ public class WorldManager {
             world.setGameRuleValue("doDaylightCycle", "false");
 
             world.setTime(6000);
-            world.setPVP(false);
             world.setStorm(false);
             world.setThundering(false);
-            world.setSpawnLocation(0, 200, 0);
+            world.setKeepSpawnInMemory(true);
+            world.setSpawnLocation(SPAWN.getBlockX(), SPAWN.getBlockY(), SPAWN.getBlockZ());
 
             WorldBorder worldBorder = world.getWorldBorder();
             worldBorder.setSize(game.getSizeNether() * 2);
@@ -149,12 +150,15 @@ public class WorldManager {
         main.getServer().getWhitelistedPlayers().clear();
         main.getServer().setWhitelist(false);
 
-        main.log("§aWorld successfully setup");
+        MinecraftServer.getServer().setPVP(false);
+        MinecraftServer.getServer().setAllowFlight(true);
+
+        main.log("§aWorlds successfully patch");
         boolean regen = main.getConfig().getBoolean("world.preload.enabled");
         main.log("Preload maps is " + (regen ? "§aenabled" : "§cdisabled"));
 
         if (regen) {
-            Bukkit.getScheduler().scheduleSyncRepeatingTask(main, new WorldLoader(WORLD, game.getPreLoad(), game.getPreLoad(), 0),  40, 200);
+            new WorldLoader(main).generateChunks(WORLD, game.getPreLoad());
         }
     }
 

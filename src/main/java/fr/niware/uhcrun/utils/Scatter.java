@@ -1,6 +1,8 @@
-package fr.lifecraft.uhcrun.utils;
+package fr.niware.uhcrun.utils;
 
-import fr.lifecraft.uhcrun.game.Game;
+import fr.niware.uhcrun.game.Game;
+import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.utils.packet.ActionBar;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -11,8 +13,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-
-import fr.lifecraft.uhcrun.Main;
 
 import java.util.*;
 
@@ -35,7 +35,6 @@ public class Scatter extends BukkitRunnable {
     }
 
     public void run() {
-
         if (this.isAdd) {
             this.players.addAll(Bukkit.getOnlinePlayers());
             this.isAdd = false;
@@ -51,33 +50,29 @@ public class Scatter extends BukkitRunnable {
         Random random = new Random();
         Player playerToTp = players.get(random.nextInt(players.size()));
 
-        if (playerToTp != null) {
-            if (playerToTp.getGameMode() != GameMode.SPECTATOR) {
-                playerToTp.setGameMode(GameMode.SURVIVAL);
+        if (playerToTp != null && playerToTp.getGameMode() != GameMode.SPECTATOR) {
 
-                if (this.isStart) {
-                    int pourcent = Math.round((float) 100 / this.players.size());
-                    new ActionBar("§7Téléportation...  §6(" + pourcent + "%)").sendToAll();
-                    playerToTp.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 3 * 20, 1, false, false));
-                    playerToTp.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 30, 9, false, false));
-                    setSpawnSpot(playerToTp);
-                }
+            playerToTp.teleport(randomLocation());
+            playerToTp.setVelocity(new Vector(0, 1, 0));
 
-                playerToTp.teleport(randomLocation());
-                playerToTp.setVelocity(new Vector(0, 2, 0));
+            if (this.isStart) {
+                int pourcent = Math.round((float) 100 / this.players.size());
+                new ActionBar("§7Téléportation...  §6(" + pourcent + "%)").sendToAll();
+                playerToTp.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20, 1, false, false));
+                playerToTp.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 9, false, false));
+                setSpawnSpot(playerToTp);
             }
+
         }
         this.players.remove(playerToTp);
     }
 
     private Location randomLocation() {
         Random random = new Random();
-        System.out.print(random.nextInt(3) + " AND " + random.nextInt(3));
-        int sizeTP = (this.isStart ? game.getSizeMap() / 2 - 10 : game.getTPBorder() / 2 - 10);
+        int sizeTP = (this.isStart ? game.getSizeMap() - 10 : game.getTPBorder() - 10);
         int x = (random.nextInt(2) == 0 ? +1 : -1) * random.nextInt(sizeTP);
         int z = (random.nextInt(2) == 0 ? +1 : -1) * random.nextInt(sizeTP);
-        Location location = game.getWorld().getHighestBlockAt(x, z).getLocation();
-        location.setY(location.getY() + 35);
+        Location location = game.getWorld().getHighestBlockAt(x, z).getLocation().add(0, 35,0);
         if (!location.getChunk().isLoaded()) {
             location.getChunk().load();
         }
@@ -91,7 +86,7 @@ public class Scatter extends BukkitRunnable {
                 Block block = player.getLocation().clone().add(x, -6, z).getBlock();
                 block.setType(Material.STAINED_GLASS);
                 if (x == -3 || x == 2 || z == -3 || z == 2)
-                    block.setData((byte) 6);
+                    block.setData((byte) 1);
                 game.getBlocks().add(block);
             }
         }

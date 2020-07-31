@@ -1,20 +1,20 @@
-package fr.lifecraft.uhcrun;
+package fr.niware.uhcrun;
 
-import fr.lifecraft.uhcrun.database.SQLManager;
-import fr.lifecraft.uhcrun.game.WinManager;
-import fr.lifecraft.uhcrun.listeners.WorldListener;
-import fr.lifecraft.uhcrun.register.*;
-import fr.lifecraft.uhcrun.player.PlayerManager;
-import fr.lifecraft.uhcrun.rank.RankManager;
-import fr.lifecraft.uhcrun.structure.StructureLoader;
-import fr.lifecraft.uhcrun.utils.Title;
-import fr.lifecraft.uhcrun.world.BiomesPatcher;
-import fr.lifecraft.uhcrun.world.WorldManager;
+import fr.niware.uhcrun.database.SQLManager;
+import fr.niware.uhcrun.game.Game;
+import fr.niware.uhcrun.game.WinManager;
+import fr.niware.uhcrun.hook.SlotPatcher;
+import fr.niware.uhcrun.listeners.WorldInitListener;
+import fr.niware.uhcrun.game.player.PlayerManager;
+import fr.niware.uhcrun.account.AccountManager;
+import fr.niware.uhcrun.register.PropertiesManager;
+import fr.niware.uhcrun.register.RegisterManager;
+import fr.niware.uhcrun.scoreboard.ScoreboardManager;
+import fr.niware.uhcrun.structure.StructureLoader;
+import fr.niware.uhcrun.utils.packet.Title;
+import fr.niware.uhcrun.world.BiomesPatcher;
+import fr.niware.uhcrun.world.WorldManager;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import fr.lifecraft.uhcrun.game.Game;
-import fr.lifecraft.uhcrun.hook.SlotPatcher;
-import fr.lifecraft.uhcrun.scoreboard.ScoreboardManager;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -32,7 +32,7 @@ public class Main extends JavaPlugin {
 
     private WorldManager worldManager;
     private WinManager winManager;
-    private RankManager rankManager;
+    private AccountManager accountManager;
     private PlayerManager playerManager;
     private StructureLoader structureLoader;
 
@@ -46,14 +46,13 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         long start = System.currentTimeMillis();
-
         instance = this;
 
         scheduledExecutorService = Executors.newScheduledThreadPool(16);
         executorMonoThread = Executors.newScheduledThreadPool(1);
         scoreboardManager = new ScoreboardManager();
 
-        this.getServer().getPluginManager().registerEvents(new WorldListener(), this);
+        this.getServer().getPluginManager().registerEvents(new WorldInitListener(), this);
 
         getServer().getScheduler().runTaskLater(this, () -> {
             this.sqlManager = new SQLManager(this);
@@ -61,14 +60,13 @@ public class Main extends JavaPlugin {
             PropertiesManager.enablePatch();
             this.structureLoader = new StructureLoader(this);
             this.playerManager = new PlayerManager(this);
-            this.worldManager = new WorldManager(this);
             this.winManager = new WinManager(this);
-            this.rankManager = new RankManager();
+            this.accountManager = new AccountManager();
+            this.worldManager = new WorldManager(this);
+            this.title = new Title();
 
             new RegisterManager(this);
         }, 40);
-
-        this.title = new Title();
 
         this.log("Plugin successfully enabled in " + (System.currentTimeMillis() - start) + " ms");
 
@@ -116,8 +114,8 @@ public class Main extends JavaPlugin {
         return sqlManager;
     }
 
-    public RankManager getRankManager() {
-        return rankManager;
+    public AccountManager getAccountManager() {
+        return accountManager;
     }
 
     public PlayerManager getPlayerManager() {

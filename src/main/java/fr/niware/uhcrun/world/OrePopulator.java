@@ -1,7 +1,8 @@
-package fr.lifecraft.uhcrun.world;
+package fr.niware.uhcrun.world;
 
 import java.util.Random;
 
+import net.minecraft.server.v1_8_R3.WorldGenCaves;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -11,9 +12,9 @@ import org.bukkit.generator.BlockPopulator;
 public class OrePopulator extends BlockPopulator {
 
     private static final int[] iterations = {3, 4, 4, 4, 2, 4};
-    private static final int[] amount = {3, 6, 4, 4, 4, 4};
+    private static final int[] amount = {4, 6, 4, 4, 4, 4};
     private static final Material[] type = {Material.REDSTONE_ORE, Material.IRON_ORE, Material.LAPIS_ORE, Material.GOLD_ORE, Material.DIAMOND_ORE, Material.OBSIDIAN};
-    //private static final int[] minHeight = {5, 5, 5, 5, 5, 5};
+    // private static final int[] minHeight = {5, 5, 5, 5, 5, 5};
     private static final int[] maxHeight = {64, 64, 64, 64, 64, 64};
 
     public void populate(World world, Random random, Chunk source) {

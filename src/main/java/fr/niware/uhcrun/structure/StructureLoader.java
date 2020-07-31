@@ -1,5 +1,6 @@
-package fr.lifecraft.uhcrun.structure;
+package fr.niware.uhcrun.structure;
 
+import fr.niware.uhcrun.Main;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -9,8 +10,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.Inventory;
 
-import fr.lifecraft.uhcrun.Main;
-import fr.lifecraft.uhcrun.utils.InventoryString;
+import fr.niware.uhcrun.utils.InventoryString;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,9 +78,6 @@ public class StructureLoader {
             zMin = (int) location2.getZ();
             zMax = (int) location1.getZ();
         }
-
-        /*Location min = new Location(location1.getWorld(), xMin, yMin, zMin);
-        Location max = new Location(location1.getWorld(), xMax, yMax, zMax);*/
 
         YamlConfiguration configuration = YamlConfiguration.loadConfiguration(schematic);
 

@@ -1,9 +1,9 @@
-package fr.lifecraft.uhcrun.register;
+package fr.niware.uhcrun.register;
 
-import fr.lifecraft.uhcrun.Main;
-import fr.lifecraft.uhcrun.hook.PotionAttackDamageNerf;
-import fr.lifecraft.uhcrun.hook.Reflection;
-import fr.lifecraft.uhcrun.hook.SlotPatcher;
+import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.hook.PotionAttackDamageNerf;
+import fr.niware.uhcrun.hook.SlotPatcher;
+import fr.niware.uhcrun.scoreboard.Reflection;
 import net.minecraft.server.v1_8_R3.GenericAttributes;
 import net.minecraft.server.v1_8_R3.MinecraftKey;
 import net.minecraft.server.v1_8_R3.MobEffectList;
@@ -26,7 +26,7 @@ public class PropertiesManager {
             e.printStackTrace();
         }
 
-        // PATCH POTIONS
+        // PATCH STRENTGH
 
         try {
             Reflection.setFinalStatic(PotionEffectType.class.getDeclaredField("acceptingNew"), true);
@@ -35,7 +35,7 @@ public class PropertiesManager {
             Field byNameField = Reflection.getField(PotionEffectType.class, true, "byName");
             ((Map<?, ?>) byNameField.get(null)).remove("increase_damage");
             ((PotionEffectType[]) byIdField.get(null))[5] = null;
-            main.log("§6Patching Strength Potion (130% => 43.3%, 260% => 86.6%)");
+            main.log("§6Patching Strength Potion (I: 130% => 43.3%, II: 260% => 86.6%)");
             Reflection.setFinalStatic(MobEffectList.class.getDeclaredField("INCREASE_DAMAGE"), (new PotionAttackDamageNerf(5, new MinecraftKey("strength"), false, 9643043)).c("potion.damageBoost").a(GenericAttributes.ATTACK_DAMAGE, "648D7064-6A60-4F59-8ABE-C2C23A6DD7A9", 2.5D, 2));
             main.log("§6Potions patched !");
         } catch (ReflectiveOperationException e) {

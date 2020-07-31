@@ -1,4 +1,4 @@
-package fr.lifecraft.uhcrun.hook;
+package fr.niware.uhcrun.hook;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 import java.util.Properties;
 import java.util.logging.Level;
 
-import fr.lifecraft.uhcrun.Main;
+import fr.niware.uhcrun.Main;
 
 public class SlotPatcher {
 

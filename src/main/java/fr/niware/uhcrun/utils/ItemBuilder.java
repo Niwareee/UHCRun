@@ -1,4 +1,4 @@
-package fr.lifecraft.uhcrun.utils;
+package fr.niware.uhcrun.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

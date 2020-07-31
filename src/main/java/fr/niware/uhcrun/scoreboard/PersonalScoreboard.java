@@ -1,13 +1,13 @@
-package fr.lifecraft.uhcrun.scoreboard;
+package fr.niware.uhcrun.scoreboard;
 
-import fr.lifecraft.uhcrun.game.Game;
+import fr.niware.uhcrun.game.Game;
+import fr.niware.uhcrun.Main;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import fr.lifecraft.uhcrun.Main;
-import fr.lifecraft.uhcrun.utils.State;
-import fr.lifecraft.uhcrun.world.WorldManager;
+import fr.niware.uhcrun.utils.State;
+import fr.niware.uhcrun.world.WorldManager;
 
 import java.util.UUID;
 
@@ -16,8 +16,8 @@ public class PersonalScoreboard {
     private final UUID uuid;
     private final ObjectiveSign objectiveSign;
 
-    private Player player;
-    private Main main = Main.getInstance();
+    private final Player player;
+    private final Main main = Main.getInstance();
 
     PersonalScoreboard(Player player) {
         this.player = player;
@@ -51,7 +51,7 @@ public class PersonalScoreboard {
             return;
         }
 
-        int kills = main.getPlayerManager().getPlayers().get(player.getUniqueId()).getKills();
+        int kills = main.getPlayerManager().getPlayers().get(player.getUniqueId()).getKillsGame();
 
         if (State.isInGame()) {
             objectiveSign.setLine(0, "§7§m+--------------+");
@@ -68,11 +68,12 @@ public class PersonalScoreboard {
             return;
 
         }
+
         if (State.isState(State.FINISH)) {
             objectiveSign.setLine(0, "§7" + DateFormatUtils.format(System.currentTimeMillis(), "dd/MM/yyyy"));
             objectiveSign.setLine(1, "§5");
             objectiveSign.setLine(2, "§7Gagnant:");
-            objectiveSign.setLine(3, "§f» §6" + Bukkit.getOfflinePlayer(game.getAlivePlayers().get(0)).getName());
+            objectiveSign.setLine(3, "§f» §a" + game.getWinner().getName());
             objectiveSign.setLine(4, "§8");
             objectiveSign.setLine(5, "§7Kills: §e" + kills);
             objectiveSign.setLine(6, "§7Durée: §e" + time + "s");

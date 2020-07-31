@@ -1,4 +1,4 @@
-package fr.lifecraft.uhcrun.scoreboard;
+package fr.niware.uhcrun.scoreboard;
 
 import net.minecraft.server.v1_8_R3.IScoreboardCriteria;
 import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardDisplayObjective;

@@ -1,12 +1,16 @@
-package fr.lifecraft.uhcrun.game;
+package fr.niware.uhcrun.game;
 
-import fr.lifecraft.uhcrun.Main;
-import fr.lifecraft.uhcrun.utils.State;
+import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.game.player.DeadPlayer;
+import fr.niware.uhcrun.utils.State;
 import net.minecraft.server.v1_8_R3.MinecraftServer;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
 
@@ -14,7 +18,15 @@ public class Game {
 
     // INIT
 
+    private long startMillis;
+    private int sizePlayers;
+    private Player winner;
+
     private World world;
+    private Location spawn;
+    private Location specSpawn;
+
+    private Map<UUID, DeadPlayer> deadPlayers;
     private final List<UUID> alivePlayers;
     private final List<UUID> decoPlayers;
 
@@ -30,18 +42,12 @@ public class Game {
     private int tpBorder = 300;
     private int finalBorderSize = 50;
 
-    private int featherAmount = 1;
-    private int stringAmount = 1;
-
     private boolean invincibility = true;
-    private boolean forceStart = false;
-
-    private Location spawn;
 
     private int slot;
-    private final int autoStart;
+    private final int autoStartSize;
     private final int autoStartTime;
-    private String hubServerName;
+    private final String hubServerName;
     private boolean runnable;
 
     private final int sizeMap;
@@ -53,6 +59,11 @@ public class Game {
 
     private final List<Block> blocks;
     private final Map<UUID, Location> stayLocs;
+
+    // POTION EFFECTS
+
+    private final List<PotionEffect> potionEffects;
+
 
     public Game(Main main) {
 
@@ -66,19 +77,50 @@ public class Game {
         this.preLoadNether = config.getInt("nether.sizePreload");
 
         this.slot = config.getInt("game.slot");
-        this.autoStart = config.getInt("game.autoStart");
+        this.autoStartSize = config.getInt("game.autoStartSize");
         this.autoStartTime = config.getInt("game.autoStartTime");
         this.hubServerName = config.getString("game.hubServerName");
         this.countdownStart = autoStartTime;
 
+        this.deadPlayers = new HashMap<>();
         this.alivePlayers = new ArrayList<>();
         this.decoPlayers = new ArrayList<>();
 
         this.blocks = new ArrayList<>();
         this.stayLocs = new HashMap<>();
+
+        this.potionEffects = new ArrayList<>();
+        this.potionEffects.add(new PotionEffect(PotionEffectType.ABSORPTION, 3, 1, false, false));
+        this.potionEffects.add(new PotionEffect(PotionEffectType.FAST_DIGGING, 999999, 0, false, false));
+        this.potionEffects.add(new PotionEffect(PotionEffectType.NIGHT_VISION, 999999, 0, false, false));
     }
 
     //---------------------------------------------------//
+
+    public long getStartMillis(){
+        return startMillis;
+    }
+
+    public void setStartMillis(long startMillis){
+        this.startMillis = startMillis;
+    }
+
+    public int getSizePlayers(){
+        return sizePlayers;
+    }
+
+    public void setSizePlayers(int sizePlayers){
+        this.sizePlayers = sizePlayers;
+    }
+
+    public Player getWinner(){
+        return winner;
+    }
+
+    public void setWinner(Player winner){
+        this.winner = winner;
+    }
+
 
     public World getWorld() {
         return world;
@@ -89,8 +131,16 @@ public class Game {
         return world;
     }
 
+    public Map<UUID, DeadPlayer> getDeadPlayers() {
+        return deadPlayers;
+    }
+
     public List<UUID> getAlivePlayers() {
         return alivePlayers;
+    }
+
+    public List<UUID> getDecoPlayers() {
+        return decoPlayers;
     }
 
     public int getPvPTime() {
@@ -103,14 +153,6 @@ public class Game {
 
     public int getBorderTime() {
         return borderTime;
-    }
-
-    public int getFeatherAmount() {
-        return featherAmount;
-    }
-
-    public int getStringAmount() {
-        return stringAmount;
     }
 
     public boolean isInvincibility() {
@@ -170,20 +212,20 @@ public class Game {
         return spawn;
     }
 
+    public Location getSpecSpawn() {
+        return specSpawn;
+    }
+
+    public void setSpecSpawn(Location specSpawn) {
+        this.specSpawn = specSpawn;
+    }
+
     public int getTPBorder() {
         return tpBorder;
     }
 
     public void setTPBorder(int tpBorder) {
         this.tpBorder = tpBorder;
-    }
-
-    public boolean isForceStart() {
-        return forceStart;
-    }
-
-    public void setForceStart(boolean forceStart) {
-        this.forceStart = forceStart;
     }
 
     public int getSlot() {
@@ -194,16 +236,12 @@ public class Game {
         this.slot = slot;
     }
 
-    public int getAutoStart() {
-        return autoStart;
+    public int getAutoStartSize() {
+        return autoStartSize;
     }
 
     public int getAutoStartTime() {
         return autoStartTime;
-    }
-
-    public List<UUID> getDecoPlayers() {
-        return decoPlayers;
     }
 
     public void setRunnable(boolean runnable) {
@@ -236,5 +274,9 @@ public class Game {
 
     public String getHubServerName() {
         return hubServerName;
+    }
+
+    public Collection<PotionEffect> getPotionEffects() {
+        return potionEffects;
     }
 }

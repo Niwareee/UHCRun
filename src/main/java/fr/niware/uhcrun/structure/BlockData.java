@@ -1,4 +1,4 @@
-package fr.lifecraft.uhcrun.structure;
+package fr.niware.uhcrun.structure;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;

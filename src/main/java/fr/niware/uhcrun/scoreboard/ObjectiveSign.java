@@ -1,4 +1,4 @@
-package fr.lifecraft.uhcrun.scoreboard;
+package fr.niware.uhcrun.scoreboard;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;

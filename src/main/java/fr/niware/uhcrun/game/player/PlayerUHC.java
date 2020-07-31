@@ -5,7 +5,7 @@ import fr.niware.uhcrun.account.Rank;
 
 import java.util.UUID;
 
-public class UHCPlayer {
+public class PlayerUHC {
 
     private final UUID uuid;
     private final String name;
@@ -15,7 +15,7 @@ public class UHCPlayer {
     private final int wins;
     private boolean isWinner;
 
-    public UHCPlayer(UUID uuid, String name, Rank rank, int killsGame, int killsAll, int wins){
+    public PlayerUHC(UUID uuid, String name, Rank rank, int killsGame, int killsAll, int wins){
         this.uuid = uuid;
         this.name = name;
         this.rank = rank;

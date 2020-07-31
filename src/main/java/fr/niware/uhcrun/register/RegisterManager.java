@@ -1,8 +1,8 @@
-package fr.lifecraft.uhcrun.register;
+package fr.niware.uhcrun.register;
 
-import fr.lifecraft.uhcrun.Main;
-import fr.lifecraft.uhcrun.commands.CommandMain;
-import fr.lifecraft.uhcrun.listeners.*;
+import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.commands.CommandMain;
+import fr.niware.uhcrun.listeners.*;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
@@ -17,8 +17,8 @@ public class RegisterManager {
     public RegisterManager(Main main){
         this.main = main;
 
-        registerListener();
         registerCommands();
+        registerListener();
 
         main.getServer().getMessenger().registerOutgoingPluginChannel(main, "BungeeCord");
     }
@@ -26,17 +26,17 @@ public class RegisterManager {
 
     public void registerListener() {
 
-        PluginManager pm = Bukkit.getPluginManager();
-        List<Listener> listeners = new ArrayList<Listener>();
+        PluginManager pluginManager = Bukkit.getPluginManager();
+        List<Listener> listeners = new ArrayList<>();
 
-        listeners.add(new WorldListener());
         listeners.add(new ChatListener());
         listeners.add(new ConnectionListener(main));
-        listeners.add(new NoMoveListener().listener);
+        listeners.add(new TempListener().moveListener);
+        listeners.add(new TempListener().chunkListener);
         listeners.add(new GameListener(main));
 
         for (Listener listener : listeners) {
-            pm.registerEvents(listener, main);
+            pluginManager.registerEvents(listener, main);
         }
     }
 

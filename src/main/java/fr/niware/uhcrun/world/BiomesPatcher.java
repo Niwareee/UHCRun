@@ -1,12 +1,14 @@
-package fr.lifecraft.uhcrun.world;
+package fr.niware.uhcrun.world;
 
 import net.minecraft.server.v1_8_R3.BiomeBase;
+
+import java.lang.reflect.Field;
 
 public class BiomesPatcher {
 
     public static void removeBiomes() {
         try {
-            java.lang.reflect.Field biomesField = BiomeBase.class.getDeclaredField("biomes");
+            Field biomesField = BiomeBase.class.getDeclaredField("biomes");
             biomesField.setAccessible(true);
             if ((biomesField.get(null) instanceof BiomeBase[])) {
                 BiomeBase[] biomes = (BiomeBase[]) biomesField.get(null);

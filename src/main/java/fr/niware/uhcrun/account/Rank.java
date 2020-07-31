@@ -1,4 +1,4 @@
-package fr.niware.uhcrun.rank;
+package fr.niware.uhcrun.account;
 
 public class Rank {
 
