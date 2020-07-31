@@ -1,4 +1,4 @@
-package fr.niware.uhcrun.player;
+package fr.niware.uhcrun.game.player;
 
 import fr.niware.uhcrun.Main;
 import fr.niware.uhcrun.account.Rank;
