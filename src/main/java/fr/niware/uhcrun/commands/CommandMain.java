@@ -7,13 +7,18 @@ import fr.niware.uhcrun.game.WinManager;
 import fr.niware.uhcrun.structure.StructureLoader;
 import fr.niware.uhcrun.utils.State;
 import fr.niware.uhcrun.world.OrePopulator;
+import net.minecraft.server.v1_8_R3.IChatBaseComponent;
+import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerListHeaderFooter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.world.WorldInitEvent;
+
+import java.lang.reflect.Field;
 
 public class CommandMain implements CommandExecutor {
 

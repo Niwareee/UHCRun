@@ -3,23 +3,24 @@ package fr.niware.uhcrun.listeners;
 import fr.niware.uhcrun.Main;
 import fr.niware.uhcrun.utils.ItemBuilder;
 import fr.niware.uhcrun.utils.State;
-import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.SkullType;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.BrewEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerAchievementAwardedEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -31,7 +32,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public class GameListener implements Listener {
 
@@ -69,8 +69,6 @@ public class GameListener implements Listener {
         }
         if (event.getDamager().getType() == EntityType.ENDER_PEARL) {
             event.setCancelled(true);
-
-            //event.setDamage(event.getDamage() / 2.5);
         }
     }
 
@@ -101,7 +99,7 @@ public class GameListener implements Listener {
     public void onPlaceLava(PlayerBucketEmptyEvent event) {
         if (event.getBucket().equals(Material.LAVA_BUCKET)) {
             for (Player players : Bukkit.getOnlinePlayers()) {
-                if (!players.equals(event.getPlayer()) && players.getGameMode() == GameMode.SURVIVAL) {
+                if (players.getUniqueId() != event.getPlayer().getUniqueId() && players.getGameMode() == GameMode.SURVIVAL) {
                     if (event.getBlockClicked().getLocation().distance(players.getLocation()) < 5) {
                         event.setCancelled(true);
                         event.getPlayer().sendMessage("§dUHCRun §8» §cVous êtes trop prêt d'un joueur");
@@ -135,11 +133,13 @@ public class GameListener implements Listener {
                 PlayerInventory targetInventory = target.getInventory();
                 Inventory inventory = Bukkit.createInventory(null, 54, "Inventaire de " + target.getName());
 
-                for (int i = 0; i < 36; i++) {
+                /*for (int i = 0; i < 36; i++) {
                     if (targetInventory.getItem(i) != null) {
                         inventory.setItem(i, targetInventory.getItem(i));
                     }
-                }
+                }*/
+
+                inventory.setContents(targetInventory.getContents());
 
                 inventory.setItem(45, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) SkullType.PLAYER.ordinal()).setName("§a" + target.getName()).setSkullOwner(target.getName()).setName("§a" + target.getName()).addLoreLine("§eVie: §c" + Math.ceil(target.getHealth() / 2) + " ❤").addLoreLine("§eNourriture: §d" + Math.ceil(target.getFoodLevel()) + "/§d20").addLoreLine("§eNiveau: §d" + target.getLevel()).toItemStack());
 

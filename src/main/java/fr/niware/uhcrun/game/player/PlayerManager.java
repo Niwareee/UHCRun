@@ -1,6 +1,7 @@
 package fr.niware.uhcrun.game.player;
 
 import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.account.AccountManager;
 import fr.niware.uhcrun.account.Rank;
 import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.game.PreGameManager;
@@ -26,7 +27,9 @@ public class PlayerManager {
     private final Main main;
     private final Game game;
 
+    private final AccountManager accountManager;
     private final ScoreboardManager scoreboardManager;
+
     private final Scoreboard scoreboard;
 
     private final Map<UUID, PlayerUHC> players;
@@ -35,7 +38,9 @@ public class PlayerManager {
         this.main = main;
         this.game = main.getGame();
 
+        this.accountManager = main.getAccountManager();
         this.scoreboardManager = main.getScoreboardManager();
+
         this.scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
 
         this.players = new HashMap<>();
@@ -85,9 +90,14 @@ public class PlayerManager {
         }
     }
 
-    public void onJoin(Player player, Rank rank) {
+    public void onJoin(Player player) {
+        int[] account = accountManager.getDatabaseAccount(player.getUniqueId());
+        Rank rank = accountManager.getFromPower(account[0]);
+        new PlayerUHC(player.getUniqueId(), player.getName(), rank, account[1], account[2]);
+
         Team team = scoreboard.getTeam(String.valueOf(1));
         team.addEntry(player.getName());
+
         scoreboardManager.onLogin(player);
 
         if (State.isInWait()) {

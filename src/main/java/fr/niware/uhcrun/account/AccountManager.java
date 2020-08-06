@@ -18,8 +18,8 @@ public class AccountManager {
 
     public List<Rank> ranks;
 
-    public AccountManager() {
-        this.main = Main.getInstance();
+    public AccountManager(Main main) {
+        this.main = main;
         this.sqlManager = main.getSQLManager();
         this.ranks = new ArrayList<>();
 
@@ -58,7 +58,7 @@ public class AccountManager {
                 exception.printStackTrace();
             }
         });
-        System.out.print("Load connection SQL in " + (System.currentTimeMillis() - start) + " ms");
+        System.out.print("Load connection SQL in " + (System.currentTimeMillis() - start) + " MS");
         return data;
     }
 
@@ -66,10 +66,6 @@ public class AccountManager {
         sqlManager.update("INSERT INTO account_uhcrun (player_uuid, rankid, kills, wins, first_connection) VALUES " +
                 "('" + id.toString() + "', '" + 0 + "', '" + 0 + "', '" + 0 + "', '" + new Timestamp(System.currentTimeMillis()) + "')");
         System.out.print("Successfully created " + id + "'s account");
-    }
-
-    public void setRank(UUID uuid, Rank rank) {
-        sqlManager.update("UPDATE account_uhcrun SET rankid='" + rank.getPower() + "' WHERE player_uuid='" + uuid + "'");
     }
 
     public Rank getFromPower(int power) {

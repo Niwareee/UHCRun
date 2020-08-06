@@ -1,12 +1,12 @@
 package fr.niware.uhcrun;
 
+import fr.niware.uhcrun.account.AccountManager;
 import fr.niware.uhcrun.database.SQLManager;
 import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.game.WinManager;
+import fr.niware.uhcrun.game.player.PlayerManager;
 import fr.niware.uhcrun.hook.SlotPatcher;
 import fr.niware.uhcrun.listeners.WorldListener;
-import fr.niware.uhcrun.game.player.PlayerManager;
-import fr.niware.uhcrun.account.AccountManager;
 import fr.niware.uhcrun.register.PropertiesManager;
 import fr.niware.uhcrun.register.RegisterManager;
 import fr.niware.uhcrun.scoreboard.ScoreboardManager;
@@ -59,9 +59,9 @@ public class Main extends JavaPlugin {
             this.game = new Game(this);
             PropertiesManager.enablePatch();
             this.structureLoader = new StructureLoader(this);
+            this.accountManager = new AccountManager(this);
             this.playerManager = new PlayerManager(this);
             this.winManager = new WinManager(this);
-            this.accountManager = new AccountManager();
             this.worldManager = new WorldManager(this);
 
             new RegisterManager(this);
@@ -103,7 +103,7 @@ public class Main extends JavaPlugin {
         return scheduledExecutorService;
     }
 
-    public WorldManager getWorldManager(){
+    public WorldManager getWorldManager() {
         return worldManager;
     }
 
@@ -134,4 +134,5 @@ public class Main extends JavaPlugin {
     public void log(String message) {
         getServer().getConsoleSender().sendMessage("[" + getName() + "] " + message);
     }
+
 }

@@ -5,9 +5,7 @@ import fr.niware.uhcrun.game.Game;
 import net.minecraft.server.v1_8_R3.MinecraftServer;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
-import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -92,15 +90,6 @@ public class WorldManager {
 
         double newPHealth = player.getHealth();
         showhealth.getScore(player.getName()).setScore((int) newPHealth * 5);
-    }
-
-    public void spawnArmorStand(Location location, String name) {
-        ArmorStand as = (ArmorStand) WORLD.spawnEntity(location, EntityType.ARMOR_STAND);
-        as.setVisible(false);
-        as.setCustomNameVisible(true);
-        as.setCustomName(name);
-        as.setGravity(false);
-        entityList.add(as);
     }
 
     public void clearAllCustomEntities() {

@@ -15,11 +15,11 @@ public class PlayerUHC {
     private final int wins;
     private boolean isWinner;
 
-    public PlayerUHC(UUID uuid, String name, Rank rank, int killsGame, int killsAll, int wins){
+    public PlayerUHC(UUID uuid, String name, Rank rank, int killsAll, int wins){
         this.uuid = uuid;
         this.name = name;
         this.rank = rank;
-        this.killsGame = killsGame;
+        this.killsGame = 0;
         this.killsAll = killsAll;
         this.wins = wins;
         this.isWinner = false;
