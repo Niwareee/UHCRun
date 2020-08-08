@@ -4,6 +4,7 @@ import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.Main;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import fr.niware.uhcrun.utils.State;
@@ -42,7 +43,7 @@ public class PersonalScoreboard {
 
         if (State.isInWait()) {
             objectiveSign.setLine(0, "§7");
-            objectiveSign.setLine(1, " §c» §7Joueurs: §e" + Bukkit.getOnlinePlayers().size() + "/" + game.getSlot());
+            objectiveSign.setLine(1, " §c» §7Joueurs: §e" + game.getAlivePlayers().size() + "/" + game.getSlot());
             objectiveSign.setLine(2, " §c» §7Démarrage: §b" + game.getCountdownStart() + "s");
             objectiveSign.setLine(3, "§6");
             objectiveSign.setLine(4, ip);
@@ -59,15 +60,13 @@ public class PersonalScoreboard {
             objectiveSign.setLine(2, " §7» §eBordure: §b" + (int) game.getWorld().getWorldBorder().getSize() / 2);
             objectiveSign.setLine(3, " §7» §eKills: §b" + kills);
             objectiveSign.setLine(4, "§6§9§7§m+--------------+");
-            objectiveSign.setLine(5, " §7» §eCentre: §b" + (int) Math.ceil(player.getLocation().distance(game.getSpawn())));
-            objectiveSign.setLine(6, " §7» §eDurée: §b" + time);
-            objectiveSign.setLine(7, " §7» §eTP: §b" + (State.isState(State.TELEPORT) ? "✔" : secondsToString(game.getPvPTime())));
-            objectiveSign.setLine(8, "§9§7§m+--------------+");
-            objectiveSign.setLine(9, ip);
+            objectiveSign.setLine(5, " §7» §eDurée: §b" + time);
+            objectiveSign.setLine(6, " §7» §eTP: §b" + (State.isState(State.PVP) ? "✔" : secondsToString(game.getPvPTime())));
+            objectiveSign.setLine(7, "§9§7§m+--------------+");
+            objectiveSign.setLine(8, ip);
             
             objectiveSign.updateLines();
             return;
-
         }
 
         if (State.isState(State.FINISH)) {

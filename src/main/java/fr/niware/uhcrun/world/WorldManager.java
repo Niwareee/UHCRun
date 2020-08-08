@@ -52,14 +52,14 @@ public class WorldManager {
         healthBellow.setDisplaySlot(DisplaySlot.BELOW_NAME);
         healthBellow.setDisplayName("%");
 
-        scoreboard.registerNewObjective("pkills", "playerKillCount");
+        scoreboard.registerNewObjective("playerkills", "playerKillCount");
 
     }
 
     public void registerTabTeams() {
         scoreboard.getTeams().forEach(Team::unregister);
 
-        Team team = scoreboard.registerNewTeam(String.valueOf(1));
+        Team team = scoreboard.registerNewTeam("player");
         team.setPrefix("§7");
         team.setSuffix("§r");
         main.getLogger().info("Tab teams successfully created");
@@ -73,7 +73,7 @@ public class WorldManager {
     }
 
     public Map<String, Integer> getTop10() {
-        Objective objective = scoreboard.getObjective("pkills");
+        Objective objective = scoreboard.getObjective("playerkills");
 
         Map<String, Integer> stats = new HashMap<>();
         scoreboard.getEntries().forEach(playerName -> stats.put(playerName, objective.getScore(playerName).getScore()));

@@ -87,29 +87,30 @@ public class WorldLoader {
                             }
 
                             Bukkit.getScheduler().scheduleSyncDelayedTask(main, new RunnableWithParameter(this.i, this.j, this.nextRest), delayTask);
-                        } else {
-                            chunksLoaded = totalChunksToLoad;
-
-                            main.log("§aFinish preload " + world.getName() + " in " + (System.currentTimeMillis() - start) / 1000 + " seconds");
-                            main.log(world.getLoadedChunks().length + " chunks have been loaded");
-                            Bukkit.getScheduler().cancelAllTasks();
-
-                            if (environment == Environment.NETHER) {
-
-                                main.getStructureLoader().load("spawn");
-                                main.getStructureLoader().paste(main.getGame().getSpawn(), "spawn", true);
-                                main.getStructureLoader().load("win");
-
-                                State.setState(State.WAITING);
-                                MinecraftServer.getServer().setMotd("§bEn attente");
-
-                                main.log("§aWorld ready. Ready to play.");
-                                return;
-                            }
-
-                            int preLoadNether = main.getGame().getPreLoadNether();
-                            generateChunks(Bukkit.getWorld("world_nether"), preLoadNether);
+                            return;
                         }
+
+                        chunksLoaded = totalChunksToLoad;
+
+                        main.log("§aFinish preload " + world.getName() + " in " + (System.currentTimeMillis() - start) / 1000 + " seconds");
+                        main.log(world.getLoadedChunks().length + " chunks have been loaded");
+                        Bukkit.getScheduler().cancelAllTasks();
+
+                        if (environment == Environment.NETHER) {
+
+                            main.getStructureLoader().load("spawn");
+                            main.getStructureLoader().paste(main.getGame().getSpawn(), "spawn", true);
+                            main.getStructureLoader().load("win");
+
+                            State.setState(State.WAITING);
+                            MinecraftServer.getServer().setMotd("§bEn attente");
+
+                            main.log("§aWorld ready. Ready to play.");
+                            return;
+                        }
+
+                        int preLoadNether = main.getGame().getPreLoadNether();
+                        generateChunks(Bukkit.getWorld("world_nether"), preLoadNether);
                     }
                 }
 

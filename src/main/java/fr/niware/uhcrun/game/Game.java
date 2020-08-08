@@ -117,10 +117,13 @@ public class Game {
         return winner;
     }
 
+    public boolean isWinner(UUID uuid){
+        return uuid == winner.getUniqueId();
+    }
+
     public void setWinner(Player winner){
         this.winner = winner;
     }
-
 
     public World getWorld() {
         return world;
@@ -248,7 +251,7 @@ public class Game {
         this.runnable = runnable;
     }
 
-    public boolean getRunnable() {
+    public boolean isRunnable() {
         return runnable;
     }
 

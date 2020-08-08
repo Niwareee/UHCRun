@@ -24,6 +24,7 @@ public class PreGameManager {
     private final Main main;
 
     private final Game game;
+    private final ActionBar actionBar;
     private final Title title;
 
     private final WorldManager worldManager;
@@ -34,6 +35,7 @@ public class PreGameManager {
         this.main = Main.getInstance();
 
         this.game = main.getGame();
+        this.actionBar = new ActionBar();
         this.title = new Title();
 
         this.worldManager = main.getWorldManager();
@@ -52,7 +54,7 @@ public class PreGameManager {
 
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(main, () -> {
 
-            if (!game.getRunnable()) {
+            if (!game.isRunnable()) {
                 return;
             }
 
@@ -62,14 +64,14 @@ public class PreGameManager {
             if (countdown > 0) {
                 Bukkit.getOnlinePlayers().forEach(players -> players.setLevel(countdown));
                 if (countdown < 4) {
-                    new ActionBar("§7» §eDémarrage dans §f" + countdown + "s§e.").sendToAll();
+                    actionBar.sendToAll("§7» §eDémarrage dans §f" + countdown + "s§e.");
                     Bukkit.getOnlinePlayers().forEach(players -> players.playSound(players.getLocation(), Sound.CLICK, 4f, 4f));
                 }
                 return;
             }
 
             if (countdown == 0) {
-                if (!(game.getAlivePlayers().size() >= game.getAutoStartSize()) && !forceStart) {
+                if (game.getAlivePlayers().size() < game.getAutoStartSize() && !forceStart) {
                     Bukkit.broadcastMessage("§dUHCRun §7» §cIl n'y a pas assez de joueurs pour démarrer.");
 
                     Bukkit.getScheduler().cancelTask(task);
@@ -89,7 +91,7 @@ public class PreGameManager {
                 Bukkit.getOnlinePlayers().forEach(players -> {
                     players.setLevel(0);
                     Reflection.playSound(players, players.getLocation(), "EAT", 3f, 3f);
-                    new ActionBar("§7Téléportation...").sendToPlayer(players);
+                    actionBar.sendToPlayer(players, "§7Téléportation...");
                     players.getInventory().clear();
                 });
 
@@ -103,12 +105,12 @@ public class PreGameManager {
             }
 
             if (countdown < -8 && countdown > -12) {
-                new ActionBar("§7» §eDémarrage dans §f" + (countdown + 12) + "s§e.").sendToAll();
+                actionBar.sendToAll("§7» §eDémarrage dans §f" + (countdown + 12) + "s§e.");
                 return;
             }
 
             if (countdown == -12) {
-                new ActionBar("§7» §eQue le meilleur gagne !").sendToAll();
+                actionBar.sendToAll("§7» §eQue le meilleur gagne !");
 
                 Bukkit.getScheduler().cancelTask(task);
                 State.setState(State.MINING);

@@ -29,7 +29,7 @@ public class ChatListener implements Listener {
                 event.setFormat(rank.getPrefix() + "%1$s" + "§7: " + rank.getColor() + "%2$s");
                 return;
             }
-            event.setFormat("§7" + "%1$s" + "§7: §7" + "%2$s");
+            event.setFormat("§7" + "%1$s" + "§7: §f" + "%2$s");
             return;
         }
 

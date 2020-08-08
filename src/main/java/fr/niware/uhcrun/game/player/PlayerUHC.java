@@ -8,31 +8,23 @@ import java.util.UUID;
 public class PlayerUHC {
 
     private final UUID uuid;
-    private final String name;
     private final Rank rank;
     private int killsGame;
     private final int killsAll;
     private final int wins;
-    private boolean isWinner;
 
-    public PlayerUHC(UUID uuid, String name, Rank rank, int killsAll, int wins){
+    public PlayerUHC(UUID uuid, Rank rank, int killsAll, int wins){
         this.uuid = uuid;
-        this.name = name;
         this.rank = rank;
         this.killsGame = 0;
         this.killsAll = killsAll;
         this.wins = wins;
-        this.isWinner = false;
 
         Main.getInstance().getPlayerManager().getPlayers().put(uuid, this);
     }
 
     public UUID getUUID() {
         return uuid;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public int getKillsGame() {
@@ -53,13 +45,5 @@ public class PlayerUHC {
 
     public int getWins() {
         return wins;
-    }
-
-    public boolean isWinner() {
-        return isWinner;
-    }
-
-    public void setWinner(boolean winner) {
-        isWinner = winner;
     }
 }

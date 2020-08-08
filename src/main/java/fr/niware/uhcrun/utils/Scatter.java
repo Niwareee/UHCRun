@@ -19,6 +19,7 @@ import java.util.*;
 public class Scatter extends BukkitRunnable {
 
     private final Game game;
+    private final ActionBar actionBar;
 
     private final List<Player> players;
 
@@ -31,6 +32,7 @@ public class Scatter extends BukkitRunnable {
         this.isAdd = true;
         this.isStart = start;
 
+        this.actionBar = new ActionBar();
         this.game = Main.getInstance().getGame();
     }
 
@@ -42,7 +44,7 @@ public class Scatter extends BukkitRunnable {
 
         if (this.players.size() == 0) {
             game.setRunnable(true);
-            new ActionBar("§aTéléportation des joueurs avec succès").sendToAll();
+            actionBar.sendToAll("§aTéléportation des joueurs avec succès");
             this.cancel();
             return;
         }
@@ -57,7 +59,7 @@ public class Scatter extends BukkitRunnable {
 
             if (this.isStart) {
                 int pourcent = Math.round((float) 100 / this.players.size());
-                new ActionBar("§7Téléportation...  §6(" + pourcent + "%)").sendToAll();
+                actionBar.sendToAll("§7Téléportation...  §6(" + pourcent + "%)");
                 playerToTp.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20, 1, false, false));
                 playerToTp.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 9, false, false));
                 setSpawnSpot(playerToTp);

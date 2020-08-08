@@ -1,6 +1,7 @@
 package fr.niware.uhcrun.game.player;
 
 import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.game.Game;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -19,6 +20,8 @@ import java.util.UUID;
 
 public class DeadPlayer {
 
+    private Game game = Main.getInstance().getGame();
+
     private final UUID uuid;
     private final Location location;
     private final int level;
@@ -34,7 +37,7 @@ public class DeadPlayer {
         this.inventory = inventory;
         this.potionEffects = new ArrayList<>(potionEffects);
 
-        Main.getInstance().getGame().getDeadPlayers().put(uuid, this);
+        game.getDeadPlayers().put(uuid, this);
     }
 
     public void revive() {
@@ -60,12 +63,7 @@ public class DeadPlayer {
         player.playSound(player.getLocation(), Sound.ENDERMAN_TELEPORT, 4F, 4F);
         player.sendMessage("§dUHCRun §7» §6Vous avez été réssuscité !");
 
-        Main.getInstance().getGame().getDeadPlayers().remove(uuid);
-
-                /*for (ItemStack items : inventory) {
-            if (items != null)
-                player.getInventory().setArmorContents().addItem(items);
-        }*/
+        game.getDeadPlayers().remove(uuid);
     }
 
 }

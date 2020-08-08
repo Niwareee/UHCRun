@@ -19,14 +19,12 @@ public class GameManager {
     private final Main main;
     private final Game game;
 
-    private int task;
-
     public GameManager() {
 
         this.main = Main.getInstance();
         this.game = main.getGame();
 
-        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(main, () -> {
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(main, () -> {
 
             game.addTimer();
             main.getGame().removePvPTime();
@@ -39,7 +37,6 @@ public class GameManager {
 
             if (pvpTime == 0) {
                 launchTeleport();
-                Bukkit.getScheduler().cancelTask(task);
             }
 
         }, 0L, 20L);

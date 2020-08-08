@@ -53,7 +53,6 @@ public class AccountManager {
                 data[0] = rs.getInt("rankid");
                 data[1] = rs.getInt("kills");
                 data[2] = rs.getInt("wins");
-
             } catch (SQLException exception) {
                 exception.printStackTrace();
             }
@@ -81,7 +80,7 @@ public class AccountManager {
 
         System.out.print(main.getPlayerManager().getPlayers().values().size());
         for (PlayerUHC uhcPlayer : main.getPlayerManager().getPlayers().values()) {
-            if (!uhcPlayer.isWinner()) {
+            if (!game.isWinner(uhcPlayer.getUUID())) {
                 sqlManager.update("UPDATE account_uhcrun SET kills='" + uhcPlayer.getKillsAll() + uhcPlayer.getKillsGame() + "' WHERE player_uuid='" + uhcPlayer.getUUID() + "'");
             } else {
                 System.out.print("dd");

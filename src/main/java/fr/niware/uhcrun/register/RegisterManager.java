@@ -23,7 +23,6 @@ public class RegisterManager {
         main.getServer().getMessenger().registerOutgoingPluginChannel(main, "BungeeCord");
     }
 
-
     public void registerListener() {
 
         PluginManager pluginManager = Bukkit.getPluginManager();

@@ -13,7 +13,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -26,6 +25,7 @@ public class PlayerManager {
 
     private final Main main;
     private final Game game;
+    private final ActionBar actionBar;
 
     private final AccountManager accountManager;
     private final ScoreboardManager scoreboardManager;
@@ -37,6 +37,7 @@ public class PlayerManager {
     public PlayerManager(Main main) {
         this.main = main;
         this.game = main.getGame();
+        this.actionBar = new ActionBar();
 
         this.accountManager = main.getAccountManager();
         this.scoreboardManager = main.getScoreboardManager();
@@ -56,8 +57,9 @@ public class PlayerManager {
         try {
             out.writeUTF("Connect");
             out.writeUTF(server);
-        } catch (IOException e) {
-            System.out.print("ERROR: " + e);
+        } catch (IOException exception) {
+            System.out.print("Error while teleport " + player.getName() + " to server " + server + ":");
+            System.out.print("" + exception);
         }
         player.sendPluginMessage(main, "BungeeCord", b.toByteArray());
     }
@@ -74,7 +76,7 @@ public class PlayerManager {
         player.getInventory().clear();
         player.getInventory().setArmorContents(null);
         player.setWalkSpeed(0.2f);
-        player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
+        player.getActivePotionEffects().forEach(potionEffects -> player.removePotionEffect(potionEffects.getType()));
         player.setMaxHealth(20.0D);
         player.setHealth(20.0D);
         player.setFoodLevel(20);
@@ -84,26 +86,21 @@ public class PlayerManager {
     }
 
     public void setSpec(Player player) {
-        if (player != null) {
-            System.out.print("spectator");
-            player.setGameMode(GameMode.SPECTATOR);
-        }
+        player.setGameMode(GameMode.SPECTATOR);
     }
 
     public void onJoin(Player player) {
         int[] account = accountManager.getDatabaseAccount(player.getUniqueId());
         Rank rank = accountManager.getFromPower(account[0]);
-        new PlayerUHC(player.getUniqueId(), player.getName(), rank, account[1], account[2]);
+        new PlayerUHC(player.getUniqueId(), rank, account[1], account[2]);
 
-        Team team = scoreboard.getTeam(String.valueOf(1));
-        team.addEntry(player.getName());
-
+        scoreboard.getTeam("player").addEntry(player.getName());
         scoreboardManager.onLogin(player);
 
         if (State.isInWait()) {
             setJoinInventory(player);
 
-            new ActionBar("§a+ " + rank.getPrefix() + player.getName() + " §7a rejoint. §6(" + Bukkit.getOnlinePlayers().size() + "/" + game.getSlot() + ")").sendToAll();
+            actionBar.sendToPlayer(player, "§a+ " + rank.getPrefix() + player.getName() + " §7a rejoint. §6(" + Bukkit.getOnlinePlayers().size() + "/" + game.getSlot() + ")");
             game.getAlivePlayers().add(player.getUniqueId());
 
             if (Bukkit.getOnlinePlayers().size() >= game.getAutoStartSize() && State.isState(State.WAITING)) {
@@ -114,7 +111,7 @@ public class PlayerManager {
 
         if (State.isInGame()) {
             if (game.getDecoPlayers().contains(player.getUniqueId())) {
-                new ActionBar("§dUHCRun §8» §b" + player.getName() + " §7est revenu dans la partie.").sendToAll();
+                actionBar.sendToAll("§dUHCRun §8» §b" + player.getName() + " §7est revenu dans la partie.");
 
                 game.getAlivePlayers().add(player.getUniqueId());
                 game.getDecoPlayers().remove(player.getUniqueId());
@@ -137,7 +134,7 @@ public class PlayerManager {
 
         if (State.isInWait()) {
             players.remove(player.getUniqueId());
-            new ActionBar("§c- §e" + player.getName() + " §7a quitté la partie. §6(" + (Bukkit.getOnlinePlayers().size() - 1) + "/" + game.getSlot() + ")").sendToAll();
+            actionBar.sendToAll("§c- §e" + player.getName() + " §7a quitté la partie. §6(" + (Bukkit.getOnlinePlayers().size() - 1) + "/" + game.getSlot() + ")");
             return;
         }
 
@@ -145,7 +142,7 @@ public class PlayerManager {
             if (game.getAlivePlayers().contains(player.getUniqueId())) {
                 if (State.isState(State.TELEPORT) || State.isState(State.MINING)) {
                     game.getDecoPlayers().add(player.getUniqueId());
-                    new ActionBar("§aUHCRun §8» §b" + player.getName() + " §7a quitté la partie.").sendToAll();
+                    actionBar.sendToAll("§aUHCRun §8» §b" + player.getName() + " §7a quitté la partie.");
                     return;
                 }
                 player.setHealth(0);

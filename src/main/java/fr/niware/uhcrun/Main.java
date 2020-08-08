@@ -76,8 +76,8 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        getScoreboardManager().onDisable();
         worldManager.onDisable();
+        getScoreboardManager().onDisable();
         SlotPatcher.updateServerProperties();
 
         super.onDisable();

@@ -42,7 +42,6 @@ public class WinManager {
     }
 
     public void launchWin(UUID uuid) {
-
         Location winLocation = game.getSpawn();
 
         Player winner = Bukkit.getOfflinePlayer(uuid).getPlayer();
@@ -53,7 +52,6 @@ public class WinManager {
         MinecraftServer.getServer().setMotd("§6Fin de la partie");
 
         Bukkit.getScheduler().runTaskLater(main, () -> {
-
             main.getStructureLoader().paste(winLocation, "win", true);
 
             for (Player players : Bukkit.getOnlinePlayers()) {
@@ -70,13 +68,13 @@ public class WinManager {
             }
 
             game.getWorld().getWorldBorder().setSize(400);
-            int kills = playerManager.getPlayers().get(winner.getUniqueId()).getKillsGame();
+            int killsWinner = playerManager.getPlayers().get(winner.getUniqueId()).getKillsGame();
 
             Bukkit.broadcastMessage("§f§m+------§6§m-----------§f§m------+");
             Bukkit.broadcastMessage("          §a§l● §ePartie terminée §a§l●");
             Bukkit.broadcastMessage(" ");
             Bukkit.broadcastMessage(" §7Victoire de §a" + winner.getName() + "§7.");
-            Bukkit.broadcastMessage(" §7Avec un total de §f" + kills + " §7kills.");
+            Bukkit.broadcastMessage(" §7Avec un total de §f" + killsWinner + " §7kills.");
             Bukkit.broadcastMessage(" ");
 
             Bukkit.broadcastMessage(" §aTop Kills:");
