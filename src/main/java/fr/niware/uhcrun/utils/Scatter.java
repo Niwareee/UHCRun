@@ -1,24 +1,23 @@
 package fr.niware.uhcrun.utils;
 
-import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.utils.packet.ActionBar;
 import io.papermc.lib.PaperLib;
-import net.minecraft.server.v1_8_R3.MinecraftServer;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class Scatter extends BukkitRunnable {
 
@@ -57,18 +56,19 @@ public class Scatter extends BukkitRunnable {
         Player playerToTp = players.get(random.nextInt(players.size()));
 
         if (playerToTp != null && playerToTp.getGameMode() != GameMode.SPECTATOR) {
+
+            PaperLib.teleportAsync(playerToTp, randomLocation());
+            playerToTp.setVelocity(new Vector(0, 1, 0));
+            System.out.print("done");
+            //playerToTp.teleport(randomLocation());
+
             if (this.isStart) {
                 int pourcent = Math.round((float) 100 / this.players.size());
                 actionBar.sendToAll("§7Téléportation...  §6(" + pourcent + "%)");
                 playerToTp.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20, 1, false, false));
                 playerToTp.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 9, false, false));
-                setSpawnSpot(randomLocation(), playerToTp);
+                setSpawnSpot(playerToTp);
             }
-
-            PaperLib.teleportAsync(playerToTp, randomLocation());
-            System.out.print("done");
-            //playerToTp.teleport(randomLocation());
-            playerToTp.setVelocity(new Vector(0, 1, 0));
 
         }
 
@@ -80,7 +80,7 @@ public class Scatter extends BukkitRunnable {
         int sizeTP = (this.isStart ? game.getSizeMap() - 10 : game.getTPBorder() - 10);
         int x = (random.nextInt(2) == 0 ? +1 : -1) * random.nextInt(sizeTP);
         int z = (random.nextInt(2) == 0 ? +1 : -1) * random.nextInt(sizeTP);
-        System.out.print("x: " + x + " z: " + z);
+        System.out.print("Found new location in x: " + x + " z: " + z);
         Location location = game.getWorld().getHighestBlockAt(x, z).getLocation().add(0, 35,0);
         if (!location.getChunk().isLoaded()) {
             location.getChunk().load();
@@ -89,10 +89,10 @@ public class Scatter extends BukkitRunnable {
     }
 
     @SuppressWarnings("deprecation")
-    private void setSpawnSpot(Location location, Player player) {
+    private void setSpawnSpot(Player player) {
         for (int x = -3; x < 3; x++) {
             for (int z = -3; z < 3; z++) {
-                Block block = location.clone().add(x, -6, z).getBlock();
+                Block block = player.getLocation().clone().add(x, -6, z).getBlock();
                 block.setType(Material.STAINED_GLASS);
                 if (x == -3 || x == 2 || z == -3 || z == 2)
                     block.setData((byte) 1);

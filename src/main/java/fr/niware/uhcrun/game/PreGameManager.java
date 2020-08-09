@@ -1,17 +1,19 @@
 package fr.niware.uhcrun.game;
 
 import fr.niware.uhcrun.Main;
-import fr.niware.uhcrun.listeners.*;
+import fr.niware.uhcrun.listeners.AutoLapisListener;
+import fr.niware.uhcrun.listeners.BlockListener;
+import fr.niware.uhcrun.listeners.CraftListener;
+import fr.niware.uhcrun.listeners.DeathListener;
 import fr.niware.uhcrun.scoreboard.Reflection;
-import fr.niware.uhcrun.utils.packet.ActionBar;
 import fr.niware.uhcrun.utils.Scatter;
 import fr.niware.uhcrun.utils.State;
+import fr.niware.uhcrun.utils.packet.ActionBar;
 import fr.niware.uhcrun.utils.packet.Title;
 import fr.niware.uhcrun.world.WorldManager;
 import net.minecraft.server.v1_8_R3.MinecraftServer;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.potion.PotionEffect;

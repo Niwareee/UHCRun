@@ -72,7 +72,7 @@ public class WorldListener implements Listener {
         // System.out.print("Block:" + itemStack.getType() + " Dura: " + itemStack.getDurability() + " Data: " + itemStack.getData());
 
         if (itemStack.getType() == Material.SAPLING) {
-            if (percent <= 50 * 0.01) {
+            if (percent <= 40 * 0.01) {
                 itemStack.setType(Material.APPLE);
                 itemStack.setData(new MaterialData(Material.APPLE));
                 itemStack.setDurability((short) 0);
@@ -80,6 +80,7 @@ public class WorldListener implements Listener {
             }
             event.getEntity().remove();
         } else if (itemStack.getType() == Material.STONE) {
+            itemStack.setType(Material.COBBLESTONE);
             itemStack.setDurability((short) 0);
         } else if (itemStack.getType() == Material.GRAVEL) {
             if (percent <= 80 * 0.01) {

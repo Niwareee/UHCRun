@@ -52,6 +52,8 @@ public class Main extends JavaPlugin {
         executorMonoThread = Executors.newScheduledThreadPool(1);
         scoreboardManager = new ScoreboardManager();
 
+        this.getServer().getPluginManager().registerEvents(new WorldListener(), this);
+
         getServer().getScheduler().runTaskLater(this, () -> {
             this.sqlManager = new SQLManager(this);
             this.game = new Game(this);
@@ -61,8 +63,6 @@ public class Main extends JavaPlugin {
             this.playerManager = new PlayerManager(this);
             this.winManager = new WinManager(this);
             this.worldManager = new WorldManager(this);
-
-            this.getServer().getPluginManager().registerEvents(new WorldListener(), this);
 
             new RegisterManager(this);
         }, 40);

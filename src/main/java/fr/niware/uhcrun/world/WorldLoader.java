@@ -3,6 +3,7 @@ package fr.niware.uhcrun.world;
 import fr.niware.uhcrun.Main;
 import fr.niware.uhcrun.utils.State;
 import io.papermc.lib.PaperLib;
+import net.minecraft.server.v1_8_R3.Chunk;
 import net.minecraft.server.v1_8_R3.ChunkProviderServer;
 import net.minecraft.server.v1_8_R3.MinecraftServer;
 import org.bukkit.Bukkit;
@@ -66,14 +67,14 @@ public class WorldLoader {
                     public void run() {
                         int loaded;
                         for (loaded = 0; this.i <= maxChunk && this.j <= maxChunk && loaded < 10; ++this.j) {
-                            final CompletableFuture<org.bukkit.Chunk> chunk = PaperLib.getChunkAtAsync(world, this.i, this.j);
-                            //final Chunk chunk = chunkProviderServer.getChunkAt(this.i, this.j);
-                            try {
+                            final Chunk chunk = chunkProviderServer.getChunkAt(this.i, this.j);
+                            //final CompletableFuture<org.bukkit.Chunk> chunk = PaperLib.getChunkAtAsync(world, this.i, this.j);
+                            /*try {
                                 chunk.get().load();
                             } catch (InterruptedException | ExecutionException e) {
                                 e.printStackTrace();
-                            }
-                            // chunkProviderServer.loadChunk(chunk.locX, chunk.locZ);
+                            }*/
+                            chunkProviderServer.loadChunk(chunk.locX, chunk.locZ);
 
                             ++loaded;
                         }
