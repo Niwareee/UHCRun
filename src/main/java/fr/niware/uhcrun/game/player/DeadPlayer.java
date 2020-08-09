@@ -20,7 +20,7 @@ import java.util.UUID;
 
 public class DeadPlayer {
 
-    private Game game = Main.getInstance().getGame();
+    private final Game game = Main.getInstance().getGame();
 
     private final UUID uuid;
     private final Location location;
@@ -57,7 +57,7 @@ public class DeadPlayer {
         player.getInventory().setContents(inventory);
 
         potionEffects.add(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 400, 10, false, false));
-        potionEffects.add(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 400, 10, false , false));
+        potionEffects.add(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 400, 10, false, false));
         potionEffects.forEach(player::addPotionEffect);
 
         player.playSound(player.getLocation(), Sound.ENDERMAN_TELEPORT, 4F, 4F);

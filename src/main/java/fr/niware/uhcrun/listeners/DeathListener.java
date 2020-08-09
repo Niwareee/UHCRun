@@ -35,7 +35,6 @@ public class DeathListener implements Listener {
     public void onDeathEvent(PlayerDeathEvent event) {
         Player player = event.getEntity();
 
-        player.setHealth(20D);
         new DeadPlayer(player.getUniqueId(), player.getLocation(), player.getLevel(), player.getInventory().getArmorContents(), player.getInventory().getContents(), player.getActivePotionEffects());
         playerManager.onDeath(player);
 

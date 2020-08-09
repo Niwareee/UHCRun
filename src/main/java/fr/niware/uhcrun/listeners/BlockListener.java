@@ -7,12 +7,14 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ExperienceOrb;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -108,15 +110,14 @@ public class BlockListener implements Listener {
     }
 
     @EventHandler
-    public void BlockPlace(BlockPlaceEvent event) {
+    public void onPlace(BlockPlaceEvent event) {
         if (event.getBlock().getType() == Material.TNT) {
             event.setCancelled(true);
 
             event.getPlayer().getInventory().removeItem(new ItemStack(Material.TNT, 1));
             event.getPlayer().updateInventory();
 
-            Location newLocation = event.getBlock().getLocation().add(0.5D, 0.0D, 0.5D);
-            event.getBlock().getWorld().spawnEntity(newLocation, EntityType.PRIMED_TNT);
+            event.getBlock().getWorld().spawnEntity(event.getBlock().getLocation().add(0.5D, 0.0D, 0.5D), EntityType.PRIMED_TNT);
             return;
         }
 
@@ -124,6 +125,20 @@ public class BlockListener implements Listener {
             if (event.getBlock().getY() >= 130) {
                 event.getPlayer().sendMessage("§cErreur: Vous ne pouvez pas aller plus haut.");
                 event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlaceLava(PlayerBucketEmptyEvent event) {
+        if (event.getBucket().equals(Material.LAVA_BUCKET)) {
+            for (Player players : Bukkit.getOnlinePlayers()) {
+                if (players.getUniqueId() != event.getPlayer().getUniqueId() && players.getGameMode() == GameMode.SURVIVAL) {
+                    if (event.getBlockClicked().getLocation().distance(players.getLocation()) < 5) {
+                        event.setCancelled(true);
+                        event.getPlayer().sendMessage("§dUHCRun §8» §cVous êtes trop prêt d'un joueur");
+                    }
+                }
             }
         }
     }
@@ -157,9 +172,8 @@ public class BlockListener implements Listener {
             Location loc = new Location(block.getWorld(), block.getLocation().getBlockX() + 0.5D, block.getLocation().getBlockY() + 0.5D, block.getLocation().getBlockZ() + 0.5D);
             block.setType(Material.AIR);
             block.getState().update();
-            block.getWorld().dropItem(loc, new ItemStack(Material.IRON_INGOT, 2));
+            block.getWorld().dropItem(block.getLocation().add(0.5, 0, 0.5), new ItemStack(Material.IRON_INGOT, 2));
             block.getWorld().spawn(loc, ExperienceOrb.class).setExperience(3);
-            event.setExpToDrop(3);
         } else if (block.getType() == Material.DIAMOND_ORE) {
             block.setType(Material.AIR);
             block.getState().update();

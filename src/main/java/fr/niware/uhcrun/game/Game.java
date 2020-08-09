@@ -26,7 +26,7 @@ public class Game {
     private Location spawn;
     private Location specSpawn;
 
-    private Map<UUID, DeadPlayer> deadPlayers;
+    private final Map<UUID, DeadPlayer> deadPlayers;
     private final List<UUID> alivePlayers;
     private final List<UUID> decoPlayers;
 
@@ -45,10 +45,10 @@ public class Game {
     private boolean invincibility = true;
 
     private int slot;
+    private boolean runnable;
     private final int autoStartSize;
     private final int autoStartTime;
     private final String hubServerName;
-    private boolean runnable;
 
     private final int sizeMap;
     private final int sizeNether;
@@ -62,7 +62,7 @@ public class Game {
 
     // POTION EFFECTS
 
-    private final List<PotionEffect> potionEffects;
+    private final List<PotionEffect> startPotionEffects;
 
 
     public Game(Main main) {
@@ -89,10 +89,10 @@ public class Game {
         this.blocks = new ArrayList<>();
         this.stayLocs = new HashMap<>();
 
-        this.potionEffects = new ArrayList<>();
-        this.potionEffects.add(new PotionEffect(PotionEffectType.ABSORPTION, 3, 1, false, false));
-        this.potionEffects.add(new PotionEffect(PotionEffectType.FAST_DIGGING, 999999, 0, false, false));
-        this.potionEffects.add(new PotionEffect(PotionEffectType.NIGHT_VISION, 999999, 0, false, false));
+        this.startPotionEffects = new ArrayList<>();
+        this.startPotionEffects.add(new PotionEffect(PotionEffectType.ABSORPTION, 3, 1, false, false));
+        this.startPotionEffects.add(new PotionEffect(PotionEffectType.FAST_DIGGING, 999999, 0, false, false));
+        this.startPotionEffects.add(new PotionEffect(PotionEffectType.NIGHT_VISION, 999999, 0, false, false));
     }
 
     //---------------------------------------------------//
@@ -279,7 +279,7 @@ public class Game {
         return hubServerName;
     }
 
-    public Collection<PotionEffect> getPotionEffects() {
-        return potionEffects;
+    public Collection<PotionEffect> getStartPotionEffects() {
+        return startPotionEffects;
     }
 }

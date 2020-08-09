@@ -1,4 +1,4 @@
-package fr.niware.uhcrun.world;
+package fr.niware.uhcrun.world.populator;
 
 import java.util.Random;
 

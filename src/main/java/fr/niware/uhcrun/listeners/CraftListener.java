@@ -1,17 +1,11 @@
 package fr.niware.uhcrun.listeners;
 
-import fr.niware.uhcrun.Main;
 import fr.niware.uhcrun.utils.ItemBuilder;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
-
-import java.util.function.Consumer;
 
 public class CraftListener implements Listener {
 

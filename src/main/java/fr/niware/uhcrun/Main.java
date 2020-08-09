@@ -134,5 +134,4 @@ public class Main extends JavaPlugin {
     public void log(String message) {
         getServer().getConsoleSender().sendMessage("[" + getName() + "] " + message);
     }
-
 }

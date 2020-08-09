@@ -2,8 +2,8 @@ package fr.niware.uhcrun.listeners;
 
 import fr.niware.uhcrun.Main;
 import fr.niware.uhcrun.utils.State;
-import fr.niware.uhcrun.world.OrePopulator;
-import org.bukkit.Location;
+import fr.niware.uhcrun.world.populator.OrePopulator;
+import fr.niware.uhcrun.world.populator.SurgarCanePopulator;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
@@ -12,7 +12,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
@@ -24,12 +23,15 @@ import java.util.Random;
 
 public class WorldListener implements Listener {
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler
     public void onWorldInit(final WorldInitEvent event) {
         World world = event.getWorld();
         if (world.getEnvironment() == Environment.NORMAL) {
             long start = System.currentTimeMillis();
+
+            world.getPopulators().add(new SurgarCanePopulator(2));
             world.getPopulators().add(new OrePopulator());
+
             Main.getInstance().log("§aWorld successfully populated in " + (System.currentTimeMillis() - start) + " ms");
         }
     }
@@ -37,12 +39,11 @@ public class WorldListener implements Listener {
     @EventHandler
     public void onLeavesDecay(LeavesDecayEvent event) {
         Block block = event.getBlock();
-        Location location = new Location(block.getWorld(), block.getLocation().getBlockX() + 0.5D, block.getLocation().getBlockY() + 0.3D, block.getLocation().getBlockZ() + 0.5D);
         Random random = new Random();
 
         if (random.nextDouble() <= 0.02) {
             block.setType(Material.AIR);
-            block.getWorld().dropItemNaturally(location, new ItemStack(Material.APPLE, 1));
+            block.getWorld().dropItemNaturally(block.getLocation().add(0.5D, 0.3, 0.5D), new ItemStack(Material.APPLE, 1));
         }
     }
 

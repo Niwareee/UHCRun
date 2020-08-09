@@ -32,7 +32,6 @@ public class WinManager {
         this.playerManager = main.getPlayerManager();
         this.game = main.getGame();
         this.title = main.getTitle();
-
     }
 
     public void checkWin() {
@@ -103,7 +102,7 @@ public class WinManager {
 
     public void launchWinFireworks() {
         Bukkit.getScheduler().runTaskTimer(main, () -> {
-            if (time < 40) {
+            if (time < 60) {
 
                 Player winner = game.getWinner();
                 if (winner == null) return;
@@ -139,7 +138,7 @@ public class WinManager {
                 Color color_2 = Colors.getColor(randint_2);
                 FireworkEffect effect = FireworkEffect.builder().flicker(random.nextBoolean()).withColor(color_1).withFade(color_2).with(type).trail(random.nextBoolean()).build();
                 fireworkMeta.addEffect(effect);
-                int power = random.nextInt(2) + 1;
+                int power = random.nextInt(2);
                 fireworkMeta.setPower(power);
                 firework.setFireworkMeta(fireworkMeta);
                 time++;

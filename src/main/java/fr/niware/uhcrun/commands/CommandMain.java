@@ -6,19 +6,12 @@ import fr.niware.uhcrun.game.PreGameManager;
 import fr.niware.uhcrun.game.WinManager;
 import fr.niware.uhcrun.structure.StructureLoader;
 import fr.niware.uhcrun.utils.State;
-import fr.niware.uhcrun.world.OrePopulator;
-import net.minecraft.server.v1_8_R3.IChatBaseComponent;
-import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerListHeaderFooter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.event.world.WorldInitEvent;
-
-import java.lang.reflect.Field;
 
 public class CommandMain implements CommandExecutor {
 
@@ -43,7 +36,7 @@ public class CommandMain implements CommandExecutor {
 
                 switch (args[0]) {
                     case "revive":
-                        Player target = Bukkit.getPlayer(args[1]);
+                        Player target = Bukkit.getServer().getPlayer(args[1]);
 
                         if (args.length != 2) {
                             sender.sendMessage("§cUtilisation: /game revive <Joueur>");
@@ -73,11 +66,6 @@ public class CommandMain implements CommandExecutor {
                             sender.sendMessage("§cErreur: La partie a déjà commencée");
                             return true;
                         }
-
-                        /*if (Bukkit.getOnlinePlayers().size() < 2) {
-                            sender.sendMessage("§cErreur: Vous devez être minimum 2 joueurs.");
-                            return true;
-                        }*/
 
                         new PreGameManager(true);
                         break;

@@ -132,7 +132,7 @@ public class PreGameManager {
                     players.setWalkSpeed(0.3f);
                     players.setGameMode(GameMode.SURVIVAL);
 
-                    for (PotionEffect potionEffect : game.getPotionEffects()) {
+                    for (PotionEffect potionEffect : game.getStartPotionEffects()) {
                         players.addPotionEffect(potionEffect);
                     }
                 });

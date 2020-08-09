@@ -96,20 +96,6 @@ public class GameListener implements Listener {
     }
 
     @EventHandler
-    public void onPlaceLava(PlayerBucketEmptyEvent event) {
-        if (event.getBucket().equals(Material.LAVA_BUCKET)) {
-            for (Player players : Bukkit.getOnlinePlayers()) {
-                if (players.getUniqueId() != event.getPlayer().getUniqueId() && players.getGameMode() == GameMode.SURVIVAL) {
-                    if (event.getBlockClicked().getLocation().distance(players.getLocation()) < 5) {
-                        event.setCancelled(true);
-                        event.getPlayer().sendMessage("§dUHCRun §8» §cVous êtes trop prêt d'un joueur");
-                    }
-                }
-            }
-        }
-    }
-
-    @EventHandler
     public void onItemConsume(PlayerItemConsumeEvent event) {
         if (event.getItem().getType() == Material.GOLDEN_APPLE) {
             event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 10 * 20, 1));
@@ -132,12 +118,6 @@ public class GameListener implements Listener {
                 Player target = (Player) event.getRightClicked();
                 PlayerInventory targetInventory = target.getInventory();
                 Inventory inventory = Bukkit.createInventory(null, 54, "Inventaire de " + target.getName());
-
-                /*for (int i = 0; i < 36; i++) {
-                    if (targetInventory.getItem(i) != null) {
-                        inventory.setItem(i, targetInventory.getItem(i));
-                    }
-                }*/
 
                 inventory.setContents(targetInventory.getContents());
 

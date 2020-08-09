@@ -8,7 +8,6 @@ import fr.niware.uhcrun.game.PreGameManager;
 import fr.niware.uhcrun.scoreboard.ScoreboardManager;
 import fr.niware.uhcrun.utils.State;
 import fr.niware.uhcrun.utils.packet.ActionBar;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -42,7 +41,7 @@ public class PlayerManager {
         this.accountManager = main.getAccountManager();
         this.scoreboardManager = main.getScoreboardManager();
 
-        this.scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+        this.scoreboard = main.getServer().getScoreboardManager().getMainScoreboard();
 
         this.players = new HashMap<>();
     }
@@ -100,10 +99,10 @@ public class PlayerManager {
         if (State.isInWait()) {
             setJoinInventory(player);
 
-            actionBar.sendToPlayer(player, "§a+ " + rank.getPrefix() + player.getName() + " §7a rejoint. §6(" + Bukkit.getOnlinePlayers().size() + "/" + game.getSlot() + ")");
+            actionBar.sendToPlayer(player, "§a+ " + rank.getPrefix() + player.getName() + " §7a rejoint. §6(" + game.getAlivePlayers().size() + "/" + game.getSlot() + ")");
             game.getAlivePlayers().add(player.getUniqueId());
 
-            if (Bukkit.getOnlinePlayers().size() >= game.getAutoStartSize() && State.isState(State.WAITING)) {
+            if (game.getAlivePlayers().size() >= game.getAutoStartSize() && State.isState(State.WAITING)) {
                 new PreGameManager(false);
             }
             return;
@@ -117,7 +116,6 @@ public class PlayerManager {
                 game.getDecoPlayers().remove(player.getUniqueId());
 
                 if (player.getGameMode() == GameMode.ADVENTURE) player.setGameMode(GameMode.SURVIVAL);
-
                 return;
             }
             player.teleport(game.getSpecSpawn());
@@ -130,11 +128,11 @@ public class PlayerManager {
 
     public void onQuit(Player player) {
         game.getAlivePlayers().remove(player.getUniqueId());
+        players.remove(player.getUniqueId());
         scoreboardManager.onLogout(player);
 
         if (State.isInWait()) {
-            players.remove(player.getUniqueId());
-            actionBar.sendToAll("§c- §e" + player.getName() + " §7a quitté la partie. §6(" + (Bukkit.getOnlinePlayers().size() - 1) + "/" + game.getSlot() + ")");
+            actionBar.sendToAll("§c- §e" + player.getName() + " §7a quitté la partie. §6(" + game.getAlivePlayers().size() + "/" + game.getSlot() + ")");
             return;
         }
 
@@ -151,7 +149,7 @@ public class PlayerManager {
     }
 
     public void onDeath(Player player) {
-        player.setMaxHealth(20D);
+        player.setHealth(20D);
         setSpec(player);
         player.playSound(player.getLocation(), Sound.WITHER_SPAWN, 5.0F, 2.0F);
         player.getWorld().strikeLightningEffect(player.getLocation());

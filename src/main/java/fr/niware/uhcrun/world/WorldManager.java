@@ -38,7 +38,7 @@ public class WorldManager {
         WORLD = game.setWorld(game.getSpawn().getWorld());
         game.setSpecSpawn(WORLD.getHighestBlockAt(0, 0).getLocation());
 
-        registerTabTeams();
+        registerTabTeam();
         patchWorlds();
     }
 
@@ -56,13 +56,13 @@ public class WorldManager {
 
     }
 
-    public void registerTabTeams() {
+    public void registerTabTeam() {
         scoreboard.getTeams().forEach(Team::unregister);
 
         Team team = scoreboard.registerNewTeam("player");
         team.setPrefix("§7");
         team.setSuffix("§r");
-        main.getLogger().info("Tab teams successfully created");
+        main.getLogger().info("Tab team successfully created");
     }
 
     public void onDisable() {
