@@ -69,7 +69,7 @@ public class WorldListener implements Listener {
         final double percent = random.nextDouble();
 
         // DEBUG
-        System.out.print("Block:" + itemStack.getType() + " Dura: " + itemStack.getDurability() + " Data: " + itemStack.getData());
+        // System.out.print("Block:" + itemStack.getType() + " Dura: " + itemStack.getDurability() + " Data: " + itemStack.getData());
 
         if (itemStack.getType() == Material.SAPLING) {
             if (percent <= 50 * 0.01) {

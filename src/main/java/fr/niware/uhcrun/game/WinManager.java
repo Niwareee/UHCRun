@@ -2,18 +2,16 @@ package fr.niware.uhcrun.game;
 
 import fr.niware.uhcrun.Main;
 import fr.niware.uhcrun.game.player.PlayerManager;
-import fr.niware.uhcrun.utils.Colors;
 import fr.niware.uhcrun.utils.State;
+import fr.niware.uhcrun.utils.WinnerFirework;
 import fr.niware.uhcrun.utils.packet.Title;
 import net.minecraft.server.v1_8_R3.MinecraftServer;
-import org.bukkit.*;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Firework;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.meta.FireworkMeta;
 
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 
 public class WinManager {
@@ -23,7 +21,6 @@ public class WinManager {
     private final Game game;
     private final Title title;
 
-    private int time = 0;
     private int timeSecond = 0;
 
     public WinManager(Main main) {
@@ -94,56 +91,10 @@ public class WinManager {
             Bukkit.broadcastMessage(" ");
             Bukkit.broadcastMessage("§f§m+------§6§m-----------§f§m------+");
 
-            launchWinFireworks();
+            new WinnerFirework(main, 40, winner);
             launchStop();
 
         }, 10);
-    }
-
-    public void launchWinFireworks() {
-        Bukkit.getScheduler().runTaskTimer(main, () -> {
-            if (time < 60) {
-
-                Player winner = game.getWinner();
-                if (winner == null) return;
-
-                Firework firework = (Firework) winner.getWorld().spawnEntity(winner.getPlayer().getLocation(), EntityType.FIREWORK);
-                FireworkMeta fireworkMeta = firework.getFireworkMeta();
-                Random random = new Random();
-                int i = random.nextInt(4) + 1;
-                FireworkEffect.Type type = FireworkEffect.Type.BALL;
-                if (i == 1) {
-                    type = FireworkEffect.Type.BALL;
-                }
-
-                if (i == 2) {
-                    type = FireworkEffect.Type.BALL_LARGE;
-                }
-
-                if (i == 3) {
-                    type = FireworkEffect.Type.BURST;
-                }
-
-                if (i == 4) {
-                    type = FireworkEffect.Type.CREEPER;
-                }
-
-                if (i == 5) {
-                    type = FireworkEffect.Type.STAR;
-                }
-
-                int randint_1 = random.nextInt(15) + 1;
-                int randint_2 = random.nextInt(15) + 1;
-                Color color_1 = Colors.getColor(randint_1);
-                Color color_2 = Colors.getColor(randint_2);
-                FireworkEffect effect = FireworkEffect.builder().flicker(random.nextBoolean()).withColor(color_1).withFade(color_2).with(type).trail(random.nextBoolean()).build();
-                fireworkMeta.addEffect(effect);
-                int power = random.nextInt(2);
-                fireworkMeta.setPower(power);
-                firework.setFireworkMeta(fireworkMeta);
-                time++;
-            }
-        }, 0, 5);
     }
 
     public void launchStop() {

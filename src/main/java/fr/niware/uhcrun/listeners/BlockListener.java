@@ -35,7 +35,6 @@ public class BlockListener implements Listener {
 
     @EventHandler
     public void onDeath(EntityDeathEvent event) {
-
         EntityType entityType = event.getEntity().getType();
         List<ItemStack> newDrops = null;
 

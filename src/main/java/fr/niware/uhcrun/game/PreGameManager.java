@@ -11,6 +11,7 @@ import fr.niware.uhcrun.world.WorldManager;
 import net.minecraft.server.v1_8_R3.MinecraftServer;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.potion.PotionEffect;
@@ -147,6 +148,7 @@ public class PreGameManager {
                 pluginManager.registerEvents(new BlockListener(main), main);
                 pluginManager.registerEvents(new DeathListener(main), main);
                 pluginManager.registerEvents(new CraftListener(), main);
+
 
                 Bukkit.getScheduler().runTaskLater(main, () -> {
                     List<Block> blocks = new ArrayList<>();
