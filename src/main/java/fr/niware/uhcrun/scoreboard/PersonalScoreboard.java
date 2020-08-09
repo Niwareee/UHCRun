@@ -102,7 +102,7 @@ public class PersonalScoreboard {
     }
 
     private String secondsToStringColor(int pTime) {
-        if(pTime / 60 < 2){
+        if(pTime / 60 < 1){
             return String.format("§c%02d:%02d", pTime / 60, pTime % 60);
         }
         return String.format("§b%02d:%02d", pTime / 60, pTime % 60);

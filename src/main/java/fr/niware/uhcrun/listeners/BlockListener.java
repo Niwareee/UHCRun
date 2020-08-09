@@ -6,7 +6,6 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -146,72 +145,7 @@ public class BlockListener implements Listener {
     @EventHandler
     public void onBreak(BlockBreakEvent event) {
         Block block = event.getBlock();
-        Location location = new Location(block.getWorld(), block.getLocation().getBlockX() + 0.5D, block.getLocation().getBlockY() + 0.3D, block.getLocation().getBlockZ() + 0.5D);
-
-        final double percent = random.nextDouble();
-
-        if (percent <= 2 * 0.01 && block.getType() == Material.LEAVES) {
-            block.setType(Material.AIR);
-            block.getState().update();
-            block.getWorld().dropItemNaturally(location, new ItemStack(Material.APPLE));
-        } else if (block.getType() == Material.STONE) {
-            if (block.getData() == 1 || block.getData() == 3 || block.getData() == 5) {
-                block.setType(Material.AIR);
-                block.getState().update();
-                block.getWorld().dropItemNaturally(location, new ItemStack(Material.COBBLESTONE, 1));
-            }
-        } else if (block.getType() == Material.GRAVEL) {
-            block.setType(Material.AIR);
-            block.getState().update();
-            if (percent <= 80 * 0.01) {
-                block.getWorld().dropItemNaturally(location, new ItemStack(Material.ARROW, 3));
-            } else {
-                block.getWorld().dropItemNaturally(location, new ItemStack(Material.FLINT, 1));
-            }
-        } else if (block.getType() == Material.IRON_ORE) {
-            Location loc = new Location(block.getWorld(), block.getLocation().getBlockX() + 0.5D, block.getLocation().getBlockY() + 0.5D, block.getLocation().getBlockZ() + 0.5D);
-            block.setType(Material.AIR);
-            block.getState().update();
-            block.getWorld().dropItem(block.getLocation().add(0.5, 0, 0.5), new ItemStack(Material.IRON_INGOT, 2));
-            block.getWorld().spawn(loc, ExperienceOrb.class).setExperience(3);
-        } else if (block.getType() == Material.DIAMOND_ORE) {
-            block.setType(Material.AIR);
-            block.getState().update();
-            block.getWorld().dropItemNaturally(location, new ItemStack(Material.DIAMOND, 2));
-            block.getWorld().spawn(block.getLocation(), ExperienceOrb.class).setExperience(10);
-        } else if (block.getType() == Material.GOLD_ORE) {
-            block.setType(Material.AIR);
-            block.getState().update();
-            block.getWorld().dropItem(location, new ItemStack(Material.GOLD_INGOT, 2));
-            block.getWorld().spawn(block.getLocation(), ExperienceOrb.class).setExperience(4);
-        } else if (block.getType() == Material.COAL_ORE) {
-            block.setType(Material.AIR);
-            block.getState().update();
-            block.getWorld().dropItemNaturally(location, new ItemStack(Material.TORCH, 3));
-            block.getWorld().spawn(location, ExperienceOrb.class).setExperience(2);
-        } else if (block.getType() == Material.REDSTONE_ORE) {
-            block.getWorld().spawn(location, ExperienceOrb.class).setExperience(3);
-        } else if (block.getType() == Material.SAND) {
-            block.setType(Material.AIR);
-            block.getState().update();
-            block.getWorld().dropItemNaturally(location, new ItemStack(Material.GLASS, 2));
-        } else if (block.getType() == Material.OBSIDIAN) {
-            block.setType(Material.AIR);
-            block.getState().update();
-            block.getWorld().dropItemNaturally(location, new ItemStack(Material.OBSIDIAN, 2));
-        } else if (block.getType() == Material.CACTUS) {
-            block.setType(Material.AIR);
-            block.getState().update();
-            block.getWorld().dropItemNaturally(location, new ItemStack(Material.LOG, 2));
-        } else if (block.getType() == Material.SUGAR_CANE || block.getType() == Material.SUGAR_CANE_BLOCK) {
-            block.setType(Material.AIR);
-            block.getState().update();
-            block.getWorld().dropItemNaturally(location, new ItemStack(Material.BOOK, 1));
-        } else if (block.getType() == Material.DEAD_BUSH) {
-            block.setType(Material.AIR);
-            block.getState().update();
-            block.getWorld().dropItemNaturally(location, new ItemStack(Material.STICK, 2));
-        } else if (block.getType() == Material.LOG || block.getType() == Material.LOG_2) {
+        if (block.getType() == Material.LOG || block.getType() == Material.LOG_2) {
             final ArrayList<Block> bList = new ArrayList<>();
             this.checkLeaves(event.getBlock());
             bList.add(event.getBlock());

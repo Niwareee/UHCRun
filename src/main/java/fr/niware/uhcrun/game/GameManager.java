@@ -26,6 +26,8 @@ public class GameManager {
 
         Bukkit.getScheduler().scheduleSyncRepeatingTask(main, () -> {
 
+            if (State.isState(State.FINISH)) return;
+
             game.addTimer();
             main.getGame().removePvPTime();
             int pvpTime = game.getPvPTime();
