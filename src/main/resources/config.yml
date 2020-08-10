@@ -2,7 +2,7 @@ world:
   sizeMap: 800
   preload:
     enabled: true
-    sizePreload: 600
+    sizePreload: 800
   spawn:
     location: world, 0, 200, 0, 180, 0
 nether:
