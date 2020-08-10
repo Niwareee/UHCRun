@@ -17,7 +17,7 @@ public class WinnerFirework {
     private int i = 0;
 
     public WinnerFirework(final Main plugin, final int loops, final Player player) {
-        task = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> {
+        task = plugin.getServer().getScheduler().runTaskTimer(plugin, () -> {
             generateRandomFirework(player.getLocation(), 5, 5);
             if (i >= loops) {
                 plugin.getServer().getScheduler().cancelTask(task);
