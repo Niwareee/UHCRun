@@ -2,7 +2,6 @@ package fr.niware.uhcrun.world;
 
 import fr.niware.uhcrun.Main;
 import fr.niware.uhcrun.utils.State;
-import io.papermc.lib.PaperLib;
 import net.minecraft.server.v1_8_R3.Chunk;
 import net.minecraft.server.v1_8_R3.ChunkProviderServer;
 import net.minecraft.server.v1_8_R3.MinecraftServer;
@@ -11,8 +10,6 @@ import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
 public class WorldLoader {

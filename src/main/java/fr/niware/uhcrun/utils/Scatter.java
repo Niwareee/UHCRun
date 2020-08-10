@@ -63,13 +63,12 @@ public class Scatter extends BukkitRunnable {
             //playerToTp.teleport(randomLocation());
 
             if (this.isStart) {
-                int pourcent = Math.round((float) 100 / this.players.size());
-                actionBar.sendToAll("§7Téléportation...  §6(" + pourcent + "%)");
+                int percent = Math.round((float) 100 / this.players.size());
+                actionBar.sendToAll("§7Téléportation...  §6(" + percent + "%)");
                 playerToTp.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20, 1, false, false));
                 playerToTp.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 9, false, false));
                 setSpawnSpot(playerToTp);
             }
-
         }
 
         this.players.remove(playerToTp);

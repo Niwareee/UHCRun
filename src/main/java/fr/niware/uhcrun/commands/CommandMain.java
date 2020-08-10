@@ -36,12 +36,12 @@ public class CommandMain implements CommandExecutor {
 
                 switch (args[0]) {
                     case "revive":
-                        Player target = Bukkit.getServer().getPlayer(args[1]);
-
                         if (args.length != 2) {
                             sender.sendMessage("§cUtilisation: /game revive <Joueur>");
                             return true;
                         }
+
+                        Player target = Bukkit.getServer().getPlayer(args[1]);
 
                         if (target == null) {
                             sender.sendMessage("§cErreur: Le joueur '§f" + args[1] + "§c' n'est pas connecté.");

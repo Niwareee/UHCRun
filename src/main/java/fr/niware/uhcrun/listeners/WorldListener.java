@@ -72,7 +72,7 @@ public class WorldListener implements Listener {
         // System.out.print("Block:" + itemStack.getType() + " Dura: " + itemStack.getDurability() + " Data: " + itemStack.getData());
 
         if (itemStack.getType() == Material.SAPLING) {
-            if (percent <= 40 * 0.01) {
+            if (percent <= 45 * 0.01) {
                 itemStack.setType(Material.APPLE);
                 itemStack.setData(new MaterialData(Material.APPLE));
                 itemStack.setDurability((short) 0);
@@ -93,7 +93,7 @@ public class WorldListener implements Listener {
             itemStack.setType(Material.IRON_INGOT);
             itemStack.setAmount(2);
             spawnExtraXp(event.getLocation(), 3);
-        } else if (itemStack.getType() == Material.DIAMOND_ORE) {
+        } else if (itemStack.getType() == Material.DIAMOND) {
             itemStack.setType(Material.DIAMOND);
             itemStack.setAmount(2);
             spawnExtraXp(event.getLocation(), 10);
