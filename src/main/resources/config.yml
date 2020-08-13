@@ -1,8 +1,6 @@
 world:
   sizeMap: 800
-  preload:
-    enabled: true
-    sizePreload: 800
+  sizePreload: 800
   spawn:
     location: world, 0, 200, 0, 180, 0
 nether:
@@ -15,6 +13,7 @@ sql:
   password: "mdp"
   port: 3306
 game:
+  preload: true
   slot: 30
   autoStartSize: 10
   autoStartTime: 30

@@ -2,8 +2,10 @@ package fr.niware.uhcrun.game;
 
 import fr.niware.uhcrun.Main;
 import fr.niware.uhcrun.game.player.DeadPlayer;
+import fr.niware.uhcrun.structure.Structure;
 import fr.niware.uhcrun.utils.State;
 import net.minecraft.server.v1_8_R3.MinecraftServer;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -26,6 +28,7 @@ public class Game {
     private Location spawn;
     private Location specSpawn;
 
+    private final Map<String, Structure> structure;
     private final Map<UUID, DeadPlayer> deadPlayers;
     private final List<UUID> alivePlayers;
     private final List<UUID> decoPlayers;
@@ -55,13 +58,14 @@ public class Game {
     private final int preLoad;
     private final int preLoadNether;
 
-    // PRELOAD BLOCS
+    // PLATFORMS BLOCS
 
     private final List<Block> blocks;
     private final Map<UUID, Location> stayLocs;
 
     // POTION EFFECTS
 
+    private final List<PotionEffect> deathPotionEffects;
     private final List<PotionEffect> startPotionEffects;
 
 
@@ -72,7 +76,7 @@ public class Game {
 
         FileConfiguration config = main.getConfig();
         this.sizeMap = config.getInt("world.sizeMap");
-        this.preLoad = config.getInt("world.preload.sizePreload");
+        this.preLoad = config.getInt("world.sizePreload");
         this.sizeNether = config.getInt("nether.sizeMap");
         this.preLoadNether = config.getInt("nether.sizePreload");
 
@@ -82,12 +86,17 @@ public class Game {
         this.hubServerName = config.getString("game.hubServerName");
         this.countdownStart = autoStartTime;
 
+        this.structure = new HashMap<>();
         this.deadPlayers = new HashMap<>();
         this.alivePlayers = new ArrayList<>();
         this.decoPlayers = new ArrayList<>();
 
         this.blocks = new ArrayList<>();
         this.stayLocs = new HashMap<>();
+
+        this.deathPotionEffects = new ArrayList<>();
+        this.deathPotionEffects.add(new PotionEffect(PotionEffectType.ABSORPTION, 2400, 0, false, false));
+        this.deathPotionEffects.add(new PotionEffect(PotionEffectType.REGENERATION, 100, 1, false, false));
 
         this.startPotionEffects = new ArrayList<>();
         this.startPotionEffects.add(new PotionEffect(PotionEffectType.ABSORPTION, 3, 1, false, false));
@@ -134,6 +143,10 @@ public class Game {
         return world;
     }
 
+    public Map<String, Structure> getStructure() {
+        return structure;
+    }
+
     public Map<UUID, DeadPlayer> getDeadPlayers() {
         return deadPlayers;
     }
@@ -178,8 +191,11 @@ public class Game {
         this.countdownStart--;
     }
 
-    public void resetCountdownStart() {
+    public void resetCountdownStart(int task) {
         this.countdownStart = autoStartTime;
+        Bukkit.broadcastMessage("§dUHCRun §7» §cIl n'y a pas assez de joueurs pour démarrer.");
+        Bukkit.getScheduler().cancelTask(task);
+        State.setState(State.WAITING);
     }
 
     public int getTimer() {
@@ -277,6 +293,10 @@ public class Game {
 
     public String getHubServerName() {
         return hubServerName;
+    }
+
+    public Collection<PotionEffect> getDeathPotionEffects() {
+        return deathPotionEffects;
     }
 
     public Collection<PotionEffect> getStartPotionEffects() {

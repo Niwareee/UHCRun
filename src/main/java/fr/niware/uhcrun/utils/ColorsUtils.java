@@ -2,11 +2,10 @@ package fr.niware.uhcrun.utils;
 
 import org.bukkit.Color;
 
-public enum Colors {
+public enum ColorsUtils {
 
     WHITE(Color.WHITE),
     AQUA(Color.AQUA),
-    BLACK(Color.BLACK),
     BLUE(Color.BLUE),
     FUCHSIA(Color.FUCHSIA),
     GRAY(Color.GRAY),
@@ -22,10 +21,9 @@ public enum Colors {
     TEAL(Color.TEAL),
     YELLOW(Color.YELLOW);
 
-
     private final Color color;
 
-    Colors(Color color) {
+    ColorsUtils(Color color) {
         this.color = color;
     }
 

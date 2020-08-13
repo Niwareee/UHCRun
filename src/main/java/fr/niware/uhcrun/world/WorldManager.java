@@ -27,6 +27,7 @@ public class WorldManager {
 
     private final Scoreboard scoreboard;
     private final List<Entity> entityList;
+    private Objective showhealth;
 
     public WorldManager(Main main) {
         this.main = main;
@@ -48,9 +49,9 @@ public class WorldManager {
         Objective health = scoreboard.registerNewObjective("health", "health");
         health.setDisplaySlot(DisplaySlot.PLAYER_LIST);
 
-        Objective healthBellow = scoreboard.registerNewObjective("showhealth", "dummy");
-        healthBellow.setDisplaySlot(DisplaySlot.BELOW_NAME);
-        healthBellow.setDisplayName("%");
+        this.showhealth = scoreboard.registerNewObjective("showhealth", "dummy");
+        showhealth.setDisplaySlot(DisplaySlot.BELOW_NAME);
+        showhealth.setDisplayName("%");
 
         scoreboard.registerNewObjective("playerkills", "playerKillCount");
 
@@ -85,9 +86,7 @@ public class WorldManager {
     }
 
     public void updateHealth(Player player) {
-        Objective showhealth = scoreboard.getObjective("showhealth");
-        if (showhealth == null) return;
-
+        if(showhealth == null) return;
         double newPHealth = player.getHealth();
         showhealth.getScore(player.getName()).setScore((int) newPHealth * 5);
     }
@@ -98,16 +97,16 @@ public class WorldManager {
     }
 
     public void deleteWorld(File path) {
-        main.log("Deleting... " + path.getName());
+        System.out.println("Deleting... " + path.getName());
 
         World world = Bukkit.getWorld(path.getName());
         Bukkit.unloadWorld(world, false);
 
         try {
             FileUtils.forceDeleteOnExit(path);
-            main.log("World deleted: " + path.getName());
+            System.out.println("World deleted: " + path.getName());
         } catch (IOException e) {
-            main.log("Error while deleting world (" + path.getAbsolutePath() + ")\n" + e.getMessage());
+            System.out.println("Error while deleting world (" + path.getAbsolutePath() + ")\n" + e.getMessage());
         }
     }
 
@@ -143,7 +142,7 @@ public class WorldManager {
         MinecraftServer.getServer().setAllowFlight(true);
 
         main.log("§aWorlds successfully patch");
-        boolean regen = main.getConfig().getBoolean("world.preload.enabled");
+        boolean regen = main.getConfig().getBoolean("game.preload");
         main.log("Preload maps is " + (regen ? "§aenabled" : "§cdisabled"));
 
         if (regen) {

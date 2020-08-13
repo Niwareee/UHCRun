@@ -61,8 +61,9 @@ public class DeadPlayer {
         potionEffects.forEach(player::addPotionEffect);
 
         player.playSound(player.getLocation(), Sound.ENDERMAN_TELEPORT, 4F, 4F);
-        player.sendMessage("§dUHCRun §7» §6Vous avez été réssuscité !");
+        player.sendMessage("§dUHCRun §7» §6Vous avez été ressuscité !");
 
+        game.getAlivePlayers().add(uuid);
         game.getDeadPlayers().remove(uuid);
     }
 

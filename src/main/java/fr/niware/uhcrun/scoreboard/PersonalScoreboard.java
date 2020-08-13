@@ -2,6 +2,7 @@ package fr.niware.uhcrun.scoreboard;
 
 import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.utils.PlayerOrientation;
 import fr.niware.uhcrun.utils.packet.ActionBar;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.bukkit.Bukkit;
@@ -9,7 +10,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import fr.niware.uhcrun.utils.State;
-import fr.niware.uhcrun.world.WorldManager;
 
 import java.util.UUID;
 
@@ -22,6 +22,7 @@ public class PersonalScoreboard {
 
     private final Location spawn;
 
+    private final PlayerOrientation playerOrientation;
     private final ActionBar actionBar;
     private final ObjectiveSign objectiveSign;
 
@@ -30,6 +31,7 @@ public class PersonalScoreboard {
         this.uuid = player.getUniqueId();
 
         this.spawn = main.getGame().getSpecSpawn();
+        this.playerOrientation = new PlayerOrientation();
 
         reloadData();
         this.actionBar = new ActionBar();
@@ -46,9 +48,6 @@ public class PersonalScoreboard {
         Game game = main.getGame();
         String time = secondsToString(game.getTimer());
 
-        WorldManager worldManager = main.getWorldManager();
-        worldManager.updateHealth(player);
-
         if (State.isInWait()) {
             objectiveSign.setLine(0, "§7");
             objectiveSign.setLine(1, " §c» §7Joueurs: §e" + game.getAlivePlayers().size() + "/" + game.getSlot());
@@ -63,6 +62,7 @@ public class PersonalScoreboard {
         int kills = main.getPlayerManager().getPlayers().get(player.getUniqueId()).getKillsGame();
 
         if (State.isInGame()) {
+            main.getWorldManager().updateHealth(player);
 
             if (State.isState(State.MINING))
                 actionBar.sendToPlayer(player, "§6Téléportation: " + secondsToStringColor(game.getPvPTime()));
@@ -73,7 +73,7 @@ public class PersonalScoreboard {
             objectiveSign.setLine(3, " §7» §eKills: §b" + kills);
             objectiveSign.setLine(4, "§6§9§7§m+--------------+");
             objectiveSign.setLine(5, " §7» §eDurée: §b" + time);
-            objectiveSign.setLine(6, " §7» §eCentre: §b" + (int) Math.ceil(player.getLocation().distance(spawn)));
+            objectiveSign.setLine(6, " §7» §eCentre: §b" + (int) Math.ceil(player.getLocation().distance(spawn)) + " " + playerOrientation.getOrientation(player));
             objectiveSign.setLine(7, "§9§7§m+--------------+");
             objectiveSign.setLine(8, ip);
 

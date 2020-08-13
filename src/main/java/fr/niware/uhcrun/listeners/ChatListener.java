@@ -1,7 +1,7 @@
 package fr.niware.uhcrun.listeners;
 
 import fr.niware.uhcrun.Main;
-import fr.niware.uhcrun.game.player.PlayerManager;
+import fr.niware.uhcrun.game.manager.PlayerManager;
 import fr.niware.uhcrun.account.Rank;
 import fr.niware.uhcrun.utils.State;
 import org.bukkit.Bukkit;

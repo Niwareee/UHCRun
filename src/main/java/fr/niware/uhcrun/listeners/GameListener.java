@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
+import org.bukkit.block.Furnace;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -17,16 +18,15 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.BrewEvent;
+import org.bukkit.event.inventory.FurnaceBurnEvent;
 import org.bukkit.event.player.PlayerAchievementAwardedEvent;
-import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -96,17 +96,26 @@ public class GameListener implements Listener {
     }
 
     @EventHandler
-    public void onItemConsume(PlayerItemConsumeEvent event) {
-        if (event.getItem().getType() == Material.GOLDEN_APPLE) {
-            event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 10 * 20, 1));
+    public void onBrew(BrewEvent event) {
+        if (event.getContents().getIngredient().getType() == Material.GLOWSTONE_DUST) {
+            event.setCancelled(true);
+            event.getContents().getIngredient().setType(Material.AIR);
         }
     }
 
     @EventHandler
-    public void onBrew(BrewEvent event) {
-        if (event.getContents().getIngredient().getType() == Material.GLOWSTONE_DUST) {
-            event.setCancelled(true);
-        }
+    public void onFurnaceBurn(FurnaceBurnEvent event) {
+        Furnace block = (Furnace) event.getBlock().getState();
+        new BukkitRunnable() {
+            public void run() {
+                if (block.getCookTime() > 0 || block.getBurnTime() > 0) {
+                    block.setCookTime((short) (block.getCookTime() + 4));
+                    block.update();
+                } else {
+                    cancel();
+                }
+            }
+        }.runTaskTimerAsynchronously(main, 1L, 1L);
     }
 
     @EventHandler

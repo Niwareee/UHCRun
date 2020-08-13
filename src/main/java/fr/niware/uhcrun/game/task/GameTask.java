@@ -1,6 +1,7 @@
-package fr.niware.uhcrun.game;
+package fr.niware.uhcrun.game.task;
 
 import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.utils.Scatter;
 import fr.niware.uhcrun.utils.State;
 import net.minecraft.server.v1_8_R3.MinecraftServer;
@@ -14,13 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class GameManager {
+public class GameTask {
 
     private final Main main;
     private final Game game;
 
-    public GameManager() {
-
+    public GameTask() {
         this.main = Main.getInstance();
         this.game = main.getGame();
 
@@ -33,12 +33,28 @@ public class GameManager {
             int pvpTime = game.getPvPTime();
 
             if (pvpTime == 60 || pvpTime == 30 || pvpTime == 10 || pvpTime == 5 || pvpTime == 4 || pvpTime == 3 || pvpTime == 2 || pvpTime == 1) {
-                Bukkit.broadcastMessage("§dUHCRun §7» §eTéléportation dans §f" + pvpTime + " §e" + (pvpTime != 1 ? "secondes" : "seconde") + ".");
+                Bukkit.broadcastMessage("§dUHCRun §7» §eTéléportation dans §f" + pvpTime + " §e" + (pvpTime != 1 ? "secondes." : "seconde."));
                 return;
             }
 
             if (pvpTime == 0) {
                 launchTeleport();
+            }
+
+            if (State.isState(State.PVP)) {
+                int timer = game.getTimer();
+                if (timer == 1210 || timer == 1215 || timer == 1216 || timer == 1217 || timer == 1218 || timer == 1219) {
+                    Bukkit.broadcastMessage("§dUHCRun §7» §eDégâts actifs dans §f" + (1220 - timer) + " §e" + (timer != 1219 ? "secondes." : "seconde."));
+                }
+
+                if (timer == 1220) {
+                    game.setInvincibility(false);
+
+                    // AVOID LAGS
+                    game.getWorld().setGameRuleValue("randomTickSpeed", "0");
+                    game.getWorld().setGameRuleValue("doMobSpawning", "false");
+                    Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.WOLF_GROWL, 2F, 2F));
+                }
             }
 
         }, 0L, 20L);
@@ -70,23 +86,12 @@ public class GameManager {
 
             player.setWalkSpeed(0.2f);
             player.removePotionEffect(PotionEffectType.FAST_DIGGING);
-
             player.setHealth(20D);
             player.setFoodLevel(20);
-            player.playSound(player.getLocation(), Sound.WOLF_GROWL, 2F, 2F);
         }
 
         lauchBorder();
         lauchKickOffline();
-
-        Bukkit.getScheduler().runTaskLater(main, () -> {
-            game.setInvincibility(false);
-
-            // AVOID LAGS
-            game.getWorld().setGameRuleValue("randomTickSpeed", "0");
-            game.getWorld().setGameRuleValue("doMobSpawning", "false");
-
-        }, 10 * 20);
     }
 
     public void lauchBorder() {

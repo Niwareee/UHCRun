@@ -1,13 +1,15 @@
-package fr.niware.uhcrun.game.player;
+package fr.niware.uhcrun.game.manager;
 
 import fr.niware.uhcrun.Main;
 import fr.niware.uhcrun.account.AccountManager;
 import fr.niware.uhcrun.account.Rank;
 import fr.niware.uhcrun.game.Game;
-import fr.niware.uhcrun.game.PreGameManager;
+import fr.niware.uhcrun.game.player.UHCPlayer;
+import fr.niware.uhcrun.game.task.PreGameTask;
 import fr.niware.uhcrun.scoreboard.ScoreboardManager;
 import fr.niware.uhcrun.utils.State;
 import fr.niware.uhcrun.utils.packet.ActionBar;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -31,7 +33,7 @@ public class PlayerManager {
 
     private final Scoreboard scoreboard;
 
-    private final Map<UUID, PlayerUHC> players;
+    private final Map<UUID, UHCPlayer> players;
 
     public PlayerManager(Main main) {
         this.main = main;
@@ -46,7 +48,7 @@ public class PlayerManager {
         this.players = new HashMap<>();
     }
 
-    public Map<UUID, PlayerUHC> getPlayers() {
+    public Map<UUID, UHCPlayer> getPlayers() {
         return players;
     }
 
@@ -64,14 +66,14 @@ public class PlayerManager {
     }
 
     public void setJoinInventory(Player player) {
-        setPlayInventory(player);
+        setJoinEffect(player);
 
         player.teleport(game.getSpawn());
         player.setLevel(game.getCountdownStart());
         player.setGameMode(GameMode.ADVENTURE);
     }
 
-    public void setPlayInventory(Player player) {
+    public void setJoinEffect(Player player) {
         player.getInventory().clear();
         player.getInventory().setArmorContents(null);
         player.setWalkSpeed(0.2f);
@@ -91,7 +93,7 @@ public class PlayerManager {
     public void onJoin(Player player) {
         int[] account = accountManager.getDatabaseAccount(player.getUniqueId());
         Rank rank = accountManager.getFromPower(account[0]);
-        new PlayerUHC(player.getUniqueId(), rank, account[1], account[2]);
+        new UHCPlayer(player.getUniqueId(), rank, account[1], account[2]);
 
         scoreboard.getTeam("player").addEntry(player.getName());
         scoreboardManager.onLogin(player);
@@ -99,18 +101,18 @@ public class PlayerManager {
         if (State.isInWait()) {
             setJoinInventory(player);
 
-            actionBar.sendToPlayer(player, "§a+ " + rank.getPrefix() + player.getName() + " §7a rejoint. §6(" + game.getAlivePlayers().size() + "/" + game.getSlot() + ")");
             game.getAlivePlayers().add(player.getUniqueId());
+            actionBar.sendToPlayer(player, "§a+ " + rank.getPrefix() + player.getName() + " §7a rejoint. §6(" + game.getAlivePlayers().size() + "/" + game.getSlot() + ")");
 
             if (game.getAlivePlayers().size() >= game.getAutoStartSize() && State.isState(State.WAITING)) {
-                new PreGameManager(false);
+                new PreGameTask(false);
             }
             return;
         }
 
         if (State.isInGame()) {
             if (game.getDecoPlayers().contains(player.getUniqueId())) {
-                actionBar.sendToAll("§dUHCRun §8» §b" + player.getName() + " §7est revenu dans la partie.");
+                Bukkit.broadcastMessage("§dUHCRun §7» §b" + player.getName() + " §7est revenu dans la partie.");
 
                 game.getAlivePlayers().add(player.getUniqueId());
                 game.getDecoPlayers().remove(player.getUniqueId());
@@ -140,7 +142,9 @@ public class PlayerManager {
             if (game.getAlivePlayers().contains(player.getUniqueId())) {
                 if (State.isState(State.TELEPORT) || State.isState(State.MINING)) {
                     game.getDecoPlayers().add(player.getUniqueId());
-                    actionBar.sendToAll("§aUHCRun §8» §b" + player.getName() + " §7a quitté la partie.");
+                    Bukkit.broadcastMessage("§dUHCRun §7» §b" + player.getName() + " §7a quitté la partie.");
+
+                    main.getWinManager().checkWin();
                     return;
                 }
                 player.setHealth(0);

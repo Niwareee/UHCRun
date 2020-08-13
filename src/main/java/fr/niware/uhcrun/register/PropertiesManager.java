@@ -15,20 +15,13 @@ import java.util.Map;
 public class PropertiesManager {
 
     public static void enablePatch() {
-
         Main main = Main.getInstance();
 
-        // PATCH SLOT
-
         try {
+            // PATCH SLOT
             SlotPatcher.changeSlots(main.getGame().getSlot());
-        } catch (ReflectiveOperationException e) {
-            e.printStackTrace();
-        }
 
-        // PATCH STRENTGH
-
-        try {
+            // PATCH STRENGTH
             Reflection.setFinalStatic(PotionEffectType.class.getDeclaredField("acceptingNew"), true);
 
             Field byIdField = Reflection.getField(PotionEffectType.class, true, "byId");

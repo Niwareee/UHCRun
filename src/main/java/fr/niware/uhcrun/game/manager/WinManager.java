@@ -1,9 +1,9 @@
-package fr.niware.uhcrun.game;
+package fr.niware.uhcrun.game.manager;
 
 import fr.niware.uhcrun.Main;
-import fr.niware.uhcrun.game.player.PlayerManager;
+import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.utils.State;
-import fr.niware.uhcrun.utils.WinnerFirework;
+import fr.niware.uhcrun.utils.WinEffect;
 import fr.niware.uhcrun.utils.packet.Title;
 import net.minecraft.server.v1_8_R3.MinecraftServer;
 import org.bukkit.Bukkit;
@@ -91,7 +91,7 @@ public class WinManager {
             Bukkit.broadcastMessage(" ");
             Bukkit.broadcastMessage("§f§m+------§6§m-----------§f§m------+");
 
-            new WinnerFirework(main, 40, winner);
+            new WinEffect(winner);
             launchStop();
 
         }, 10);

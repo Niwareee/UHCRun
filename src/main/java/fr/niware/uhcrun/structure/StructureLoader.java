@@ -1,6 +1,8 @@
 package fr.niware.uhcrun.structure;
 
 import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.game.Game;
+import fr.niware.uhcrun.utils.InventoryString;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -10,27 +12,22 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.Inventory;
 
-import fr.niware.uhcrun.utils.InventoryString;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class StructureLoader {
 
     private final Main main;
 
-    private int changes = 0;
-    private Thread thread;
+    public final Game game;
 
-    private final Map<String, Structure> structures;
     private final String path;
+    private int changes = 0;
 
 
     public StructureLoader(Main main) {
         this.main = main;
-        this.structures = new HashMap<>();
+        this.game = main.getGame();
         this.path = main.getDataFolder().getPath();
     }
 
@@ -123,7 +120,7 @@ public class StructureLoader {
 
         long start = System.currentTimeMillis();
 
-        structures.remove(fileName);
+        game.getStructure().remove(fileName);
 
         File schematic = new File(path + "/schematics/" + fileName + ".yml");
 
@@ -151,22 +148,22 @@ public class StructureLoader {
             structure.addBlock(Integer.parseInt(values[0]), Integer.parseInt(values[1]), Integer.parseInt(values[2]), Material.getMaterial(values[3]), Byte.parseByte(values[4]), inventory);
         }
 
-        structures.put(fileName, structure);
+        game.getStructure().put(fileName, structure);
 
         main.log("§eStructure " + fileName + " loaded in " + (System.currentTimeMillis() - start) + " ms");
 
         return true;
     }
 
-    public boolean paste(Location location, String fileName, boolean noAir) {
+    public void paste(Location location, String fileName, boolean noAir) {
 
         changes = 0;
 
-        if (!structures.containsKey(fileName)) load(fileName);
+        if (!game.getStructure().containsKey(fileName)) load(fileName);
 
         long start = System.currentTimeMillis();
 
-        Structure structure = structures.get(fileName);
+        Structure structure = game.getStructure().get(fileName);
 
         BlockData[][][] blocks = structure.getBlocks();
 
@@ -175,14 +172,15 @@ public class StructureLoader {
         int yStart = (int) location.getY() - structure.getYAnchor();
         int zStart = (int) location.getZ() - structure.getZAnchor();
 
-        
+
+        final Thread thread;
         (thread = new Thread()).start();
         try {
             thread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        
+
         synchronized (thread) {
 				
 	        for (int x = 0; x < structure.getXSize(); x++) {
@@ -203,8 +201,7 @@ public class StructureLoader {
 	        }
 
 	        main.log("§eStructure " + fileName + " pasted in " + (System.currentTimeMillis() - start) + " ms (" + changes + " blocks changed)");
-	        return true;
-		}
+        }
     }
 
     @SuppressWarnings("deprecation")

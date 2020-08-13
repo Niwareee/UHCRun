@@ -3,8 +3,8 @@ package fr.niware.uhcrun;
 import fr.niware.uhcrun.account.AccountManager;
 import fr.niware.uhcrun.database.SQLManager;
 import fr.niware.uhcrun.game.Game;
-import fr.niware.uhcrun.game.WinManager;
-import fr.niware.uhcrun.game.player.PlayerManager;
+import fr.niware.uhcrun.game.manager.WinManager;
+import fr.niware.uhcrun.game.manager.PlayerManager;
 import fr.niware.uhcrun.hook.SlotPatcher;
 import fr.niware.uhcrun.listeners.WorldListener;
 import fr.niware.uhcrun.register.PropertiesManager;
@@ -48,7 +48,7 @@ public class Main extends JavaPlugin {
         long start = System.currentTimeMillis();
         instance = this;
 
-        scheduledExecutorService = Executors.newScheduledThreadPool(16);
+        scheduledExecutorService = Executors.newScheduledThreadPool(1);
         executorMonoThread = Executors.newScheduledThreadPool(1);
         scoreboardManager = new ScoreboardManager();
 
@@ -134,4 +134,5 @@ public class Main extends JavaPlugin {
     public void log(String message) {
         getServer().getConsoleSender().sendMessage("[" + getName() + "] " + message);
     }
+
 }

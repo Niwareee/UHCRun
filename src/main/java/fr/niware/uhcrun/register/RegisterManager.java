@@ -25,9 +25,13 @@ public class RegisterManager {
 
     public void registerListener() {
 
-        PluginManager pluginManager = Bukkit.getPluginManager();
+        PluginManager pluginManager = main.getServer().getPluginManager();
         List<Listener> listeners = new ArrayList<>();
 
+        listeners.add(new AutoLapisListener());
+        listeners.add(new BlockListener(main));
+        listeners.add(new DeathListener(main));
+        listeners.add(new CraftListener());
         listeners.add(new ChatListener());
         listeners.add(new ConnectionListener(main));
         listeners.add(new TempListener().moveListener);

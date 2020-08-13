@@ -10,8 +10,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -55,7 +53,7 @@ public class Scatter extends BukkitRunnable {
         Random random = new Random();
         Player playerToTp = players.get(random.nextInt(players.size()));
 
-        if (playerToTp != null && playerToTp.getGameMode() != GameMode.SPECTATOR) {
+        if (playerToTp != null) {
 
             PaperLib.teleportAsync(playerToTp, randomLocation());
             playerToTp.setVelocity(new Vector(0, 1, 0));
@@ -64,9 +62,7 @@ public class Scatter extends BukkitRunnable {
 
             if (this.isStart) {
                 int percent = Math.round((float) 100 / this.players.size());
-                actionBar.sendToAll("§7Téléportation...  §6(" + percent + "%)");
-                playerToTp.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20, 1, false, false));
-                playerToTp.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 9, false, false));
+                actionBar.sendToAll("§7Téléportation en cours...  §6(" + percent + "%)");
                 setSpawnSpot(playerToTp);
             }
         }

@@ -3,7 +3,7 @@ package fr.niware.uhcrun.account;
 import fr.niware.uhcrun.Main;
 import fr.niware.uhcrun.database.SQLManager;
 import fr.niware.uhcrun.game.Game;
-import fr.niware.uhcrun.game.player.PlayerUHC;
+import fr.niware.uhcrun.game.player.UHCPlayer;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -78,14 +78,14 @@ public class AccountManager {
         sqlManager.update("INSERT INTO games_uhcrun (start, size_players, winner, finish) VALUES " +
                 "('" + new Timestamp(game.getStartMillis()) + "', '" + game.getSizePlayers() + "', '" + game.getWinner().getName() + "', '" + new Timestamp(System.currentTimeMillis()) + "')");
 
-        System.out.print(main.getPlayerManager().getPlayers().values().size());
-        for (PlayerUHC uhcPlayer : main.getPlayerManager().getPlayers().values()) {
-            if (!game.isWinner(uhcPlayer.getUUID())) {
-                sqlManager.update("UPDATE account_uhcrun SET kills='" + uhcPlayer.getKillsAll() + uhcPlayer.getKillsGame() + "' WHERE player_uuid='" + uhcPlayer.getUUID() + "'");
-            } else {
-                System.out.print("dd");
-                sqlManager.update("UPDATE account_uhcrun SET kills='" + uhcPlayer.getKillsAll() + uhcPlayer.getKillsGame() + "' SET wins='" + uhcPlayer.getWins() + 1 + "' WHERE player_uuid='" + uhcPlayer.getUUID() + "'");
+        for (UHCPlayer uhcPlayer : main.getPlayerManager().getPlayers().values()) {
+            if (game.isWinner(uhcPlayer.getUUID())) {
+                int newWins = uhcPlayer.getWins() + 1;
+                System.out.print(newWins);
+                sqlManager.update("UPDATE account_uhcrun SET kills='" + uhcPlayer.getKillsAll() + uhcPlayer.getKillsGame() + "' SET wins='" + newWins + "' WHERE player_uuid='" + uhcPlayer.getUUID() + "'");
+                continue;
             }
+            sqlManager.update("UPDATE account_uhcrun SET kills='" + uhcPlayer.getKillsAll() + uhcPlayer.getKillsGame() + "' WHERE player_uuid='" + uhcPlayer.getUUID() + "'");
         }
 
         main.log("§aGame data successfully send to database in " + (System.currentTimeMillis() - start) + " ms !");

@@ -1,7 +1,11 @@
 package fr.niware.uhcrun.listeners;
 
 import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.utils.State;
+import fr.niware.uhcrun.world.WorldManager;
+import fr.niware.uhcrun.world.patch.BetterCenter;
+import fr.niware.uhcrun.world.patch.WorldGenCavesPatched;
 import fr.niware.uhcrun.world.populator.OrePopulator;
 import fr.niware.uhcrun.world.populator.SurgarCanePopulator;
 import net.minecraft.server.v1_8_R3.EntityExperienceOrb;
@@ -28,7 +32,7 @@ public class WorldListener implements Listener {
 
     private final Random random;
 
-    public WorldListener(){
+    public WorldListener() {
         this.random = new Random();
     }
 
@@ -38,10 +42,24 @@ public class WorldListener implements Listener {
         if (world.getEnvironment() == Environment.NORMAL) {
             long start = System.currentTimeMillis();
 
-            world.getPopulators().add(new SurgarCanePopulator(2));
-            world.getPopulators().add(new OrePopulator());
+            try {
+                BetterCenter.load();
+                WorldGenCavesPatched.load(world, 3);
+            } catch (ReflectiveOperationException e) {
+                e.printStackTrace();
+            }
 
-            Main.getInstance().log("§aWorld successfully populated in " + (System.currentTimeMillis() - start) + " ms");
+            OrePopulator orePopulator = new OrePopulator();
+            orePopulator.addRule(new OrePopulator.Rule(Material.DIAMOND_ORE, 4, 0, 64, 5));
+            orePopulator.addRule(new OrePopulator.Rule(Material.IRON_ORE, 4, 0, 64, 12));
+            orePopulator.addRule(new OrePopulator.Rule(Material.GOLD_ORE, 2, 0, 64, 8));
+            orePopulator.addRule(new OrePopulator.Rule(Material.LAPIS_ORE, 3, 0, 64, 4));
+            orePopulator.addRule(new OrePopulator.Rule(Material.OBSIDIAN, 4, 0, 32, 4));
+
+            world.getPopulators().add(orePopulator);
+            world.getPopulators().add(new SurgarCanePopulator(2));
+
+            Main.getInstance().log("§aWorld successfully init in " + (System.currentTimeMillis() - start) + " ms");
         }
     }
 
@@ -65,6 +83,10 @@ public class WorldListener implements Listener {
 
     @EventHandler
     public void onItemSpawn(ItemSpawnEvent event) {
+        if (event.getEntityType() != EntityType.DROPPED_ITEM){
+            return;
+        }
+
         ItemStack itemStack = event.getEntity().getItemStack();
         final double percent = random.nextDouble();
 

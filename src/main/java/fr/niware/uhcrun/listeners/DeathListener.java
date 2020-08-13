@@ -1,16 +1,15 @@
 package fr.niware.uhcrun.listeners;
 
 import fr.niware.uhcrun.Main;
-import fr.niware.uhcrun.game.WinManager;
+import fr.niware.uhcrun.game.Game;
+import fr.niware.uhcrun.game.manager.PlayerManager;
+import fr.niware.uhcrun.game.manager.WinManager;
 import fr.niware.uhcrun.game.player.DeadPlayer;
-import fr.niware.uhcrun.game.player.PlayerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 
 public class DeathListener implements Listener {
@@ -21,6 +20,7 @@ public class DeathListener implements Listener {
 
     private final PlayerManager playerManager;
     private final WinManager winManager;
+    private final Game game;
 
     public DeathListener(Main main) {
         this.main = main;
@@ -29,6 +29,7 @@ public class DeathListener implements Listener {
 
         this.playerManager = main.getPlayerManager();
         this.winManager = main.getWinManager();
+        this.game = main.getGame();
     }
 
     @EventHandler
@@ -40,10 +41,10 @@ public class DeathListener implements Listener {
 
         if (player.getKiller() != null) {
             playerManager.getPlayers().get(player.getUniqueId()).setKillsGame(scoreboard.getObjective("pkills").getScore(player.getName()).getScore());
-            player.getKiller().addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 20 * 20, 1));
+            game.getDeathPotionEffects().forEach(player.getKiller()::addPotionEffect);
         }
 
-        event.setDeathMessage("§aUHC §8» §c" + player.getName() + " §7" + (player.getKiller() == null ? "est mort." : "a été tué par §a" + player.getKiller().getName() + "§7."));
+        event.setDeathMessage("§dUHCRun §7» §c" + player.getName() + " §6" + (player.getKiller() == null ? "est mort." : "a été tué par §a" + player.getKiller().getName() + "§6."));
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(main, winManager::checkWin, 10);
     }

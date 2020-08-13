@@ -1,17 +1,12 @@
 package fr.niware.uhcrun.hook;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import fr.niware.uhcrun.Main;
+
+import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Properties;
 import java.util.logging.Level;
-
-import fr.niware.uhcrun.Main;
 
 public class SlotPatcher {
 
