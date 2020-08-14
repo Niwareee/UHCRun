@@ -6,7 +6,7 @@ import net.minecraft.server.v1_8_R3.*;
 import java.lang.reflect.Field;
 import java.util.Random;
 
-public class BetterCenter {
+public class CenterPatcher {
     public static void load() throws ReflectiveOperationException {
         Field worldGenTreesField = BiomeBase.class.getDeclaredField("aA");
         worldGenTreesField.setAccessible(true);

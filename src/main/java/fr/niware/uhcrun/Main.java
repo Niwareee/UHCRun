@@ -3,17 +3,16 @@ package fr.niware.uhcrun;
 import fr.niware.uhcrun.account.AccountManager;
 import fr.niware.uhcrun.database.SQLManager;
 import fr.niware.uhcrun.game.Game;
-import fr.niware.uhcrun.game.manager.WinManager;
 import fr.niware.uhcrun.game.manager.PlayerManager;
+import fr.niware.uhcrun.game.manager.WinManager;
 import fr.niware.uhcrun.hook.SlotPatcher;
 import fr.niware.uhcrun.listeners.WorldListener;
-import fr.niware.uhcrun.register.PropertiesManager;
 import fr.niware.uhcrun.register.RegisterManager;
 import fr.niware.uhcrun.scoreboard.ScoreboardManager;
 import fr.niware.uhcrun.structure.StructureLoader;
 import fr.niware.uhcrun.utils.packet.Title;
-import fr.niware.uhcrun.world.BiomesPatcher;
 import fr.niware.uhcrun.world.WorldManager;
+import fr.niware.uhcrun.world.patch.BiomesPatcher;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.concurrent.Executors;
@@ -57,14 +56,13 @@ public class Main extends JavaPlugin {
         getServer().getScheduler().runTaskLater(this, () -> {
             this.sqlManager = new SQLManager(this);
             this.game = new Game(this);
-            PropertiesManager.enablePatch();
             this.structureLoader = new StructureLoader(this);
             this.accountManager = new AccountManager(this);
             this.playerManager = new PlayerManager(this);
             this.winManager = new WinManager(this);
-            this.worldManager = new WorldManager(this);
 
             new RegisterManager(this);
+            this.worldManager = new WorldManager(this);
         }, 40);
 
         this.title = new Title();

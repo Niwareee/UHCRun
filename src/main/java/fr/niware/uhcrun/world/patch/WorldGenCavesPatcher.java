@@ -9,10 +9,10 @@ import org.bukkit.craftbukkit.v1_8_R3.generator.NormalChunkGenerator;
 import java.lang.reflect.Field;
 
 
-public class WorldGenCavesPatched extends WorldGenCaves {
+public class WorldGenCavesPatcher extends WorldGenCaves {
     private final int amount;
 
-    public WorldGenCavesPatched(int amountOfCaves) {
+    public WorldGenCavesPatcher(int amountOfCaves) {
         this.amount = amountOfCaves;
     }
 
@@ -53,6 +53,6 @@ public class WorldGenCavesPatched extends WorldGenCaves {
         Field worldGenCaveField = ChunkProviderGenerate.class.getDeclaredField("u");
         worldGenCaveField.setAccessible(true);
 
-        worldGenCaveField.set(chunkProviderField.get(chunkProviderChunkProviderField.get(chunkProviderWorldField.get(craftWorld))), new WorldGenCavesPatched(amountOfCaves));
+        worldGenCaveField.set(chunkProviderField.get(chunkProviderChunkProviderField.get(chunkProviderWorldField.get(craftWorld))), new WorldGenCavesPatcher(amountOfCaves));
     }
 }

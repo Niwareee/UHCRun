@@ -36,7 +36,7 @@ public class ChatListener implements Listener {
         if (player.getGameMode() == GameMode.SPECTATOR) {
             event.setCancelled(true);
             String message = event.getMessage();
-            Bukkit.getOnlinePlayers().stream().filter(spec -> spec.getGameMode() == GameMode.SPECTATOR).forEach(spec -> spec.sendMessage("§f[Spec] §7" + player.getDisplayName() + " §f» §7" + message));
+            Bukkit.getOnlinePlayers().stream().filter(spectator -> spectator.getGameMode() == GameMode.SPECTATOR).forEach(spectator -> spectator.sendMessage("§f[Spec] §7" + player.getDisplayName() + " §f» §7" + message));
             return;
         }
 

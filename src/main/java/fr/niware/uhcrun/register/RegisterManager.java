@@ -41,6 +41,8 @@ public class RegisterManager {
         for (Listener listener : listeners) {
             pluginManager.registerEvents(listener, main);
         }
+
+        PropertiesManager.enablePatch();
     }
 
     public void registerCommands() {

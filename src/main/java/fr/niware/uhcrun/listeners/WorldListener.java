@@ -1,11 +1,9 @@
 package fr.niware.uhcrun.listeners;
 
 import fr.niware.uhcrun.Main;
-import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.utils.State;
-import fr.niware.uhcrun.world.WorldManager;
-import fr.niware.uhcrun.world.patch.BetterCenter;
-import fr.niware.uhcrun.world.patch.WorldGenCavesPatched;
+import fr.niware.uhcrun.world.patch.CenterPatcher;
+import fr.niware.uhcrun.world.patch.WorldGenCavesPatcher;
 import fr.niware.uhcrun.world.populator.OrePopulator;
 import fr.niware.uhcrun.world.populator.SurgarCanePopulator;
 import net.minecraft.server.v1_8_R3.EntityExperienceOrb;
@@ -43,8 +41,8 @@ public class WorldListener implements Listener {
             long start = System.currentTimeMillis();
 
             try {
-                BetterCenter.load();
-                WorldGenCavesPatched.load(world, 3);
+                CenterPatcher.load();
+                WorldGenCavesPatcher.load(world, 3);
             } catch (ReflectiveOperationException e) {
                 e.printStackTrace();
             }

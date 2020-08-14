@@ -65,13 +65,9 @@ public class WorldLoader {
                         int loaded;
                         for (loaded = 0; this.i <= maxChunk && this.j <= maxChunk && loaded < 10; ++this.j) {
                             final Chunk chunk = chunkProviderServer.getChunkAt(this.i, this.j);
-                            //final CompletableFuture<org.bukkit.Chunk> chunk = PaperLib.getChunkAtAsync(world, this.i, this.j);
-                            /*try {
-                                chunk.get().load();
-                            } catch (InterruptedException | ExecutionException e) {
-                                e.printStackTrace();
-                            }*/
                             chunkProviderServer.loadChunk(chunk.locX, chunk.locZ);
+                            //final CompletableFuture<Chunk> chunk = PaperLib.getChunkAtAsync(world, this.i, this.j);
+                            //chunk.join().load();
 
                             ++loaded;
                         }
