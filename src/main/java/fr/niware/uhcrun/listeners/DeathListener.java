@@ -40,7 +40,7 @@ public class DeathListener implements Listener {
         playerManager.onDeath(player);
 
         if (player.getKiller() != null) {
-            playerManager.getPlayers().get(player.getUniqueId()).setKillsGame(scoreboard.getObjective("pkills").getScore(player.getName()).getScore());
+            playerManager.getUHCPlayer(player.getUniqueId()).setKillsGame(scoreboard.getObjective("pkills").getScore(player.getName()).getScore());
             game.getDeathPotionEffects().forEach(player.getKiller()::addPotionEffect);
         }
 

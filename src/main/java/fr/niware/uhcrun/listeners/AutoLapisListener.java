@@ -32,7 +32,6 @@ public class AutoLapisListener implements Listener {
         }
     }
 
-
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (event.getClickedInventory() != null && event.getClickedInventory().getType() == InventoryType.ENCHANTING && event.getSlot() == 1){

@@ -156,7 +156,6 @@ public class StructureLoader {
     }
 
     public void paste(Location location, String fileName, boolean noAir) {
-
         changes = 0;
 
         if (!game.getStructure().containsKey(fileName)) load(fileName);
@@ -171,7 +170,6 @@ public class StructureLoader {
         int xStart = (int) location.getX() - structure.getXAnchor();
         int yStart = (int) location.getY() - structure.getYAnchor();
         int zStart = (int) location.getZ() - structure.getZAnchor();
-
 
         final Thread thread;
         (thread = new Thread()).start();

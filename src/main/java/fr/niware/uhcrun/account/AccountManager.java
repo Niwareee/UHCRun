@@ -78,7 +78,7 @@ public class AccountManager {
         sqlManager.update("INSERT INTO games_uhcrun (start, size_players, winner, finish) VALUES " +
                 "('" + new Timestamp(game.getStartMillis()) + "', '" + game.getSizePlayers() + "', '" + game.getWinner().getName() + "', '" + new Timestamp(System.currentTimeMillis()) + "')");
 
-        for (UHCPlayer uhcPlayer : main.getPlayerManager().getPlayers().values()) {
+        for (UHCPlayer uhcPlayer : main.getPlayerManager().getPlayers()) {
             if (game.isWinner(uhcPlayer.getUUID())) {
                 int newWins = uhcPlayer.getWins() + 1;
                 System.out.print(newWins);

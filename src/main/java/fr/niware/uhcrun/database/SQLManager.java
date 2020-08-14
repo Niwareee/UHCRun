@@ -12,6 +12,7 @@ import java.util.function.Function;
 
 public class SQLManager {
 
+    private Main main;
     private static SQLDatabase sqlDatabase;
     private final String host, database, username, password;
     private final int port;
@@ -19,6 +20,7 @@ public class SQLManager {
     public SQLManager(Main main) {
 
         main.saveDefaultConfig();
+        this.main = main;
         this.host = main.getConfig().getString("sql.host");
         this.database = main.getConfig().getString("sql.database");
         this.username = main.getConfig().getString("sql.username");
@@ -67,7 +69,7 @@ public class SQLManager {
     }
 
     public void connect() {
-        sqlDatabase = new SQLDatabase(host, database, username, password, port);
+        sqlDatabase = new SQLDatabase(main, host, database, username, password, port);
         sqlDatabase.connect();
     }
 

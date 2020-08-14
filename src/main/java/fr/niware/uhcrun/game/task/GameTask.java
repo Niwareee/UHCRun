@@ -20,8 +20,8 @@ public class GameTask {
     private final Main main;
     private final Game game;
 
-    public GameTask() {
-        this.main = Main.getInstance();
+    public GameTask(Main main) {
+        this.main = main;
         this.game = main.getGame();
 
         Bukkit.getScheduler().scheduleSyncRepeatingTask(main, () -> {

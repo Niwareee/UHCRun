@@ -1,6 +1,5 @@
 package fr.niware.uhcrun.game.player;
 
-import fr.niware.uhcrun.Main;
 import fr.niware.uhcrun.account.Rank;
 
 import java.util.UUID;
@@ -19,8 +18,6 @@ public class UHCPlayer {
         this.killsGame = 0;
         this.killsAll = killsAll;
         this.wins = wins;
-
-        Main.getInstance().getPlayerManager().getPlayers().put(uuid, this);
     }
 
     public UUID getUUID() {

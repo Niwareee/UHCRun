@@ -24,7 +24,7 @@ public class ChatListener implements Listener {
         Player player = event.getPlayer();
 
         if (!State.isInGame()) {
-            Rank rank = playerManager.getPlayers().get(player.getUniqueId()).getRank();
+            Rank rank = playerManager.getUHCPlayer(player.getUniqueId()).getRank();
             if (rank.getPower() != 0) {
                 event.setFormat(rank.getPrefix() + "%1$s" + "§7: " + rank.getColor() + "%2$s");
                 return;
@@ -40,7 +40,7 @@ public class ChatListener implements Listener {
             return;
         }
 
-        event.setFormat("§7[§c" + playerManager.getPlayers().get(player.getUniqueId()).getKillsGame() + "§7] §e" + "%1$s" + "§7: §f" + "%2$s");
+        event.setFormat("§7[§c" + playerManager.getUHCPlayer(player.getUniqueId()).getKillsGame() + "§7] §e" + "%1$s" + "§7: §f" + "%2$s");
     }
 
 }

@@ -18,17 +18,13 @@ import java.util.UUID;
 
 public class PreGameTask {
 
-    private final Main main;
-
     private final Game game;
     private final ActionBar actionBar;
-
     private final WorldManager worldManager;
 
     private int task;
 
-    public PreGameTask(boolean forceStart) {
-        this.main = Main.getInstance();
+    public PreGameTask(Main main, boolean forceStart) {
 
         this.game = main.getGame();
         this.actionBar = new ActionBar();
@@ -123,6 +119,7 @@ public class PreGameTask {
                 }
 
                 Bukkit.broadcastMessage("§7§m+-------------------------------+");
+                Bukkit.broadcastMessage("§7§m+-------------------------------+");
                 Bukkit.broadcastMessage("               §6● §eDébut de la partie §6●");
                 Bukkit.broadcastMessage(" ");
                 Bukkit.broadcastMessage("  §7» §aAlliances §cinterdites§7.");
@@ -155,7 +152,7 @@ public class PreGameTask {
 
                 }, 20 * 10);
 
-                new GameTask();
+                new GameTask(main);
 
                 Bukkit.getScheduler().runTaskLaterAsynchronously(main, () -> {
                     game.setInvincibility(false);

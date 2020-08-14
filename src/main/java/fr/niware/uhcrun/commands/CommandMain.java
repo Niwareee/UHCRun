@@ -15,11 +15,13 @@ import org.bukkit.entity.Player;
 
 public class CommandMain implements CommandExecutor {
 
+    private final Main main;
     private final Game game;
     private final WinManager winManager;
     private final StructureLoader structureLoader;
 
     public CommandMain(Main main) {
+        this.main = main;
         this.game = main.getGame();
         this.winManager = main.getWinManager();
         this.structureLoader = main.getStructureLoader();
@@ -66,7 +68,7 @@ public class CommandMain implements CommandExecutor {
                         return true;
                     }
 
-                    new PreGameTask(true);
+                    new PreGameTask(main,true);
                     break;
 
                 case "checkwin":

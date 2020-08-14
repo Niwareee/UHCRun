@@ -15,8 +15,8 @@ public class SQLDatabase {
 
     private final Main main;
 
-    public SQLDatabase(String host, String database, String username, String password, int port) {
-        this.main = Main.getInstance();
+    public SQLDatabase(Main main, String host, String database, String username, String password, int port) {
+        this.main = main;
 
         this.host = host;
         this.database = database;

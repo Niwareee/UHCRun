@@ -8,6 +8,7 @@ import net.minecraft.server.v1_8_R3.MinecraftServer;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
+import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 
 import java.util.logging.Logger;

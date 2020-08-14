@@ -64,7 +64,7 @@ public class WinManager {
             }
 
             game.getWorld().getWorldBorder().setSize(400);
-            int killsWinner = playerManager.getPlayers().get(winner.getUniqueId()).getKillsGame();
+            int killsWinner = playerManager.getUHCPlayer(winner.getUniqueId()).getKillsGame();
 
             Bukkit.broadcastMessage("§f§m+------§6§m-----------§f§m------+");
             Bukkit.broadcastMessage("          §a§l● §ePartie terminée §a§l●");

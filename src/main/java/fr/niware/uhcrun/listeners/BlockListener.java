@@ -2,12 +2,12 @@ package fr.niware.uhcrun.listeners;
 
 import fr.niware.uhcrun.Main;
 import fr.niware.uhcrun.utils.State;
-import org.bukkit.Bukkit;
-import org.bukkit.Effect;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
+import net.minecraft.server.v1_8_R3.MinecraftServer;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -119,14 +119,15 @@ public class BlockListener implements Listener {
 
     @EventHandler
     public void onPlace(BlockPlaceEvent event) {
-        if (event.getBlock().getType() == Material.TNT) {
-            event.getBlock().setType(Material.AIR);
-            event.getBlock().getWorld().spawnEntity(event.getBlock().getLocation().add(0.5D, 0.0D, 0.5D), EntityType.PRIMED_TNT);
+        Block block = event.getBlock();
+        if (block.getType() == Material.TNT) {
+            block.setType(Material.AIR);
+            block.getWorld().spawnEntity(block.getLocation().add(0.5D, 0.0D, 0.5D), EntityType.PRIMED_TNT);
             return;
         }
 
         if (!State.isState(State.FINISH)) {
-            if (event.getBlock().getY() >= 130) {
+            if (block.getY() >= 130) {
                 event.getPlayer().sendMessage("§cErreur: Vous ne pouvez pas aller plus haut.");
                 event.setCancelled(true);
             }
@@ -135,10 +136,11 @@ public class BlockListener implements Listener {
 
     @EventHandler
     public void onPlaceLava(PlayerBucketEmptyEvent event) {
-        if (event.getBucket().equals(Material.LAVA_BUCKET)) {
-            for (Player players : Bukkit.getOnlinePlayers()) {
-                if (players.getUniqueId() != event.getPlayer().getUniqueId() && players.getGameMode() == GameMode.SURVIVAL) {
-                    if (event.getBlockClicked().getLocation().distance(players.getLocation()) < 5) {
+        if (event.getBucket() == Material.LAVA_BUCKET) {
+            for (Entity entity : event.getPlayer().getNearbyEntities(3D, 3D, 3D)) {
+                if (entity.getType() == EntityType.PLAYER) {
+                    Player target = (Player) entity;
+                    if (target.getGameMode() == GameMode.SURVIVAL) {
                         event.setCancelled(true);
                         event.getPlayer().sendMessage("§dUHCRun §8» §cVous êtes trop prêt d'un joueur");
                     }
@@ -150,9 +152,7 @@ public class BlockListener implements Listener {
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         if (event.getBlock().getType() == Material.LOG || event.getBlock().getType() == Material.LOG_2) {
-            main.getServer().getScheduler().runTask(main, () -> {
-                removeTree(event.getBlock(), true, 3);
-            });
+            main.getServer().getScheduler().runTask(main, () -> removeTree(event.getBlock(), true, 3));
         }
     }
 

@@ -40,35 +40,35 @@ public class ScoreboardManager {
 
     private String colorIpAt() {
         String ip = "play.blabla.fr";
- 
+
         if (cooldown > 0) {
             cooldown--;
             return ChatColor.GOLD + ip;
         }
- 
+
         StringBuilder formattedIp = new StringBuilder();
- 
+
         if (ipCharIndex > 0) {
             formattedIp.append(ip.substring(0, ipCharIndex - 1));
             formattedIp.append(ChatColor.RED).append(ip.substring(ipCharIndex - 1, ipCharIndex));
         } else {
             formattedIp.append(ip.substring(0, ipCharIndex));
         }
- 
+
         formattedIp.append(ChatColor.RED).append(ip.charAt(ipCharIndex));
- 
+
         if (ipCharIndex + 1 < ip.length()) {
             formattedIp.append(ChatColor.RED).append(ip.charAt(ipCharIndex + 1));
- 
+
             if (ipCharIndex + 2 < ip.length())
                 formattedIp.append(ChatColor.GOLD).append(ip.substring(ipCharIndex + 2));
- 
+
             ipCharIndex++;
         } else {
             ipCharIndex = 0;
             cooldown = 50;
         }
- 
+
         return ChatColor.GOLD + formattedIp.toString();
     }
 

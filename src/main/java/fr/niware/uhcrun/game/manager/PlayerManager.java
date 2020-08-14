@@ -18,13 +18,12 @@ import org.bukkit.scoreboard.Scoreboard;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class PlayerManager {
 
     private final Main main;
+
     private final Game game;
     private final ActionBar actionBar;
 
@@ -37,6 +36,7 @@ public class PlayerManager {
 
     public PlayerManager(Main main) {
         this.main = main;
+
         this.game = main.getGame();
         this.actionBar = new ActionBar();
 
@@ -46,10 +46,6 @@ public class PlayerManager {
         this.scoreboard = main.getServer().getScoreboardManager().getMainScoreboard();
 
         this.players = new HashMap<>();
-    }
-
-    public Map<UUID, UHCPlayer> getPlayers() {
-        return players;
     }
 
     public void teleportServer(Player player, String server) {
@@ -93,7 +89,7 @@ public class PlayerManager {
     public void onJoin(Player player) {
         int[] account = accountManager.getDatabaseAccount(player.getUniqueId());
         Rank rank = accountManager.getFromPower(account[0]);
-        new UHCPlayer(player.getUniqueId(), rank, account[1], account[2]);
+        put(new UHCPlayer(player.getUniqueId(), rank, account[1], account[2]));
 
         scoreboard.getTeam("player").addEntry(player.getName());
         scoreboardManager.onLogin(player);
@@ -105,7 +101,7 @@ public class PlayerManager {
             actionBar.sendToPlayer(player, "§a+ " + rank.getPrefix() + player.getName() + " §7a rejoint. §6(" + game.getAlivePlayers().size() + "/" + game.getSlot() + ")");
 
             if (game.getAlivePlayers().size() >= game.getAutoStartSize() && State.isState(State.WAITING)) {
-                new PreGameTask(false);
+                new PreGameTask(main,false);
             }
             return;
         }
@@ -147,7 +143,7 @@ public class PlayerManager {
                     main.getWinManager().checkWin();
                     return;
                 }
-                player.setHealth(0);
+                player.setHealth(0D);
             }
         }
     }
@@ -159,5 +155,17 @@ public class PlayerManager {
         player.getWorld().strikeLightningEffect(player.getLocation());
 
         game.getAlivePlayers().remove(player.getUniqueId());
+    }
+
+    public UHCPlayer put(UHCPlayer uhcPlayer){
+        return players.putIfAbsent(uhcPlayer.getUUID(), uhcPlayer);
+    }
+
+    public UHCPlayer getUHCPlayer(UUID uuid){
+        return players.getOrDefault(uuid, put(new UHCPlayer(uuid, accountManager.getFromPower(0), 0, 0)));
+    }
+
+    public Collection<UHCPlayer> getPlayers(){
+        return players.values();
     }
 }

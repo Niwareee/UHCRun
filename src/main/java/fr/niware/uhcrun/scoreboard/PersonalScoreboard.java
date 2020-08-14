@@ -59,7 +59,7 @@ public class PersonalScoreboard {
             return;
         }
 
-        int kills = main.getPlayerManager().getPlayers().get(player.getUniqueId()).getKillsGame();
+        int kills = main.getPlayerManager().getUHCPlayer(player.getUniqueId()).getKillsGame();
 
         if (State.isInGame()) {
             main.getWorldManager().updateHealth(player);
