@@ -6,10 +6,11 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Random;
 
-public class WinEffect implements Runnable {
+public class WinEffect extends BukkitRunnable {
 
     private final Player player;
     private int time;
@@ -21,7 +22,6 @@ public class WinEffect implements Runnable {
 
     @Override
     public void run() {
-        System.out.print("d");
         if (this.time < 20) {
             Firework fw = (Firework) player.getWorld().spawnEntity(player.getPlayer().getLocation(), EntityType.FIREWORK);
             FireworkMeta fwm = fw.getFireworkMeta();

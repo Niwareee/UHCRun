@@ -12,7 +12,7 @@ import java.util.function.Function;
 
 public class SQLManager {
 
-    private Main main;
+    private final Main main;
     private static SQLDatabase sqlDatabase;
     private final String host, database, username, password;
     private final int port;

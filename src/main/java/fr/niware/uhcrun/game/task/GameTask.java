@@ -28,8 +28,7 @@ public class GameTask extends BukkitRunnable {
 
     @Override
     public void run() {
-
-        if (State.isState(State.FINISH)) return;
+        if (State.isState(State.FINISH)) cancel();
 
         game.addTimer();
         main.getGame().removePvPTime();

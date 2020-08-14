@@ -91,7 +91,7 @@ public class WinManager {
             Bukkit.broadcastMessage(" ");
             Bukkit.broadcastMessage("§f§m+------§6§m-----------§f§m------+");
 
-            new WinEffect(winner);
+            new WinEffect(winner).runTaskTimer(main, 5L, 5L);
             launchStop();
 
         }, 10);
