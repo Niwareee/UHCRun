@@ -191,10 +191,9 @@ public class Game {
         this.countdownStart--;
     }
 
-    public void resetCountdownStart(int task) {
+    public void resetCountdownStart() {
         this.countdownStart = autoStartTime;
         Bukkit.broadcastMessage("§dUHCRun §7» §cIl n'y a pas assez de joueurs pour démarrer.");
-        Bukkit.getScheduler().cancelTask(task);
         State.setState(State.WAITING);
     }
 

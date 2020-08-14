@@ -10,12 +10,13 @@ import org.bukkit.Sound;
 import org.bukkit.WorldBorder;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class GameTask {
+public class GameTask extends BukkitRunnable {
 
     private final Main main;
     private final Game game;
@@ -23,41 +24,41 @@ public class GameTask {
     public GameTask(Main main) {
         this.main = main;
         this.game = main.getGame();
+    }
 
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(main, () -> {
+    @Override
+    public void run() {
 
-            if (State.isState(State.FINISH)) return;
+        if (State.isState(State.FINISH)) return;
 
-            game.addTimer();
-            main.getGame().removePvPTime();
-            int pvpTime = game.getPvPTime();
+        game.addTimer();
+        main.getGame().removePvPTime();
+        int pvpTime = game.getPvPTime();
 
-            if (pvpTime == 60 || pvpTime == 30 || pvpTime == 10 || pvpTime == 5 || pvpTime == 4 || pvpTime == 3 || pvpTime == 2 || pvpTime == 1) {
-                Bukkit.broadcastMessage("§dUHCRun §7» §eTéléportation dans §f" + pvpTime + " §e" + (pvpTime != 1 ? "secondes." : "seconde."));
-                return;
+        if (pvpTime == 60 || pvpTime == 30 || pvpTime == 10 || pvpTime == 5 || pvpTime == 4 || pvpTime == 3 || pvpTime == 2 || pvpTime == 1) {
+            Bukkit.broadcastMessage("§dUHCRun §7» §eTéléportation dans §f" + pvpTime + " §e" + (pvpTime != 1 ? "secondes." : "seconde."));
+            return;
+        }
+
+        if (pvpTime == 0) {
+            launchTeleport();
+        }
+
+        if (State.isState(State.PVP)) {
+            int timer = game.getTimer();
+            if (timer == 1210 || timer == 1215 || timer == 1216 || timer == 1217 || timer == 1218 || timer == 1219) {
+                Bukkit.broadcastMessage("§dUHCRun §7» §eDégâts actifs dans §f" + (1220 - timer) + " §e" + (timer != 1219 ? "secondes." : "seconde."));
             }
 
-            if (pvpTime == 0) {
-                launchTeleport();
+            if (timer == 1220) {
+                game.setInvincibility(false);
+
+                // AVOID LAGS
+                game.getWorld().setGameRuleValue("randomTickSpeed", "0");
+                game.getWorld().setGameRuleValue("doMobSpawning", "false");
+                Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.WOLF_GROWL, 2F, 2F));
             }
-
-            if (State.isState(State.PVP)) {
-                int timer = game.getTimer();
-                if (timer == 1210 || timer == 1215 || timer == 1216 || timer == 1217 || timer == 1218 || timer == 1219) {
-                    Bukkit.broadcastMessage("§dUHCRun §7» §eDégâts actifs dans §f" + (1220 - timer) + " §e" + (timer != 1219 ? "secondes." : "seconde."));
-                }
-
-                if (timer == 1220) {
-                    game.setInvincibility(false);
-
-                    // AVOID LAGS
-                    game.getWorld().setGameRuleValue("randomTickSpeed", "0");
-                    game.getWorld().setGameRuleValue("doMobSpawning", "false");
-                    Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.WOLF_GROWL, 2F, 2F));
-                }
-            }
-
-        }, 0L, 20L);
+        }
     }
 
     public void launchTeleport() {
@@ -108,6 +109,5 @@ public class GameTask {
         Bukkit.broadcastMessage("§dUHCRun §7» §cLes joueurs déconnectés ont été éliminés.");
         main.getWinManager().checkWin();
     }
-
 }
 

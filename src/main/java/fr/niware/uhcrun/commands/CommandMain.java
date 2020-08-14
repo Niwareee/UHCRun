@@ -2,6 +2,7 @@ package fr.niware.uhcrun.commands;
 
 import fr.niware.uhcrun.Main;
 import fr.niware.uhcrun.game.Game;
+import fr.niware.uhcrun.game.task.GameTask;
 import fr.niware.uhcrun.game.task.PreGameTask;
 import fr.niware.uhcrun.game.manager.WinManager;
 import fr.niware.uhcrun.structure.StructureLoader;
@@ -68,7 +69,7 @@ public class CommandMain implements CommandExecutor {
                         return true;
                     }
 
-                    new PreGameTask(main,true);
+                    new PreGameTask(main, true).runTaskTimer(main,0L, 20L);
                     break;
 
                 case "checkwin":

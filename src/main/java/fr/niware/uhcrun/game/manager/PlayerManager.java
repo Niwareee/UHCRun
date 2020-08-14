@@ -101,7 +101,7 @@ public class PlayerManager {
             actionBar.sendToPlayer(player, "§a+ " + rank.getPrefix() + player.getName() + " §7a rejoint. §6(" + game.getAlivePlayers().size() + "/" + game.getSlot() + ")");
 
             if (game.getAlivePlayers().size() >= game.getAutoStartSize() && State.isState(State.WAITING)) {
-                new PreGameTask(main,false);
+                new PreGameTask(main, false).runTaskTimer(main, 0L, 20L);
             }
             return;
         }
@@ -157,15 +157,15 @@ public class PlayerManager {
         game.getAlivePlayers().remove(player.getUniqueId());
     }
 
-    public UHCPlayer put(UHCPlayer uhcPlayer){
+    public UHCPlayer put(UHCPlayer uhcPlayer) {
         return players.putIfAbsent(uhcPlayer.getUUID(), uhcPlayer);
     }
 
-    public UHCPlayer getUHCPlayer(UUID uuid){
+    public UHCPlayer getUHCPlayer(UUID uuid) {
         return players.getOrDefault(uuid, put(new UHCPlayer(uuid, accountManager.getFromPower(0), 0, 0)));
     }
 
-    public Collection<UHCPlayer> getPlayers(){
+    public Collection<UHCPlayer> getPlayers() {
         return players.values();
     }
 }

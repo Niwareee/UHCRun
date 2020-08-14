@@ -53,11 +53,8 @@ public class Scatter extends BukkitRunnable {
         Player playerToTp = players.get(random.nextInt(players.size()));
 
         if (playerToTp != null) {
-
             PaperLib.teleportAsync(playerToTp, randomLocation());
             playerToTp.setVelocity(new Vector(0, 1, 0));
-            System.out.print("done");
-            //playerToTp.teleport(randomLocation());
 
             if (this.isStart) {
                 int percent = Math.round((float) 100 / this.players.size());
@@ -75,7 +72,7 @@ public class Scatter extends BukkitRunnable {
         int x = (random.nextInt(2) == 0 ? +1 : -1) * random.nextInt(sizeTP);
         int z = (random.nextInt(2) == 0 ? +1 : -1) * random.nextInt(sizeTP);
         System.out.print("Found new location in x: " + x + " z: " + z);
-        Location location = game.getWorld().getHighestBlockAt(x, z).getLocation().add(0, 35,0);
+        Location location = game.getWorld().getHighestBlockAt(x, z).getLocation().add(0, 50,0);
         if (!location.getChunk().isLoaded()) {
             location.getChunk().load();
         }

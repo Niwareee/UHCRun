@@ -137,12 +137,12 @@ public class BlockListener implements Listener {
     @EventHandler
     public void onPlaceLava(PlayerBucketEmptyEvent event) {
         if (event.getBucket() == Material.LAVA_BUCKET) {
-            for (Entity entity : event.getPlayer().getNearbyEntities(3D, 3D, 3D)) {
+            for (Entity entity : event.getPlayer().getNearbyEntities(2D, 2D, 2D)) {
                 if (entity.getType() == EntityType.PLAYER) {
                     Player target = (Player) entity;
                     if (target.getGameMode() == GameMode.SURVIVAL) {
                         event.setCancelled(true);
-                        event.getPlayer().sendMessage("§dUHCRun §8» §cVous êtes trop prêt d'un joueur");
+                        event.getPlayer().sendMessage("§dUHCRun §7» §cVous êtes trop prêt d'un joueur");
                     }
                 }
             }

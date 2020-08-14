@@ -16,20 +16,20 @@ public class DeathListener implements Listener {
 
     private final Main main;
 
-    private final Scoreboard scoreboard;
-
     private final PlayerManager playerManager;
     private final WinManager winManager;
     private final Game game;
 
+    private final Scoreboard scoreboard;
+
     public DeathListener(Main main) {
         this.main = main;
-
-        this.scoreboard = main.getServer().getScoreboardManager().getMainScoreboard();
 
         this.playerManager = main.getPlayerManager();
         this.winManager = main.getWinManager();
         this.game = main.getGame();
+
+        this.scoreboard = main.getServer().getScoreboardManager().getMainScoreboard();
     }
 
     @EventHandler

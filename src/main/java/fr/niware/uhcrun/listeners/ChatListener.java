@@ -20,7 +20,7 @@ public class ChatListener implements Listener {
     }
 
     @EventHandler
-    public void onChat(AsyncPlayerChatEvent event) {
+    public void onAsyncChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
 
         if (!State.isInGame()) {
