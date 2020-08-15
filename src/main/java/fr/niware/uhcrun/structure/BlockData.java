@@ -8,8 +8,8 @@ public class BlockData {
     private Material material;
     private byte data;
 
-    private Inventory inventory;
-    private boolean inv;
+    private final Inventory inventory;
+    private final boolean inv;
 
     public BlockData(Material material, byte data, Inventory inventory) {
         this.material = material;

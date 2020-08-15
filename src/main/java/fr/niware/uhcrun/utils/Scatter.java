@@ -24,24 +24,18 @@ public class Scatter extends BukkitRunnable {
     private final List<Player> players;
 
     private final boolean isStart;
-    private boolean isAdd;
 
-    public Scatter(boolean start) {
+    public Scatter(Main main, boolean start) {
+        this.game = main.getGame();
+        this.actionBar = new ActionBar();
+
         this.players = new ArrayList<>();
-
-        this.isAdd = true;
         this.isStart = start;
 
-        this.actionBar = new ActionBar();
-        this.game = Main.getInstance().getGame();
+        game.getAlivePlayers().forEach(uuid -> this.players.add(Bukkit.getPlayer(uuid)));
     }
 
     public void run() {
-        if (this.isAdd) {
-            this.players.addAll(Bukkit.getOnlinePlayers());
-            this.isAdd = false;
-        }
-
         if (this.players.size() == 0) {
             game.setRunnable(true);
             actionBar.sendToAll("§aTéléportation des joueurs avec succès");
@@ -72,9 +66,16 @@ public class Scatter extends BukkitRunnable {
         int x = (random.nextInt(2) == 0 ? +1 : -1) * random.nextInt(sizeTP);
         int z = (random.nextInt(2) == 0 ? +1 : -1) * random.nextInt(sizeTP);
         System.out.print("Found new location in x: " + x + " z: " + z);
-        Location location = game.getWorld().getHighestBlockAt(x, z).getLocation().add(0, 50,0);
-        if (!location.getChunk().isLoaded()) {
-            location.getChunk().load();
+        Location location = game.getWorld().getHighestBlockAt(x, z).getLocation().add(0, 50, 0);
+
+        int i = 0;
+
+        for (int x1 = -3; x1 < 3; x1++) {
+            for (int z1 = -3; z1 < 3; z1++) {
+                location.add(x1 * 16, 0, z1 * 16).getChunk().load();
+                i++;
+                System.out.print("test" + i);
+            }
         }
         return location;
     }

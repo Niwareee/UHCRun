@@ -3,7 +3,6 @@ package fr.niware.uhcrun.world;
 import fr.niware.uhcrun.Main;
 import fr.niware.uhcrun.game.Game;
 import net.minecraft.server.v1_8_R3.MinecraftServer;
-import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -13,7 +12,6 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -54,7 +52,6 @@ public class WorldManager {
         showhealth.setDisplayName("%");
 
         scoreboard.registerNewObjective("playerkills", "playerKillCount");
-
     }
 
     public void registerTabTeam() {
@@ -86,7 +83,7 @@ public class WorldManager {
     }
 
     public void updateHealth(Player player) {
-        if(showhealth == null) return;
+        if (showhealth == null) return;
         double newPHealth = player.getHealth();
         showhealth.getScore(player.getName()).setScore((int) newPHealth * 5);
     }
@@ -97,16 +94,15 @@ public class WorldManager {
     }
 
     public void deleteWorld(File path) {
-        System.out.println("Deleting... " + path.getName());
-
-        World world = Bukkit.getWorld(path.getName());
-        Bukkit.unloadWorld(world, false);
-
-        try {
-            FileUtils.forceDeleteOnExit(path);
-            System.out.println("World deleted: " + path.getName());
-        } catch (IOException e) {
-            System.out.println("Error while deleting world (" + path.getAbsolutePath() + ")\n" + e.getMessage());
+        if (path.exists()) {
+            File[] files = path.listFiles();
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    deleteWorld(file);
+                } else {
+                    file.delete();
+                }
+            }
         }
     }
 

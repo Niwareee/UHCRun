@@ -142,7 +142,7 @@ public class BlockListener implements Listener {
                     Player target = (Player) entity;
                     if (target.getGameMode() == GameMode.SURVIVAL) {
                         event.setCancelled(true);
-                        event.getPlayer().sendMessage("§dUHCRun §7» §cVous êtes trop prêt d'un joueur");
+                        event.getPlayer().sendMessage("§dUHCRun §7» §cVous êtes trop prêt d'un joueur.");
                     }
                 }
             }

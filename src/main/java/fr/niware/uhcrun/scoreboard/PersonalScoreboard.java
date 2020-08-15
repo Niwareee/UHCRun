@@ -19,7 +19,6 @@ public class PersonalScoreboard {
 
     private final Player player;
     private final UUID uuid;
-
     private final Location spawn;
 
     private final PlayerOrientation playerOrientation;
@@ -29,8 +28,8 @@ public class PersonalScoreboard {
     PersonalScoreboard(Player player) {
         this.player = player;
         this.uuid = player.getUniqueId();
-
         this.spawn = main.getGame().getSpecSpawn();
+
         this.playerOrientation = new PlayerOrientation();
 
         reloadData();

@@ -85,7 +85,7 @@ public class PreGameTask extends BukkitRunnable {
                 players.getInventory().clear();
             });
 
-            new Scatter(true).runTaskTimer(main, 0L, 10L);
+            new Scatter(main,true).runTaskTimer(main, 0L, 10L);
             return;
         }
 

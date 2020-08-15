@@ -48,6 +48,18 @@ public class PlayerManager {
         this.players = new HashMap<>();
     }
 
+    public UHCPlayer put(UHCPlayer uhcPlayer) {
+        return players.putIfAbsent(uhcPlayer.getUUID(), uhcPlayer);
+    }
+
+    public UHCPlayer getUHCPlayer(UUID uuid) {
+        return players.getOrDefault(uuid, put(new UHCPlayer(uuid, accountManager.getFromPower(0), 0, 0)));
+    }
+
+    public Collection<UHCPlayer> getPlayers() {
+        return players.values();
+    }
+
     public void teleportServer(Player player, String server) {
         ByteArrayOutputStream b = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(b);
@@ -155,17 +167,5 @@ public class PlayerManager {
         player.getWorld().strikeLightningEffect(player.getLocation());
 
         game.getAlivePlayers().remove(player.getUniqueId());
-    }
-
-    public UHCPlayer put(UHCPlayer uhcPlayer) {
-        return players.putIfAbsent(uhcPlayer.getUUID(), uhcPlayer);
-    }
-
-    public UHCPlayer getUHCPlayer(UUID uuid) {
-        return players.getOrDefault(uuid, put(new UHCPlayer(uuid, accountManager.getFromPower(0), 0, 0)));
-    }
-
-    public Collection<UHCPlayer> getPlayers() {
-        return players.values();
     }
 }

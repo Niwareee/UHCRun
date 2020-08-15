@@ -65,7 +65,7 @@ public class GameTask extends BukkitRunnable {
         State.setState(State.PVP);
         MinecraftServer.getServer().setPVP(true);
 
-        new Scatter(false).runTaskTimer(main, 0L, 5L);
+        new Scatter(main,false).runTaskTimer(main, 0L, 5L);
 
         Bukkit.broadcastMessage("§7§m+---------------------+");
         Bukkit.broadcastMessage("              §6● §eCombats §6●");
