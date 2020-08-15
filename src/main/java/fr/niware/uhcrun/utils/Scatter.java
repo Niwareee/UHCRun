@@ -67,17 +67,11 @@ public class Scatter extends BukkitRunnable {
         int z = (random.nextInt(2) == 0 ? +1 : -1) * random.nextInt(sizeTP);
         System.out.print("Found new location in x: " + x + " z: " + z);
         Location location = game.getWorld().getHighestBlockAt(x, z).getLocation().add(0, 50, 0);
-
-        int i = 0;
-
-        for (int x1 = -3; x1 < 3; x1++) {
-            for (int z1 = -3; z1 < 3; z1++) {
-                location.add(x1 * 16, 0, z1 * 16).getChunk().load();
-                i++;
-                System.out.print("test" + i);
-            }
+        if(!location.getChunk().isLoaded()){
+            location.getChunk().load();
         }
         return location;
+
     }
 
     @SuppressWarnings("deprecation")

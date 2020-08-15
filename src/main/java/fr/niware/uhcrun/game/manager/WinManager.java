@@ -5,6 +5,7 @@ import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.utils.State;
 import fr.niware.uhcrun.utils.WinEffect;
 import fr.niware.uhcrun.utils.packet.Title;
+import io.papermc.lib.PaperLib;
 import net.minecraft.server.v1_8_R3.MinecraftServer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -51,7 +52,7 @@ public class WinManager {
             main.getStructureLoader().paste(winLocation, "win", true);
 
             for (Player players : Bukkit.getOnlinePlayers()) {
-                players.teleport(winLocation);
+                PaperLib.teleportAsync(players, winLocation);
 
                 if (players.getUniqueId() != uuid) {
                     players.playSound(players.getLocation(), Sound.WITHER_DEATH, 5.0F, 5.0F);

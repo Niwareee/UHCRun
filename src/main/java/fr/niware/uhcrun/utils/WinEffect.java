@@ -31,7 +31,6 @@ public class WinEffect extends BukkitRunnable {
 
             FireworkEffect.Type type = FireworkEffect.Type.BALL;
 
-            System.out.print("Num: " + randInt);
             if (randInt == 1)
                 type = FireworkEffect.Type.BALL;
             else if (randInt == 2)
@@ -43,8 +42,8 @@ public class WinEffect extends BukkitRunnable {
             else if (randInt == 5)
                 type = FireworkEffect.Type.STAR;
 
-            int r1i = random.nextInt(15) + 1;
-            int r2i = random.nextInt(15) + 1;
+            int r1i = random.nextInt(16) + 1;
+            int r2i = random.nextInt(16) + 1;
 
             Color color1 = ColorsUtils.getColor(r1i);
             Color color2 = ColorsUtils.getColor(r2i);
@@ -52,7 +51,7 @@ public class WinEffect extends BukkitRunnable {
             FireworkEffect effect = FireworkEffect.builder().flicker(random.nextBoolean()).withColor(color1).withFade(color2).with(type).trail(random.nextBoolean()).build();
             fwm.addEffect(effect);
 
-            int rp = random.nextInt(2) + 1;
+            int rp = random.nextInt(1) + 1;
             fwm.setPower(rp);
 
             fw.setFireworkMeta(fwm);
