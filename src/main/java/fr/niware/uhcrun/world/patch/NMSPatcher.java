@@ -14,8 +14,7 @@ import java.util.Map;
 
 public class PropertiesManager {
 
-    public static void enablePatch() {
-        Main main = Main.getInstance();
+    public static void enablePatch(Main main) {
 
         try {
             // PATCH SLOT

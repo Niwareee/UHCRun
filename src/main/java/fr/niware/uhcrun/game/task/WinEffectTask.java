@@ -22,18 +22,16 @@ public class WinEffect extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (this.time < 20) {
-            Firework fw = (Firework) player.getWorld().spawnEntity(player.getPlayer().getLocation(), EntityType.FIREWORK);
+        if (this.time < 30) {
+            Firework firework = (Firework) player.getWorld().spawnEntity(player.getPlayer().getLocation(), EntityType.FIREWORK);
             FireworkMeta fwm = fw.getFireworkMeta();
 
             Random random = new Random();
-            int randInt = random.nextInt(4) + 1;
+            int randInt = random.nextInt(6) + 1;
 
             FireworkEffect.Type type = FireworkEffect.Type.BALL;
 
-            if (randInt == 1)
-                type = FireworkEffect.Type.BALL;
-            else if (randInt == 2)
+            if (randInt == 2)
                 type = FireworkEffect.Type.BALL_LARGE;
             else if (randInt == 3)
                 type = FireworkEffect.Type.BURST;
@@ -42,8 +40,8 @@ public class WinEffect extends BukkitRunnable {
             else if (randInt == 5)
                 type = FireworkEffect.Type.STAR;
 
-            int r1i = random.nextInt(16) + 1;
-            int r2i = random.nextInt(16) + 1;
+            int r1i = random.nextInt(15) + 1;
+            int r2i = random.nextInt(15) + 1;
 
             Color color1 = ColorsUtils.getColor(r1i);
             Color color2 = ColorsUtils.getColor(r2i);
@@ -51,7 +49,7 @@ public class WinEffect extends BukkitRunnable {
             FireworkEffect effect = FireworkEffect.builder().flicker(random.nextBoolean()).withColor(color1).withFade(color2).with(type).trail(random.nextBoolean()).build();
             fwm.addEffect(effect);
 
-            int rp = random.nextInt(1) + 1;
+            int rp = random.nextInt(2);
             fwm.setPower(rp);
 
             fw.setFireworkMeta(fwm);

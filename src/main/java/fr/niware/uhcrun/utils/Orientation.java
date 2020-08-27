@@ -29,7 +29,7 @@ public class PlayerOrientation {
 
     private String getArrow(int pointOrientation) {
         String object = "";
-        switch(pointOrientation) {
+        switch (pointOrientation) {
             case -7:
             case 1:
                 object = object + "⬈";
@@ -67,7 +67,7 @@ public class PlayerOrientation {
 
     private int getSeeOrientation(double yaw) {
         int seeOrientation = 0;
-        if (337.5D > yaw || yaw >= 360.0D && 0.0D > yaw || yaw > 22.5D) {
+        if ((337.5D > yaw || yaw >= 360.0D) && (0.0D > yaw || yaw > 22.5D)) {
             if (22.5D <= yaw && yaw < 67.5D) {
                 seeOrientation = 7;
             } else if (112.5D <= yaw && yaw < 157.5D) {
