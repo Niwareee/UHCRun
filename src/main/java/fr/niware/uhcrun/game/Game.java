@@ -36,14 +36,12 @@ public class Game {
     // CONFIGURATION
 
     private int pvpTime = 1200;
-    private int borderTime = 20;
     private int borderMoveTime = 10;
 
     private int countdownStart;
     private int timer = 0;
 
-    private int tpBorder = 300;
-    private int finalBorderSize = 50;
+    private int sizeTpBorder = 300;
 
     private boolean invincibility = true;
 
@@ -71,7 +69,7 @@ public class Game {
 
     public Game(Main main) {
 
-        State.setState(State.PREGEN);
+        State.setState(State.PRELOAD);
         MinecraftServer.getServer().setMotd("§eChargement...");
 
         FileConfiguration config = main.getConfig();
@@ -99,7 +97,7 @@ public class Game {
         this.deathPotionEffects.add(new PotionEffect(PotionEffectType.REGENERATION, 100, 1, false, false));
 
         this.startPotionEffects = new ArrayList<>();
-        this.startPotionEffects.add(new PotionEffect(PotionEffectType.ABSORPTION, 3, 1, false, false));
+        this.startPotionEffects.add(new PotionEffect(PotionEffectType.ABSORPTION, 2, 0, false, false));
         this.startPotionEffects.add(new PotionEffect(PotionEffectType.FAST_DIGGING, 999999, 0, false, false));
         this.startPotionEffects.add(new PotionEffect(PotionEffectType.NIGHT_VISION, 999999, 0, false, false));
     }
@@ -167,10 +165,6 @@ public class Game {
         this.pvpTime--;
     }
 
-    public int getBorderTime() {
-        return borderTime;
-    }
-
     public boolean isInvincibility() {
         return invincibility;
     }
@@ -181,10 +175,6 @@ public class Game {
 
     public int getCountdownStart() {
         return countdownStart;
-    }
-
-    public void setCountdownStart(int countdownStart) {
-        this.countdownStart = countdownStart;
     }
 
     public void removeCountdownStart() {
@@ -201,16 +191,12 @@ public class Game {
         return timer;
     }
 
-    public void setTimer(int timer) {
-        this.timer = timer;
-    }
-
     public void addTimer() {
         this.timer++;
     }
 
     public int getFinalBorderSize() {
-        return finalBorderSize;
+        return 50;
     }
 
     public int getBorderMoveTime() {
@@ -238,28 +224,16 @@ public class Game {
         this.specSpawn = specSpawn;
     }
 
-    public int getTPBorder() {
-        return tpBorder;
-    }
-
-    public void setTPBorder(int tpBorder) {
-        this.tpBorder = tpBorder;
+    public int getSizeTpBorder() {
+        return sizeTpBorder;
     }
 
     public int getSlot() {
         return slot;
     }
 
-    public void setSlot(int slot) {
-        this.slot = slot;
-    }
-
     public int getAutoStartSize() {
         return autoStartSize;
-    }
-
-    public int getAutoStartTime() {
-        return autoStartTime;
     }
 
     public void setRunnable(boolean runnable) {

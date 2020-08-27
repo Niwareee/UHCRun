@@ -29,7 +29,7 @@ public class DeathListener implements Listener {
         this.winManager = main.getWinManager();
         this.game = main.getGame();
 
-        this.scoreboard = main.getServer().getScoreboardManager().getMainScoreboard();
+        this.scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
     }
 
     @EventHandler
@@ -40,7 +40,7 @@ public class DeathListener implements Listener {
         playerManager.onDeath(player);
 
         if (player.getKiller() != null) {
-            playerManager.getUHCPlayer(player.getUniqueId()).setKillsGame(scoreboard.getObjective("pkills").getScore(player.getName()).getScore());
+            playerManager.getUHCPlayer(player.getUniqueId()).setKillsGame(scoreboard.getObjective("playerkills").getScore(player.getName()).getScore());
             game.getDeathPotionEffects().forEach(player.getKiller()::addPotionEffect);
         }
 

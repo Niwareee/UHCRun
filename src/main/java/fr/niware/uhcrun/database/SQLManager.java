@@ -2,6 +2,7 @@ package fr.niware.uhcrun.database;
 
 import fr.niware.uhcrun.Main;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,11 +22,13 @@ public class SQLManager {
 
         main.saveDefaultConfig();
         this.main = main;
-        this.host = main.getConfig().getString("sql.host");
-        this.database = main.getConfig().getString("sql.database");
-        this.username = main.getConfig().getString("sql.username");
-        this.password = main.getConfig().getString("sql.password");
-        this.port = main.getConfig().getInt("sql.port");
+
+        FileConfiguration config = main.getConfig();
+        this.host = config.getString("sql.host");
+        this.database = config.getString("sql.database");
+        this.username = config.getString("sql.username");
+        this.password = config.getString("sql.password");
+        this.port = config.getInt("sql.port");
 
         connect();
     }

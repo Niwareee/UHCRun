@@ -6,7 +6,7 @@ import fr.niware.uhcrun.account.Rank;
 import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.game.player.UHCPlayer;
 import fr.niware.uhcrun.game.task.PreGameTask;
-import fr.niware.uhcrun.scoreboard.ScoreboardManager;
+import fr.niware.uhcrun.utils.scoreboard.FastMain;
 import fr.niware.uhcrun.utils.State;
 import fr.niware.uhcrun.utils.packet.ActionBar;
 import org.bukkit.Bukkit;
@@ -18,7 +18,10 @@ import org.bukkit.scoreboard.Scoreboard;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class PlayerManager {
 
@@ -28,7 +31,8 @@ public class PlayerManager {
     private final ActionBar actionBar;
 
     private final AccountManager accountManager;
-    private final ScoreboardManager scoreboardManager;
+    private final FastMain fastMain;
+    private WinManager winManager;
 
     private final Scoreboard scoreboard;
 
@@ -36,16 +40,15 @@ public class PlayerManager {
 
     public PlayerManager(Main main) {
         this.main = main;
-
         this.game = main.getGame();
-        this.actionBar = new ActionBar();
-
         this.accountManager = main.getAccountManager();
-        this.scoreboardManager = main.getScoreboardManager();
-
+        this.fastMain = main.getFastMain();
         this.scoreboard = main.getServer().getScoreboardManager().getMainScoreboard();
 
+        this.actionBar = new ActionBar();
         this.players = new HashMap<>();
+
+        main.getServer().getScheduler().runTaskLaterAsynchronously(main, () -> this.winManager = main.getWinManager(), 1L);
     }
 
     public UHCPlayer put(UHCPlayer uhcPlayer) {
@@ -66,9 +69,9 @@ public class PlayerManager {
         try {
             out.writeUTF("Connect");
             out.writeUTF(server);
+
         } catch (IOException exception) {
-            System.out.print("Error while teleport " + player.getName() + " to server " + server + ":");
-            System.out.print("" + exception);
+            exception.printStackTrace();
         }
         player.sendPluginMessage(main, "BungeeCord", b.toByteArray());
     }
@@ -94,17 +97,21 @@ public class PlayerManager {
         player.setFireTicks(0);
     }
 
-    public void setSpec(Player player) {
+    public void setSpectator(Player player) {
         player.setGameMode(GameMode.SPECTATOR);
     }
 
-    public void onJoin(Player player) {
-        int[] account = accountManager.getDatabaseAccount(player.getUniqueId());
+    public void loadSQLAccount(UUID uuid) {
+        int[] account = accountManager.getDatabaseAccount(uuid);
         Rank rank = accountManager.getFromPower(account[0]);
-        put(new UHCPlayer(player.getUniqueId(), rank, account[1], account[2]));
+        put(new UHCPlayer(uuid, rank, account[1], account[2]));
+    }
 
+    public void onJoin(Player player) {
+        long start = System.currentTimeMillis();
+        Rank rank = players.get(player.getUniqueId()).getRank();
         scoreboard.getTeam("player").addEntry(player.getName());
-        scoreboardManager.onLogin(player);
+        fastMain.onJoin(player);
 
         if (State.isInWait()) {
             setJoinInventory(player);
@@ -115,6 +122,8 @@ public class PlayerManager {
             if (game.getAlivePlayers().size() >= game.getAutoStartSize() && State.isState(State.WAITING)) {
                 new PreGameTask(main, false).runTaskTimer(main, 0L, 20L);
             }
+
+            System.out.println("Successfully load " + player.getName() + "'s settings in " + (System.currentTimeMillis() - start) + " ms");
             return;
         }
 
@@ -129,19 +138,18 @@ public class PlayerManager {
                 return;
             }
             player.teleport(game.getSpecSpawn());
-            setSpec(player);
+            setSpectator(player);
             return;
         }
-
-        setSpec(player);
+        setSpectator(player);
     }
 
     public void onQuit(Player player) {
-        game.getAlivePlayers().remove(player.getUniqueId());
         players.remove(player.getUniqueId());
-        scoreboardManager.onLogout(player);
+        fastMain.onQuit(player.getUniqueId());
 
         if (State.isInWait()) {
+            game.getAlivePlayers().remove(player.getUniqueId());
             actionBar.sendToAll("§c- §e" + player.getName() + " §7a quitté la partie. §6(" + game.getAlivePlayers().size() + "/" + game.getSlot() + ")");
             return;
         }
@@ -149,10 +157,10 @@ public class PlayerManager {
         if (State.isInGame()) {
             if (game.getAlivePlayers().contains(player.getUniqueId())) {
                 if (State.isState(State.TELEPORT) || State.isState(State.MINING)) {
+                    game.getAlivePlayers().remove(player.getUniqueId());
                     game.getDecoPlayers().add(player.getUniqueId());
                     Bukkit.broadcastMessage("§dUHCRun §7» §b" + player.getName() + " §7a quitté la partie.");
-
-                    main.getWinManager().checkWin();
+                    winManager.checkWin();
                     return;
                 }
                 player.setHealth(0D);
@@ -162,7 +170,7 @@ public class PlayerManager {
 
     public void onDeath(Player player) {
         player.setHealth(20D);
-        setSpec(player);
+        setSpectator(player);
         player.playSound(player.getLocation(), Sound.WITHER_SPAWN, 5.0F, 2.0F);
         player.getWorld().strikeLightningEffect(player.getLocation());
 

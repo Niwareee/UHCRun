@@ -2,7 +2,7 @@ package fr.niware.uhcrun.utils;
 
 import org.bukkit.entity.Player;
 
-public class PlayerOrientation {
+public class Orientation {
 
     public String getOrientation(Player player) {
         double oppose = player.getLocation().getZ();

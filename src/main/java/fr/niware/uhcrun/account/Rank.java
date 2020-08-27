@@ -41,5 +41,4 @@ public class Rank {
     public int getOrder() {
         return order;
     }
-
 }

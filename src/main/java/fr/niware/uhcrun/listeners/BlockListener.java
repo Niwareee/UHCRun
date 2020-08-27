@@ -2,11 +2,11 @@ package fr.niware.uhcrun.listeners;
 
 import fr.niware.uhcrun.Main;
 import fr.niware.uhcrun.utils.State;
-import net.minecraft.server.v1_8_R3.MinecraftServer;
-import org.bukkit.*;
+import org.bukkit.Effect;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;

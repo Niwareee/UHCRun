@@ -1,4 +1,4 @@
-package fr.niware.uhcrun.scoreboard;
+package fr.niware.uhcrun.utils.scoreboard;
 
 import fr.niware.uhcrun.Main;
 import fr.niware.uhcrun.game.Game;
@@ -10,40 +10,45 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class FastMain {
 
-    private final Game game;
+    private final Main main;
     private PlayerManager playerManager;
+
+    private final Game game;
     private final Orientation orientation;
     private final ActionBar actionBar;
 
-    private final Location spawn;
+    private Location spawn;
     private final Map<UUID, FastBoard> boards;
 
     public FastMain(Main main) {
+        this.main = main;
         this.game = main.getGame();
-        main.getServer().getScheduler().runTaskLaterAsynchronously(main, () -> this.playerManager = main.getPlayerManager(), 1L);
+
         this.orientation = new Orientation();
         this.actionBar = new ActionBar();
-
-        this.spawn = game.getSpecSpawn();
         this.boards = new HashMap<>();
+    }
 
-        main.getServer().getScheduler().runTaskTimer(main, () -> {
-            System.out.print("dd");
+    public void launchTask() {
+        this.playerManager = main.getPlayerManager();
+        this.spawn = game.getSpecSpawn();
+
+        main.getServer().getScheduler().runTaskTimerAsynchronously(main, () -> {
             for (FastBoard board : boards.values()) {
                 updateBoard(board, board.getPlayer());
             }
-        }, 0, 20);
+        }, 0, 5);
+
+        main.log("Scoreboard module successfully load");
+        main.log("Main task sucessfully start");
     }
 
     private void updateBoard(FastBoard board, Player player) {
-        if (State.isInWait()) {
-            System.out.print("test");
+        if (State.isInWait()){
             board.updateLines(
                     "",
                     " §c» §7Joueurs: §e" + game.getAlivePlayers().size() + "/" + game.getSlot(),
@@ -52,13 +57,13 @@ public class FastMain {
                     "§6play.nontia.fr"
             );
             return;
+
         }
 
         int kills = playerManager.getUHCPlayer(player.getUniqueId()).getKillsGame();
         String time = secondsToString(game.getTimer());
 
         if (State.isInGame()) {
-
             if (State.isState(State.MINING)) {
                 actionBar.sendToPlayer(board.getPlayer(), "§6Téléportation: " + secondsToStringColor(game.getPvPTime()));
             }

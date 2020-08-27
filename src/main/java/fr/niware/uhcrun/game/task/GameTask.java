@@ -4,7 +4,6 @@ import fr.niware.uhcrun.Main;
 import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.utils.Scatter;
 import fr.niware.uhcrun.utils.State;
-import net.minecraft.server.v1_8_R3.MinecraftServer;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.WorldBorder;
@@ -31,7 +30,7 @@ public class GameTask extends BukkitRunnable {
         if (State.isState(State.FINISH)) cancel();
 
         game.addTimer();
-        main.getGame().removePvPTime();
+        game.removePvPTime();
         int pvpTime = game.getPvPTime();
 
         if (pvpTime == 60 || pvpTime == 30 || pvpTime == 10 || pvpTime == 5 || pvpTime == 4 || pvpTime == 3 || pvpTime == 2 || pvpTime == 1) {
@@ -61,9 +60,10 @@ public class GameTask extends BukkitRunnable {
     }
 
     public void launchTeleport() {
-        game.setInvincibility(true);
         State.setState(State.PVP);
-        MinecraftServer.getServer().setPVP(true);
+
+        game.setInvincibility(true);
+        game.getWorld().setPVP(true);
 
         new Scatter(main,false).runTaskTimer(main, 0L, 5L);
 
@@ -86,21 +86,22 @@ public class GameTask extends BukkitRunnable {
 
             player.setWalkSpeed(0.2f);
             player.removePotionEffect(PotionEffectType.FAST_DIGGING);
+            player.removePotionEffect(PotionEffectType.NIGHT_VISION);
             player.setHealth(20D);
             player.setFoodLevel(20);
         }
 
-        lauchBorder();
-        lauchKickOffline();
+        launchBorder();
+        launchKickOffline();
     }
 
-    public void lauchBorder() {
+    public void launchBorder() {
         WorldBorder worldBorder = game.getWorld().getWorldBorder();
-        worldBorder.setSize(game.getTPBorder() * 2);
+        worldBorder.setSize(game.getSizeTpBorder() * 2);
         worldBorder.setSize(game.getFinalBorderSize() * 2, game.getBorderMoveTime() * 60);
     }
 
-    public void lauchKickOffline() {
+    public void launchKickOffline() {
         List<UUID> uuids = new ArrayList<>(game.getAlivePlayers());
 
         uuids.stream().filter(uuid -> Bukkit.getPlayer(uuid) == null).forEach(uuid -> game.getAlivePlayers().remove(uuid));

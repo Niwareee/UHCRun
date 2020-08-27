@@ -1,4 +1,4 @@
-package fr.niware.uhcrun.register;
+package fr.niware.uhcrun.register.hook;
 
 import net.minecraft.server.v1_8_R3.AttributeModifier;
 import net.minecraft.server.v1_8_R3.MinecraftKey;

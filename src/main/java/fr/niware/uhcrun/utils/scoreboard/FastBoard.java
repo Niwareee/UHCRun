@@ -1,4 +1,4 @@
-package fr.niware.uhcrun.scoreboard;
+package fr.niware.uhcrun.utils.scoreboard;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

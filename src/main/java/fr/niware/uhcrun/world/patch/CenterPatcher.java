@@ -1,6 +1,6 @@
 package fr.niware.uhcrun.world.patch;
 
-import fr.niware.uhcrun.scoreboard.Reflection;
+import fr.niware.uhcrun.utils.scoreboard.FastReflection;
 import net.minecraft.server.v1_8_R3.*;
 
 import java.lang.reflect.Field;
@@ -17,13 +17,12 @@ public class CenterPatcher {
         Field worldGenSwampTreeField = BiomeBase.class.getDeclaredField("aC");
         worldGenSwampTreeField.setAccessible(true);
 
-        for (BiomeBase biome : BiomeBase.getBiomes()) {
-            if (biome == null)
-                continue;
+        for (BiomeBase biomeBase : BiomeBase.getBiomes()) {
+            if (biomeBase == null) continue;
 
-            worldGenTreesField.set(biome, new WorldGenTreesPatched(false));
-            worldGenBigTreeField.set(biome, new WorldGenBigTreePatched(false));
-            worldGenSwampTreeField.set(biome, new WorldGenSwampTreePatched());
+            worldGenTreesField.set(biomeBase, new WorldGenTreesPatched(false));
+            worldGenBigTreeField.set(biomeBase, new WorldGenBigTreePatched(false));
+            worldGenSwampTreeField.set(biomeBase, new WorldGenSwampTreePatched());
         }
 
         Field worldGenForestFirstField = BiomeForest.class.getDeclaredField("aD");
@@ -35,9 +34,9 @@ public class CenterPatcher {
         Field worldGenForestTreeField = BiomeForest.class.getDeclaredField("aF");
         worldGenForestTreeField.setAccessible(true);
 
-        Reflection.setFinalStatic(worldGenForestFirstField, new WorldGenForestPatched(false, true));
-        Reflection.setFinalStatic(worldGenForestSecondField, new WorldGenForestPatched(false, false));
-        Reflection.setFinalStatic(worldGenForestTreeField, new WorldGenForestTreePatched(false));
+        FastReflection.setFinalStatic(worldGenForestFirstField, new WorldGenForestPatched(false, true));
+        FastReflection.setFinalStatic(worldGenForestSecondField, new WorldGenForestPatched(false, false));
+        FastReflection.setFinalStatic(worldGenForestTreeField, new WorldGenForestTreePatched(false));
     }
 
     private static class WorldGenTreesPatched extends WorldGenTrees {

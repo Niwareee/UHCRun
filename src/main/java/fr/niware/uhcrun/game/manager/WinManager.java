@@ -3,7 +3,7 @@ package fr.niware.uhcrun.game.manager;
 import fr.niware.uhcrun.Main;
 import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.utils.State;
-import fr.niware.uhcrun.utils.WinEffect;
+import fr.niware.uhcrun.game.task.WinEffectTask;
 import fr.niware.uhcrun.utils.packet.Title;
 import io.papermc.lib.PaperLib;
 import net.minecraft.server.v1_8_R3.MinecraftServer;
@@ -92,7 +92,7 @@ public class WinManager {
             Bukkit.broadcastMessage(" ");
             Bukkit.broadcastMessage("§f§m+------§6§m-----------§f§m------+");
 
-            new WinEffect(winner).runTaskTimer(main, 5L, 5L);
+            new WinEffectTask(winner).runTaskTimer(main, 5L, 5L);
             launchStop();
 
         }, 10);
@@ -103,7 +103,7 @@ public class WinManager {
             timeSecond++;
 
             if (timeSecond == 10) {
-                Bukkit.getScheduler().runTaskAsynchronously(main, () -> main.getAccountManager().sendFinishSQL());
+                main.getAccountManager().sendFinishSQL();
             }
 
             if (timeSecond == 25) {

@@ -8,8 +8,9 @@ import fr.niware.uhcrun.utils.Scatter;
 import fr.niware.uhcrun.utils.State;
 import fr.niware.uhcrun.utils.packet.ActionBar;
 import fr.niware.uhcrun.world.WorldManager;
-import net.minecraft.server.v1_8_R3.MinecraftServer;
+import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.*;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -112,6 +113,7 @@ public class PreGameTask extends BukkitRunnable {
 
             game.getStayLocs().clear();
             game.getBlocks().forEach(block -> block.setType(Material.AIR));
+            new WorldGenLakes(Blocks.WATER);
             game.getBlocks().clear();
 
             for (UUID uuid : game.getAlivePlayers()) {

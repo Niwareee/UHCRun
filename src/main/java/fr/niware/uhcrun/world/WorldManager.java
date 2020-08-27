@@ -25,7 +25,7 @@ public class WorldManager {
 
     private final Scoreboard scoreboard;
     private final List<Entity> entityList;
-    private Objective showhealth;
+    private Objective health;
 
     public WorldManager(Main main) {
         this.main = main;
@@ -47,9 +47,9 @@ public class WorldManager {
         Objective health = scoreboard.registerNewObjective("health", "health");
         health.setDisplaySlot(DisplaySlot.PLAYER_LIST);
 
-        this.showhealth = scoreboard.registerNewObjective("showhealth", "dummy");
-        showhealth.setDisplaySlot(DisplaySlot.BELOW_NAME);
-        showhealth.setDisplayName("%");
+        this.health = scoreboard.registerNewObjective("showhealth", "dummy");
+        health.setDisplaySlot(DisplaySlot.BELOW_NAME);
+        health.setDisplayName("%");
 
         scoreboard.registerNewObjective("playerkills", "playerKillCount");
     }
@@ -83,9 +83,9 @@ public class WorldManager {
     }
 
     public void updateHealth(Player player) {
-        if (showhealth == null) return;
+        if (health == null) return;
         double newPHealth = player.getHealth();
-        showhealth.getScore(player.getName()).setScore((int) newPHealth * 5);
+        health.getScore(player.getName()).setScore((int) newPHealth * 5);
     }
 
     public void clearAllCustomEntities() {
@@ -96,6 +96,7 @@ public class WorldManager {
     public void deleteWorld(File path) {
         if (path.exists()) {
             File[] files = path.listFiles();
+            assert files != null;
             for (File file : files) {
                 if (file.isDirectory()) {
                     deleteWorld(file);
@@ -107,14 +108,14 @@ public class WorldManager {
     }
 
     public void patchWorlds() {
-        for (World world : Bukkit.getWorlds()) {
-
+        for (World world : main.getServer().getWorlds()) {
             world.setDifficulty(Difficulty.NORMAL);
             world.setGameRuleValue("naturalRegeneration", "false");
             world.setGameRuleValue("doFireTick", "false");
             world.setGameRuleValue("sendCommandFeedback", "false");
             world.setGameRuleValue("doDaylightCycle", "false");
 
+            world.setPVP(false);
             world.setTime(6000);
             world.setStorm(false);
             world.setThundering(false);
@@ -134,7 +135,6 @@ public class WorldManager {
         main.getServer().getWhitelistedPlayers().clear();
         main.getServer().setWhitelist(false);
 
-        MinecraftServer.getServer().setPVP(false);
         MinecraftServer.getServer().setAllowFlight(true);
 
         main.log("§aWorlds successfully patch");

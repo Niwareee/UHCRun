@@ -13,8 +13,8 @@ public class TempListener implements Listener {
 
     private final Game game;
 
-    public TempListener() {
-        this.game = Main.getInstance().getGame();
+    public TempListener(Main main) {
+        this.game = main.getGame();
     }
 
     public final Listener moveListener = new Listener() {
@@ -22,7 +22,7 @@ public class TempListener implements Listener {
         public void onMove(PlayerMoveEvent event) {
             if (State.isState(State.TELEPORT)) {
                 if (game.getStayLocs().containsKey(event.getPlayer().getUniqueId())) {
-                    if (event.getTo().distanceSquared(game.getStayLocs().get(event.getPlayer().getUniqueId())) > 35) {
+                    if (event.getTo().distanceSquared(game.getStayLocs().get(event.getPlayer().getUniqueId())) > 30) {
                         event.getPlayer().teleport(game.getStayLocs().get(event.getPlayer().getUniqueId()));
                         return;
                     }

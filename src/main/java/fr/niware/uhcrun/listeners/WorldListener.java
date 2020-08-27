@@ -2,6 +2,7 @@ package fr.niware.uhcrun.listeners;
 
 import fr.niware.uhcrun.Main;
 import fr.niware.uhcrun.utils.State;
+import fr.niware.uhcrun.world.patch.BiomesPatcher;
 import fr.niware.uhcrun.world.patch.CenterPatcher;
 import fr.niware.uhcrun.world.patch.WorldGenCavesPatcher;
 import fr.niware.uhcrun.world.populator.OrePopulator;
@@ -17,7 +18,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.world.WorldInitEvent;
@@ -28,10 +28,12 @@ import java.util.Random;
 
 public class WorldListener implements Listener {
 
+    private final Main main;
     private final Random random;
 
-    public WorldListener() {
+    public WorldListener(Main main) {
         this.random = new Random();
+        this.main = main;
     }
 
     @EventHandler
@@ -39,6 +41,8 @@ public class WorldListener implements Listener {
         World world = event.getWorld();
         if (world.getEnvironment() == Environment.NORMAL) {
             long start = System.currentTimeMillis();
+
+            BiomesPatcher.removeBiomes();
 
             try {
                 CenterPatcher.load();
@@ -55,16 +59,9 @@ public class WorldListener implements Listener {
             orePopulator.addRule(new OrePopulator.Rule(Material.OBSIDIAN, 4, 0, 32, 4));
 
             world.getPopulators().add(orePopulator);
-            world.getPopulators().add(new SurgarCanePopulator(2));
+            world.getPopulators().add(new SurgarCanePopulator(1));
 
-            Main.getInstance().log("§aWorld successfully init in " + (System.currentTimeMillis() - start) + " ms");
-        }
-    }
-
-    @EventHandler
-    public void onEntitySpawn(EntitySpawnEvent event) {
-        if (event.getEntityType() == EntityType.WITCH || event.getEntityType() == EntityType.GUARDIAN || event.getEntityType() == EntityType.BAT) {
-            event.setCancelled(true);
+            main.log("§aWorld successfully init in " + (System.currentTimeMillis() - start) + " ms");
         }
     }
 
@@ -86,12 +83,9 @@ public class WorldListener implements Listener {
         }
 
         ItemStack itemStack = event.getEntity().getItemStack();
-        final double percent = random.nextDouble();
-
-        // DEBUG
-        // System.out.print("Block:" + itemStack.getType() + " Dura: " + itemStack.getDurability() + " Data: " + itemStack.getData());
 
         if (itemStack.getType() == Material.SAPLING) {
+            double percent = random.nextDouble();
             if (percent <= 45 * 0.01) {
                 itemStack.setType(Material.APPLE);
                 itemStack.setData(new MaterialData(Material.APPLE));
@@ -103,6 +97,7 @@ public class WorldListener implements Listener {
             itemStack.setType(Material.COBBLESTONE);
             itemStack.setDurability((short) 0);
         } else if (itemStack.getType() == Material.GRAVEL) {
+            double percent = random.nextDouble();
             if (percent <= 80 * 0.01) {
                 itemStack.setType(Material.ARROW);
                 itemStack.setAmount(3);

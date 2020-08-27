@@ -2,7 +2,7 @@ package fr.niware.uhcrun.utils;
 
 public enum State {
 
-    PREGEN(false, false),
+    PRELOAD(false, false),
     WAITING(true, false),
     STARTING(true, false),
     TELEPORT(false, true),

@@ -5,6 +5,7 @@ import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.utils.packet.ActionBar;
 import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -15,6 +16,7 @@ import org.bukkit.util.Vector;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 
 public class Scatter extends BukkitRunnable {
 
@@ -23,6 +25,7 @@ public class Scatter extends BukkitRunnable {
 
     private final List<Player> players;
 
+    private int index;
     private final boolean isStart;
 
     public Scatter(Main main, boolean start) {
@@ -31,6 +34,7 @@ public class Scatter extends BukkitRunnable {
 
         this.players = new ArrayList<>();
         this.isStart = start;
+        this.index = 0;
 
         game.getAlivePlayers().forEach(uuid -> this.players.add(Bukkit.getPlayer(uuid)));
     }
@@ -38,13 +42,14 @@ public class Scatter extends BukkitRunnable {
     public void run() {
         if (this.players.size() == 0) {
             game.setRunnable(true);
-            actionBar.sendToAll("§aTéléportation des joueurs avec succès");
             this.cancel();
+            if (this.isStart) actionBar.sendToAll("§aTéléportation des joueurs avec succès");
             return;
         }
 
         Random random = new Random();
-        Player playerToTp = players.get(random.nextInt(players.size()));
+        int i = random.nextInt(players.size());
+        Player playerToTp = players.get(i);
 
         if (playerToTp != null) {
             PaperLib.teleportAsync(playerToTp, randomLocation());
@@ -57,18 +62,27 @@ public class Scatter extends BukkitRunnable {
             }
         }
 
+        index++;
         this.players.remove(playerToTp);
     }
 
     private Location randomLocation() {
-        Random random = new Random();
-        int sizeTP = (this.isStart ? game.getSizeMap() - 10 : game.getTPBorder() - 10);
-        int x = (random.nextInt(2) == 0 ? +1 : -1) * random.nextInt(sizeTP);
-        int z = (random.nextInt(2) == 0 ? +1 : -1) * random.nextInt(sizeTP);
+        int sizeTP = (this.isStart ? game.getSizeMap() - 10 : game.getSizeTpBorder() - 10);
+
+        double a = index * 2.0D * Math.PI / game.getAlivePlayers().size();
+        int x = (int) Math.round(sizeTP / 3.0D * Math.cos(a) + game.getSpawn().getX());
+        int z = (int) Math.round(sizeTP / 3.0D * Math.sin(a) + game.getSpawn().getZ());
+
         System.out.print("Found new location in x: " + x + " z: " + z);
-        Location location = game.getWorld().getHighestBlockAt(x, z).getLocation().add(0, 50, 0);
-        if(!location.getChunk().isLoaded()){
-            location.getChunk().load();
+        //Random random = new Random();
+        // int x = (random.nextInt(2) == 0 ? +1 : -1) * random.nextInt(sizeTP);
+        // int z = (random.nextInt(2) == 0 ? +1 : -1) * random.nextInt(sizeTP);
+        // Location location = game.getWorld().getHighestBlockAt(x, z).getLocation().add(0, 50, 0);
+
+        CompletableFuture<Chunk> chunk = PaperLib.getChunkAtAsync(game.getWorld(), x, z);
+        Location location = chunk.join().getWorld().getHighestBlockAt(x, z).getLocation().add(0, 50, 0);
+        if(!chunk.join().isLoaded()){
+            chunk.join().load();
         }
         return location;
 
@@ -78,14 +92,13 @@ public class Scatter extends BukkitRunnable {
     private void setSpawnSpot(Player player) {
         for (int x = -3; x < 3; x++) {
             for (int z = -3; z < 3; z++) {
-                Block block = player.getLocation().clone().add(x, -6, z).getBlock();
+                Block block = player.getLocation().clone().add(x, 0, z).getBlock();
                 block.setType(Material.STAINED_GLASS);
                 if (x == -3 || x == 2 || z == -3 || z == 2)
                     block.setData((byte) 1);
                 game.getBlocks().add(block);
             }
         }
-        game.getStayLocs().put(player.getUniqueId(), player.getLocation().clone().add(0, -4, 0));
+        game.getStayLocs().put(player.getUniqueId(), player.getLocation().clone().add(0, 1, 0));
     }
-
 }

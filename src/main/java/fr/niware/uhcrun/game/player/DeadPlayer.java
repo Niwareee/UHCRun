@@ -20,7 +20,7 @@ import java.util.UUID;
 
 public class DeadPlayer {
 
-    private final Game game = Main.getInstance().getGame();
+    private static final Game game = Main.getInstance().getGame();
 
     private final UUID uuid;
     private final Location location;

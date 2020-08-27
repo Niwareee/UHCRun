@@ -1,6 +1,7 @@
 package fr.niware.uhcrun.world;
 
 import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.structure.StructureLoader;
 import fr.niware.uhcrun.utils.State;
 import net.minecraft.server.v1_8_R3.Chunk;
 import net.minecraft.server.v1_8_R3.ChunkProviderServer;
@@ -8,7 +9,6 @@ import net.minecraft.server.v1_8_R3.MinecraftServer;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
-import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 
 import java.util.logging.Logger;
@@ -17,6 +17,7 @@ public class WorldLoader {
 
     private final Main main;
     private final Logger logger;
+    private final StructureLoader structureLoader;
 
     private Environment environment;
     private long start;
@@ -27,7 +28,8 @@ public class WorldLoader {
 
     public WorldLoader(Main main) {
         this.main = main;
-        this.logger = Bukkit.getLogger();
+        this.logger = main.getLogger();
+        this.structureLoader = main.getStructureLoader();
     }
 
     public double getLoadingState() {
@@ -38,7 +40,7 @@ public class WorldLoader {
     public void generateChunks(World world, int size) {
         this.start = System.currentTimeMillis();
         this.environment = world.getEnvironment();
-        this.chunkProviderServer = ((CraftWorld)world).getHandle().chunkProviderServer;
+        this.chunkProviderServer = ((CraftWorld) world).getHandle().chunkProviderServer;
 
         main.getLogger().info("-----------------------------------------------");
         main.getLogger().info(" Preloading map " + world.getName() + " => radius " + size + " block");
@@ -101,14 +103,16 @@ public class WorldLoader {
 
                         if (environment == Environment.NETHER) {
 
-                            main.getStructureLoader().load("spawn");
-                            main.getStructureLoader().paste(main.getGame().getSpawn(), "spawn", true);
-                            main.getStructureLoader().load("win");
+                            structureLoader.load("spawn");
+                            structureLoader.paste(main.getGame().getSpawn(), "spawn", true);
+                            structureLoader.load("win");
 
                             State.setState(State.WAITING);
                             MinecraftServer.getServer().setMotd("§bEn attente");
 
+                            main.getFastMain().launchTask();
                             main.log("§aWorld ready. Ready to play.");
+
                             return;
                         }
 
