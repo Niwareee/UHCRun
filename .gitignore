@@ -20,7 +20,9 @@ src/main/resources/config.properties
 *.iws
 *.iml
 *.ipr
-out/
+target/*
+.idea_modules/
+/out/
 
 ### NetBeans ###
 /nbproject/private/
