@@ -18,18 +18,19 @@ import java.util.UUID;
 public class WinManager {
 
     private final Main main;
-    private final PlayerManager playerManager;
+
     private final Game game;
     private final Title title;
+    private final PlayerManager playerManager;
 
-    private int timeSecond = 0;
+    public int timeSecond = 0;
 
     public WinManager(Main main) {
         this.main = main;
 
-        this.playerManager = main.getPlayerManager();
         this.game = main.getGame();
         this.title = main.getTitle();
+        this.playerManager = main.getPlayerManager();
     }
 
     public void checkWin() {

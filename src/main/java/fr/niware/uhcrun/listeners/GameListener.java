@@ -40,7 +40,7 @@ public class GameListener implements Listener {
 
     public GameListener(Main main) {
         this.main = main;
-        this.simpleDateFormat = new SimpleDateFormat("mm:ss");
+        this.simpleDateFormat = new SimpleDateFormat("mm 'minutes' ss 'secondes'");
     }
 
     @EventHandler
@@ -55,20 +55,25 @@ public class GameListener implements Listener {
 
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent event) {
-        if (event.getCause() == DamageCause.PROJECTILE) {
-            if (event.getEntity() instanceof Player) {
-                Player damaged = (Player) event.getEntity();
-                if (((Projectile) event.getDamager()).getShooter() instanceof Player) {
-                    Player damager = (Player) ((Projectile) event.getDamager()).getShooter();
-                    if (damaged.getHealth() - event.getFinalDamage() > 0) {
-                        damager.sendMessage("§dUHCRun §8» §6" + damaged.getName() + " §7est à §c" + getPercent((int) (damaged.getHealth() - event.getFinalDamage()) * 5) + "% §7de sa vie.");
-                    }
-                }
-            }
+        System.out.print(event.getCause());
+        if (event.getCause() != DamageCause.PROJECTILE) {
             return;
         }
+
         if (event.getDamager().getType() == EntityType.ENDER_PEARL) {
             event.setCancelled(true);
+            return;
+        }
+
+        if (event.getEntity() instanceof Player) {
+            Player damaged = (Player) event.getEntity();
+            Projectile entity = (Projectile) event.getDamager();
+            if (entity.getShooter() instanceof Player) {
+                Player damager = (Player) entity.getShooter();
+                if (damaged.getHealth() - event.getFinalDamage() > 0) {
+                    damager.sendMessage("§dUHCRun §8» §6" + damaged.getName() + " §7est à §c" + getPercent((int) (damaged.getHealth() - event.getFinalDamage()) * 5) + "% §7de sa vie.");
+                }
+            }
         }
     }
 
@@ -97,9 +102,11 @@ public class GameListener implements Listener {
 
     @EventHandler
     public void onBrew(BrewEvent event) {
-        if (event.getContents().getIngredient().getType() == Material.GLOWSTONE_DUST) {
+        ItemStack itemStack = event.getContents().getIngredient();
+        if (itemStack.getType() == Material.GLOWSTONE_DUST) {
+            System.out.print("test");
             event.setCancelled(true);
-            event.getContents().getIngredient().setType(Material.AIR);
+            itemStack.setType(Material.AIR);
         }
     }
 
@@ -121,44 +128,47 @@ public class GameListener implements Listener {
     @EventHandler
     public void onPlayerInteractEntityEvent(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
-        if (player.getGameMode() == GameMode.SPECTATOR) {
-            if (event.getRightClicked().getType() == EntityType.PLAYER) {
-
-                Player target = (Player) event.getRightClicked();
-                PlayerInventory targetInventory = target.getInventory();
-                Inventory inventory = Bukkit.createInventory(null, 54, "Inventaire de " + target.getName());
-
-                inventory.setContents(targetInventory.getContents());
-
-                inventory.setItem(45, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) SkullType.PLAYER.ordinal()).setName("§a" + target.getName()).setSkullOwner(target.getName()).setName("§a" + target.getName()).addLoreLine("§eVie: §c" + Math.ceil(target.getHealth() / 2) + " ❤").addLoreLine("§eNourriture: §d" + Math.ceil(target.getFoodLevel()) + "/§d20").addLoreLine("§eNiveau: §d" + target.getLevel()).toItemStack());
-
-                List<String> lore = new ArrayList<>();
-                for (PotionEffect effect : target.getActivePotionEffects()) {
-                    int duration = effect.getDuration();
-                    String time = simpleDateFormat.format(duration * 50);
-                    lore.add("§e" + effect.getType().getName() + " " + effect.getAmplifier() + 1 + " §7(" + time + " min)");
-                }
-
-                inventory.setItem(46, new ItemBuilder(Material.BREWING_STAND_ITEM).setName("§6Effets de potions").setLore((lore.isEmpty() ? (Collections.singletonList("§f» §7Aucun")) : lore)).toItemStack());
-
-                ItemStack glass = new ItemBuilder(Material.STAINED_GLASS_PANE).setName(" ").toItemStack();
-
-                inventory.setItem(36, glass);
-                inventory.setItem(37, glass);
-                inventory.setItem(38, glass);
-                inventory.setItem(39, glass);
-                inventory.setItem(40, glass);
-                inventory.setItem(41, glass);
-                inventory.setItem(42, glass);
-                inventory.setItem(43, glass);
-                inventory.setItem(44, glass);
-                inventory.setItem(48, targetInventory.getHelmet());
-                inventory.setItem(49, targetInventory.getChestplate());
-                inventory.setItem(50, targetInventory.getLeggings());
-                inventory.setItem(51, targetInventory.getBoots());
-
-                player.openInventory(inventory);
-            }
+        if (player.getGameMode() != GameMode.SPECTATOR) {
+            return;
         }
+
+        if (event.getRightClicked().getType() != EntityType.PLAYER) {
+            return;
+        }
+
+        Player target = (Player) event.getRightClicked();
+        PlayerInventory targetInventory = target.getInventory();
+        Inventory inventory = Bukkit.createInventory(null, 54, "Inventaire de " + target.getName());
+
+        inventory.setContents(targetInventory.getContents());
+
+        inventory.setItem(45, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) SkullType.PLAYER.ordinal()).setName("§a" + target.getName()).setSkullOwner(target.getName()).setName("§a" + target.getName()).addLoreLine("§eVie: §c" + Math.ceil(target.getHealth() / 2) + " ❤").addLoreLine("§eNourriture: §d" + Math.ceil(target.getFoodLevel()) + "/§d20").addLoreLine("§eNiveau d'xp: §d" + target.getLevel()).toItemStack());
+
+        List<String> lore = new ArrayList<>();
+        for (PotionEffect effect : target.getActivePotionEffects()) {
+            int duration = effect.getDuration();
+            String time = simpleDateFormat.format(duration * 50);
+            lore.add("§e" + effect.getType().getName() + " " + effect.getAmplifier() + 1 + " §7(" + time + ")");
+        }
+
+        inventory.setItem(46, new ItemBuilder(Material.BREWING_STAND_ITEM).setName("§6Effets de potions").setLore((lore.isEmpty() ? (Collections.singletonList("§f» §7Aucun")) : lore)).toItemStack());
+
+        ItemStack glass = new ItemBuilder(Material.STAINED_GLASS_PANE).setName(" ").toItemStack();
+
+        inventory.setItem(36, glass);
+        inventory.setItem(37, glass);
+        inventory.setItem(38, glass);
+        inventory.setItem(39, glass);
+        inventory.setItem(40, glass);
+        inventory.setItem(41, glass);
+        inventory.setItem(42, glass);
+        inventory.setItem(43, glass);
+        inventory.setItem(44, glass);
+        inventory.setItem(48, targetInventory.getHelmet());
+        inventory.setItem(49, targetInventory.getChestplate());
+        inventory.setItem(50, targetInventory.getLeggings());
+        inventory.setItem(51, targetInventory.getBoots());
+
+        player.openInventory(inventory);
     }
 }

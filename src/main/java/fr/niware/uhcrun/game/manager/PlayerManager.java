@@ -4,6 +4,7 @@ import fr.niware.uhcrun.Main;
 import fr.niware.uhcrun.account.AccountManager;
 import fr.niware.uhcrun.account.Rank;
 import fr.niware.uhcrun.game.Game;
+import fr.niware.uhcrun.game.player.DeadPlayer;
 import fr.niware.uhcrun.game.player.UHCPlayer;
 import fr.niware.uhcrun.game.task.PreGameTask;
 import fr.niware.uhcrun.utils.scoreboard.FastMain;
@@ -169,8 +170,10 @@ public class PlayerManager {
     }
 
     public void onDeath(Player player) {
+        new DeadPlayer(player.getUniqueId(), player.getLocation(), player.getLevel(), player.getInventory().getArmorContents(), player.getInventory().getContents(), player.getActivePotionEffects());
+
         player.setHealth(20D);
-        setSpectator(player);
+        player.setGameMode(GameMode.SPECTATOR);
         player.playSound(player.getLocation(), Sound.WITHER_SPAWN, 5.0F, 2.0F);
         player.getWorld().strikeLightningEffect(player.getLocation());
 

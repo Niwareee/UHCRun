@@ -33,10 +33,10 @@ public class RegisterManager {
         List<Listener> listeners = new ArrayList<>();
 
         listeners.add(new AutoLapisListener());
+        listeners.add(new CraftListener());
         listeners.add(new BlockListener(main));
         listeners.add(new DeathListener(main));
-        listeners.add(new CraftListener());
-        listeners.add(new ChatListener());
+        listeners.add(new ChatListener(main));
         listeners.add(new ConnectionListener(main));
         listeners.add(new TempListener(main).moveListener);
         listeners.add(new TempListener(main).chunkListener);

@@ -12,16 +12,16 @@ import org.bukkit.inventory.ItemStack;
 
 public class AutoLapisListener implements Listener {
 
-    private final ItemStack lapis;
+    private final ItemStack lazuli_item;
 
     public AutoLapisListener() {
-        this.lapis = new ItemStack(Material.INK_SACK, 3, (short) 4);
+        this.lazuli_item = new ItemStack(Material.INK_SACK, 3, (short) 4);
     }
 
     @EventHandler
     public void onInventoryOpen(InventoryOpenEvent event) {
         if (event.getInventory().getType() == InventoryType.ENCHANTING){
-            event.getInventory().setItem(1, this.lapis);
+            event.getInventory().setItem(1, this.lazuli_item);
         }
     }
 
@@ -41,6 +41,6 @@ public class AutoLapisListener implements Listener {
 
     @EventHandler
     public void onEnchantItem(EnchantItemEvent event) {
-        event.getInventory().setItem(1, this.lapis);
+        event.getInventory().setItem(1, this.lazuli_item);
     }
 }

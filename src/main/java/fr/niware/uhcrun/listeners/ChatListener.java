@@ -15,8 +15,8 @@ public class ChatListener implements Listener {
 
     private final PlayerManager playerManager;
 
-    public ChatListener() {
-        this.playerManager = Main.getInstance().getPlayerManager();
+    public ChatListener(Main main) {
+        this.playerManager = main.getPlayerManager();
     }
 
     @EventHandler

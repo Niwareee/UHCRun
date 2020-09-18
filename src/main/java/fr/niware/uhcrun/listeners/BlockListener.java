@@ -9,6 +9,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -127,25 +128,34 @@ public class BlockListener implements Listener {
         }
 
         if (!State.isState(State.FINISH)) {
-            if (block.getY() >= 130) {
-                event.getPlayer().sendMessage("§cErreur: Vous ne pouvez pas aller plus haut.");
-                event.setCancelled(true);
+            if (block.getY() < 130) {
+                return;
             }
+
+            event.getPlayer().sendMessage("§cErreur: Vous ne pouvez pas aller plus haut.");
+            event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onPlaceLava(PlayerBucketEmptyEvent event) {
-        if (event.getBucket() == Material.LAVA_BUCKET) {
-            for (Entity entity : event.getPlayer().getNearbyEntities(2D, 2D, 2D)) {
-                if (entity.getType() == EntityType.PLAYER) {
-                    Player target = (Player) entity;
-                    if (target.getGameMode() == GameMode.SURVIVAL) {
-                        event.setCancelled(true);
-                        event.getPlayer().sendMessage("§dUHCRun §7» §cVous êtes trop prêt d'un joueur.");
-                    }
-                }
+        if (event.getBucket() != Material.LAVA_BUCKET) {
+            return;
+        }
+
+        for (Entity entity : event.getPlayer().getNearbyEntities(2D, 2D, 2D)) {
+            if (entity.getType() != EntityType.PLAYER) {
+                return;
             }
+
+            HumanEntity target = (HumanEntity) entity;
+            if (target.getGameMode() != GameMode.SURVIVAL) {
+                return;
+            }
+
+            event.setCancelled(true);
+            event.getPlayer().sendMessage("§dUHCRun §7» §cVous êtes trop prêt du joueur §e" + target.getName() + "§c.");
+            return;
         }
     }
 
@@ -156,7 +166,7 @@ public class BlockListener implements Listener {
         }
     }
 
-    private void removeTree(Block block, boolean nearwood, int range) {
+    private void removeTree(Block block, boolean nearWood, int range) {
         if (range < 0)
             return;
 
@@ -183,14 +193,14 @@ public class BlockListener implements Listener {
                         Block block1 = block.getRelative(x, y, z);
 
                         if (block1.getType() == Material.LOG || block1.getType() == Material.LOG_2) {
-                            removeTree(block1, nearwood, range - ((z == 0 && x == 0 || nearwood) ? 0 : 1));
+                            removeTree(block1, nearWood, range - ((z == 0 && x == 0 || nearWood) ? 0 : 1));
                         } else if (block1.getType() == Material.LEAVES || block1.getType() == Material.LEAVES_2) {
                             int finalZ = z;
                             int finalX = x;
 
                             main.getServer().getScheduler().runTaskAsynchronously(main, () -> {
                                 if (!this.isNearWood(block1, 2))
-                                    main.getServer().getScheduler().runTask(main, () -> removeTree(block1, false, nearwood ? 4 : (range - ((finalZ == 0 && finalX == 0) ? 0 : 1))));
+                                    main.getServer().getScheduler().runTask(main, () -> removeTree(block1, false, nearWood ? 4 : (range - ((finalZ == 0 && finalX == 0) ? 0 : 1))));
                             });
                         }
                     }

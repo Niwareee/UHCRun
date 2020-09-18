@@ -28,6 +28,7 @@ public class SQLDatabase {
     public void connect() {
         try {
             if (!isConnected()) {
+                long start = System.currentTimeMillis();
                 final HikariConfig hikariConfig = new HikariConfig();
                 hikariConfig.setJdbcUrl("jdbc:mysql://" + this.host + ":" + port + "/" + this.database + "?useUnicode=yes");
                 hikariConfig.setUsername(username);
@@ -39,7 +40,7 @@ public class SQLDatabase {
                 hikariConfig.setConnectionTimeout(10000L);
                 hikariConfig.addDataSourceProperty("useSSL", false);
                 this.hikariDataSource = new HikariDataSource(hikariConfig);
-                main.log("§aSuccessful connected to database !");
+                main.log("§aSuccessful connected to database in " + (System.currentTimeMillis() - start) + " ms");
 
                 updateTables();
             }

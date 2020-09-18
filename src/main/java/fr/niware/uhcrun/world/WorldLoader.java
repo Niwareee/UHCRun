@@ -22,7 +22,7 @@ public class WorldLoader {
     private Environment environment;
     private long start;
     private double chunksLoaded = 0.0D;
-    private double totalChunksToLoad;
+    private int totalChunksToLoad;
 
     private ChunkProviderServer chunkProviderServer;
 
@@ -48,9 +48,9 @@ public class WorldLoader {
 
         this.chunksLoaded = 0.0D;
         final int maxChunk = (size - size % 16) / 16;
-        this.totalChunksToLoad = (2.0D * (double) maxChunk + 1.0D) * (2.0D * (double) maxChunk + 1.0D);
+        this.totalChunksToLoad = (int) ((2.0D * maxChunk + 1.0D) * (2.0D * maxChunk + 1.0D));
 
-        System.out.print("Chunk to load: " + (int) totalChunksToLoad);
+        main.log("Chunk to load: " + totalChunksToLoad);
         Bukkit.getScheduler().runTaskAsynchronously(this.main, new Runnable() {
             public void run() {
                 class RunnableWithParameter implements Runnable {

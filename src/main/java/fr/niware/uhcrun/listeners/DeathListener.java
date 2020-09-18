@@ -16,36 +16,37 @@ public class DeathListener implements Listener {
 
     private final Main main;
 
-    private final PlayerManager playerManager;
-    private final WinManager winManager;
     private final Game game;
-
     private final Scoreboard scoreboard;
+    private final WinManager winManager;
+    private final PlayerManager playerManager;
 
     public DeathListener(Main main) {
         this.main = main;
 
+        this.game = main.getGame();
         this.playerManager = main.getPlayerManager();
         this.winManager = main.getWinManager();
-        this.game = main.getGame();
-
-        this.scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+        this.scoreboard = main.getServer().getScoreboardManager().getMainScoreboard();
     }
 
     @EventHandler
     public void onDeathEvent(PlayerDeathEvent event) {
         Player player = event.getEntity();
 
-        new DeadPlayer(player.getUniqueId(), player.getLocation(), player.getLevel(), player.getInventory().getArmorContents(), player.getInventory().getContents(), player.getActivePotionEffects());
         playerManager.onDeath(player);
 
-        if (player.getKiller() != null) {
-            playerManager.getUHCPlayer(player.getUniqueId()).setKillsGame(scoreboard.getObjective("playerkills").getScore(player.getName()).getScore());
-            game.getDeathPotionEffects().forEach(player.getKiller()::addPotionEffect);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(main, winManager::checkWin, 10);
+
+        if (player.getKiller() == null) {
+            event.setDeathMessage("§dUHCRun §7» §c" + player.getName() + " §6est mort.");
+            return;
         }
 
-        event.setDeathMessage("§dUHCRun §7» §c" + player.getName() + " §6" + (player.getKiller() == null ? "est mort." : "a été tué par §a" + player.getKiller().getName() + "§6."));
+        playerManager.getUHCPlayer(player.getUniqueId()).setKillsGame(scoreboard.getObjective("playerkills").getScore(player.getName()).getScore());
+        game.getDeathPotionEffects().forEach(player.getKiller()::addPotionEffect);
+        event.setDeathMessage("§dUHCRun §7» §c" + player.getName() + " §6a été tué par §a" + player.getKiller().getName() + "§6.");
 
-        Bukkit.getScheduler().scheduleSyncDelayedTask(main, winManager::checkWin, 10);
+       // event.setDeathMessage("§dUHCRun §7» §c" + player.getName() + " §6" + (player.getKiller() == null ? "est mort." : "a été tué par §a" + player.getKiller().getName() + "§6."));
     }
 }

@@ -47,6 +47,6 @@ public class ConnectionListener implements Listener {
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_FULL, "§cLe serveur est plein. (" + game.getAlivePlayers().size() + "/" + game.getSlot() + ")");
         }
 
-        //Bukkit.getScheduler().runTaskAsynchronously(main, () -> playerManager.loadSQLAccount(event.getUniqueId()));
+        playerManager.loadSQLAccount(event.getUniqueId());
     }
 }

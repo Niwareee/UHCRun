@@ -39,37 +39,37 @@ public class WorldListener implements Listener {
     @EventHandler
     public void onWorldInit(final WorldInitEvent event) {
         World world = event.getWorld();
-        if (world.getEnvironment() == Environment.NORMAL) {
-            long start = System.currentTimeMillis();
-
-            BiomesPatcher.removeBiomes();
-
-            try {
-                CenterPatcher.load();
-                WorldGenCavesPatcher.load(world, 3);
-            } catch (ReflectiveOperationException e) {
-                e.printStackTrace();
-            }
-
-            OrePopulator orePopulator = new OrePopulator();
-            orePopulator.addRule(new OrePopulator.Rule(Material.DIAMOND_ORE, 4, 0, 64, 5));
-            orePopulator.addRule(new OrePopulator.Rule(Material.IRON_ORE, 4, 0, 64, 12));
-            orePopulator.addRule(new OrePopulator.Rule(Material.GOLD_ORE, 2, 0, 64, 8));
-            orePopulator.addRule(new OrePopulator.Rule(Material.LAPIS_ORE, 3, 0, 64, 4));
-            orePopulator.addRule(new OrePopulator.Rule(Material.OBSIDIAN, 4, 0, 32, 4));
-
-            world.getPopulators().add(orePopulator);
-            world.getPopulators().add(new SurgarCanePopulator(1));
-
-            main.log("§aWorld successfully init in " + (System.currentTimeMillis() - start) + " ms");
+        if (world.getEnvironment() != Environment.NORMAL) {
+            return;
         }
+
+        long start = System.currentTimeMillis();
+        BiomesPatcher.removeBiomes();
+
+        try {
+            CenterPatcher.load();
+            WorldGenCavesPatcher.load(world, 3);
+        } catch (ReflectiveOperationException e) {
+            e.printStackTrace();
+        }
+
+        OrePopulator orePopulator = new OrePopulator();
+        orePopulator.addRule(new OrePopulator.Rule(Material.DIAMOND_ORE, 4, 0, 64, 5));
+        orePopulator.addRule(new OrePopulator.Rule(Material.IRON_ORE, 4, 0, 64, 12));
+        orePopulator.addRule(new OrePopulator.Rule(Material.GOLD_ORE, 2, 0, 64, 8));
+        orePopulator.addRule(new OrePopulator.Rule(Material.LAPIS_ORE, 3, 0, 64, 4));
+        orePopulator.addRule(new OrePopulator.Rule(Material.OBSIDIAN, 4, 0, 32, 4));
+
+        world.getPopulators().add(orePopulator);
+        world.getPopulators().add(new SurgarCanePopulator(1));
+
+        main.log("§aWorld successfully init in " + (System.currentTimeMillis() - start) + " ms");
     }
 
     @EventHandler
     public void onPortal(PlayerPortalEvent event) {
         if (!State.isState(State.MINING)) {
             Player player = event.getPlayer();
-
             event.setCancelled(true);
             player.sendMessage("§cErreur: Le nether est désactivé.");
             player.playSound(player.getLocation(), Sound.VILLAGER_NO, 2F, 2F);
@@ -78,7 +78,7 @@ public class WorldListener implements Listener {
 
     @EventHandler
     public void onItemSpawn(ItemSpawnEvent event) {
-        if (event.getEntityType() != EntityType.DROPPED_ITEM){
+        if (event.getEntityType() != EntityType.DROPPED_ITEM) {
             return;
         }
 
