@@ -1,11 +1,11 @@
 package fr.niware.uhcrun.game.manager;
 
-import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.player.commands.CommandMain;
 import fr.niware.uhcrun.player.listeners.*;
 import fr.niware.uhcrun.world.listeners.BlockListener;
 import fr.niware.uhcrun.world.listeners.ChunkListener;
-import fr.niware.uhcrun.world.patch.NMSPatcher;
+import fr.niware.uhcrun.world.patchers.NMSPatcher;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
@@ -15,9 +15,9 @@ import java.util.List;
 
 public class RegisterManager {
 
-    private final Main main;
+    private final UHCRun main;
 
-    public RegisterManager(Main main){
+    public RegisterManager(UHCRun main){
         this.main = main;
 
         registerCommands();

@@ -13,9 +13,9 @@ import fr.niware.uhcrun.world.WorldManager;
 import fr.niware.uhcrun.world.listeners.WorldInitListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class Main extends JavaPlugin {
+public class UHCRun extends JavaPlugin {
 
-    public static Main instance;
+    public static UHCRun instance;
 
     private Game game;
     private FastMain fastMain;
@@ -48,7 +48,6 @@ public class Main extends JavaPlugin {
             new PluginMessage(this);
         }, 40);
 
-
         this.log("§6Running with " + Runtime.getRuntime().availableProcessors() + " threads and " + Runtime.getRuntime().maxMemory() / 1024L / 1024L + " Mo.");
         this.log("Plugin successfully enabled in " + (System.currentTimeMillis() - start) + " ms");
 
@@ -63,8 +62,8 @@ public class Main extends JavaPlugin {
         super.onDisable();
     }
 
-    public static Main getInstance() {
-        return Main.instance;
+    public static UHCRun getInstance() {
+        return UHCRun.instance;
     }
 
     public Game getGame() {

@@ -1,6 +1,6 @@
 package fr.niware.uhcrun.utils.structure;
 
-import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.utils.InventoryString;
 import org.bukkit.Location;
@@ -17,7 +17,7 @@ import java.io.IOException;
 
 public class StructureLoader {
 
-    private final Main main;
+    private final UHCRun main;
 
     public final Game game;
 
@@ -25,7 +25,7 @@ public class StructureLoader {
     private int changes = 0;
 
 
-    public StructureLoader(Main main) {
+    public StructureLoader(UHCRun main) {
         this.main = main;
         this.game = main.getGame();
         this.path = main.getDataFolder().getPath();

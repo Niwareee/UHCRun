@@ -1,6 +1,6 @@
-package fr.niware.uhcrun.game.task;
+package fr.niware.uhcrun.game.tasks;
 
-import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.utils.packet.ActionBar;
 import io.papermc.lib.PaperLib;
@@ -28,7 +28,7 @@ public class ScatterTask extends BukkitRunnable {
     private int index;
     private final boolean isStart;
 
-    public ScatterTask(Main main, boolean isStart) {
+    public ScatterTask(UHCRun main, boolean isStart) {
         this.game = main.getGame();
         this.actionBar = new ActionBar();
 

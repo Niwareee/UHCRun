@@ -1,6 +1,6 @@
 package fr.niware.uhcrun.world.listeners;
 
-import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.game.state.GameState;
 import org.bukkit.Effect;
 import org.bukkit.Material;
@@ -22,11 +22,11 @@ import java.util.stream.Collectors;
 
 public class BlockListener implements Listener {
 
-    private final Main main;
+    private final UHCRun main;
     private final Random random;
     private final List<BlockFace> faces;
 
-    public BlockListener(Main main) {
+    public BlockListener(UHCRun main) {
         this.main = main;
         this.random = new Random();
 

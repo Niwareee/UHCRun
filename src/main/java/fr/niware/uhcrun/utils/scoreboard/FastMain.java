@@ -1,6 +1,6 @@
 package fr.niware.uhcrun.utils.scoreboard;
 
-import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.player.manager.PlayerManager;
 import fr.niware.uhcrun.utils.Orientation;
@@ -14,7 +14,7 @@ import java.util.*;
 
 public class FastMain {
 
-    private final Main main;
+    private final UHCRun main;
     private PlayerManager playerManager;
 
     private final Game game;
@@ -24,7 +24,7 @@ public class FastMain {
     private Location spawn;
     private final Map<UUID, FastBoard> boards;
 
-    public FastMain(Main main) {
+    public FastMain(UHCRun main) {
         this.main = main;
         this.game = main.getGame();
 

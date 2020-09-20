@@ -1,6 +1,6 @@
 package fr.niware.uhcrun.player.listeners;
 
-import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.game.state.GameState;
 import fr.niware.uhcrun.utils.ItemBuilder;
@@ -35,11 +35,11 @@ import java.util.List;
 
 public class GameListener implements Listener {
 
-    private final Main main;
+    private final UHCRun main;
     private final Game game;
     private final SimpleDateFormat simpleDateFormat;
 
-    public GameListener(Main main) {
+    public GameListener(UHCRun main) {
         this.main = main;
         this.game = main.getGame();
         this.simpleDateFormat = new SimpleDateFormat("mm'm' ss's'");

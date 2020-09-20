@@ -1,8 +1,8 @@
-package fr.niware.uhcrun.world.patch;
+package fr.niware.uhcrun.world.patchers;
 
-import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.utils.scoreboard.FastReflection;
-import fr.niware.uhcrun.world.patch.hook.PotionAttackDamageNerf;
+import fr.niware.uhcrun.world.patchers.hook.PotionAttackDamageNerf;
 import net.minecraft.server.v1_8_R3.GenericAttributes;
 import net.minecraft.server.v1_8_R3.MinecraftKey;
 import net.minecraft.server.v1_8_R3.MobEffectList;
@@ -22,7 +22,7 @@ public class NMSPatcher {
     private final Server server;
     private final Logger logger;
 
-    public NMSPatcher(Main main){
+    public NMSPatcher(UHCRun main){
         this.server = main.getServer();
         this.logger = main.getLogger();
     }

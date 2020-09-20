@@ -1,4 +1,4 @@
-package fr.niware.uhcrun.world.populator;
+package fr.niware.uhcrun.world.populators;
 
 import net.minecraft.server.v1_8_R3.ChunkSnapshot;
 import net.minecraft.server.v1_8_R3.WorldGenCanyon;

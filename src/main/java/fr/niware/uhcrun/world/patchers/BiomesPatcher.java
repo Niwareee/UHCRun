@@ -1,4 +1,4 @@
-package fr.niware.uhcrun.world.patch;
+package fr.niware.uhcrun.world.patchers;
 
 import net.minecraft.server.v1_8_R3.BiomeBase;
 

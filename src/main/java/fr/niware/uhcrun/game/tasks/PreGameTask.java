@@ -1,6 +1,6 @@
-package fr.niware.uhcrun.game.task;
+package fr.niware.uhcrun.game.tasks;
 
-import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.game.manager.GameManager;
 import fr.niware.uhcrun.game.state.GameState;
@@ -19,7 +19,7 @@ public class PreGameTask extends BukkitRunnable {
 
     private final boolean forceStart;
 
-    public PreGameTask(Main main, boolean forceStart) {
+    public PreGameTask(UHCRun main, boolean forceStart) {
         this.game = main.getGame();
         this.actionBar = new ActionBar();
         this.gameManager = main.getGameManager();

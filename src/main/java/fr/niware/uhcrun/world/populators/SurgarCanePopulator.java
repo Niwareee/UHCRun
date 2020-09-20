@@ -1,4 +1,4 @@
-package fr.niware.uhcrun.world.populator;
+package fr.niware.uhcrun.world.populators;
 
 import org.bukkit.Chunk;
 import org.bukkit.Location;

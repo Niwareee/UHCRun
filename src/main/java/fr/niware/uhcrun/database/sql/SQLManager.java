@@ -1,7 +1,6 @@
 package fr.niware.uhcrun.database.sql;
 
-import fr.niware.uhcrun.Main;
-import fr.niware.uhcrun.database.sql.SQLDatabase;
+import fr.niware.uhcrun.UHCRun;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -14,12 +13,12 @@ import java.util.function.Function;
 
 public class SQLManager {
 
-    private final Main main;
+    private final UHCRun main;
     private static SQLDatabase sqlDatabase;
     private final String host, database, username, password;
     private final int port;
 
-    public SQLManager(Main main) {
+    public SQLManager(UHCRun main) {
 
         main.saveDefaultConfig();
         this.main = main;

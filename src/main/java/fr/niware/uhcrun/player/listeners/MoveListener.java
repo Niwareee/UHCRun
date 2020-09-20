@@ -1,6 +1,6 @@
 package fr.niware.uhcrun.player.listeners;
 
-import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.game.state.GameState;
 import org.bukkit.event.EventHandler;
@@ -13,7 +13,7 @@ public class MoveListener implements Listener {
 
     private final Game game;
 
-    public MoveListener(Main main) {
+    public MoveListener(UHCRun main) {
         this.game = main.getGame();
     }
 

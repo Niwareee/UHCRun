@@ -1,11 +1,11 @@
 package fr.niware.uhcrun.player.manager;
 
-import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.database.GameDatabase;
 import fr.niware.uhcrun.database.Rank;
 import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.game.manager.GameManager;
-import fr.niware.uhcrun.game.task.PreGameTask;
+import fr.niware.uhcrun.game.tasks.PreGameTask;
 import fr.niware.uhcrun.player.DeadPlayer;
 import fr.niware.uhcrun.player.UHCPlayer;
 import fr.niware.uhcrun.utils.scoreboard.FastMain;
@@ -27,7 +27,7 @@ import java.util.UUID;
 
 public class PlayerManager {
 
-    private final Main main;
+    private final UHCRun main;
 
     private final Game game;
     private final FastMain fastMain;
@@ -39,7 +39,7 @@ public class PlayerManager {
 
     private final Map<UUID, UHCPlayer> players;
 
-    public PlayerManager(Main main) {
+    public PlayerManager(UHCRun main) {
         this.main = main;
 
         this.game = main.getGame();

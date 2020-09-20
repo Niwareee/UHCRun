@@ -1,6 +1,6 @@
 package fr.niware.uhcrun.player.listeners;
 
-import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.player.manager.PlayerManager;
 import fr.niware.uhcrun.game.state.GameState;
@@ -13,11 +13,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class ConnectionListener implements Listener {
 
-    private final Main main;
+    private final UHCRun main;
     private final Game game;
     private final PlayerManager playerManager;
 
-    public ConnectionListener(Main main) {
+    public ConnectionListener(UHCRun main) {
         this.main = main;
         this.game = main.getGame();
         this.playerManager = main.getPlayerManager();

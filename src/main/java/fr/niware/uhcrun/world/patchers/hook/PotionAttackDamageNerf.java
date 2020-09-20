@@ -1,4 +1,4 @@
-package fr.niware.uhcrun.world.patch.hook;
+package fr.niware.uhcrun.world.patchers.hook;
 
 import net.minecraft.server.v1_8_R3.AttributeModifier;
 import net.minecraft.server.v1_8_R3.MinecraftKey;

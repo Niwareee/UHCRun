@@ -1,6 +1,6 @@
-package fr.niware.uhcrun.game.task;
+package fr.niware.uhcrun.game.tasks;
 
-import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.database.GameDatabase;
 import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.player.manager.PlayerManager;
@@ -24,7 +24,7 @@ public class EndTask extends BukkitRunnable {
     private final Game game;
     private int time;
 
-    public EndTask(Main main, Entity player) {
+    public EndTask(UHCRun main, Entity player) {
         this.gameDatabase = main.getAccountManager();
         this.playerManager = main.getPlayerManager();
         this.player = player;
@@ -35,7 +35,7 @@ public class EndTask extends BukkitRunnable {
     @Override
     public void run() {
         this.time++;
-        
+
         if (time < 30) {
             Firework firework = (Firework) player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK);
             FireworkMeta fwm = firework.getFireworkMeta();

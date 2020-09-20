@@ -1,6 +1,6 @@
 package fr.niware.uhcrun.world;
 
-import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.utils.structure.StructureLoader;
 import fr.niware.uhcrun.game.state.GameState;
 import fr.niware.uhcrun.world.listeners.WorldListener;
@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 
 public class WorldLoader {
 
-    private final Main main;
+    private final UHCRun main;
     private final Logger logger;
     private final StructureLoader structureLoader;
 
@@ -27,7 +27,7 @@ public class WorldLoader {
 
     private ChunkProviderServer chunkProviderServer;
 
-    public WorldLoader(Main main) {
+    public WorldLoader(UHCRun main) {
         this.main = main;
         this.logger = main.getLogger();
         this.structureLoader = main.getStructureLoader();

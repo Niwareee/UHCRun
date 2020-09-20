@@ -2,7 +2,7 @@ package fr.niware.uhcrun.utils;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
-import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.database.GameDatabase;
 import fr.niware.uhcrun.database.Rank;
 import fr.niware.uhcrun.game.Game;
@@ -19,7 +19,7 @@ public class PluginMessage implements PluginMessageListener {
     private final GameDatabase accountManager;
     private final PlayerManager playerManager;
 
-    public PluginMessage(Main main) {
+    public PluginMessage(UHCRun main) {
         this.game = main.getGame();
         this.accountManager = main.getAccountManager();
         this.playerManager = main.getPlayerManager();

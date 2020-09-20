@@ -1,6 +1,6 @@
 package fr.niware.uhcrun.database;
 
-import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.database.sql.SQLManager;
 import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.player.UHCPlayer;
@@ -8,20 +8,18 @@ import org.apache.commons.lang.time.DateFormatUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class GameDatabase {
 
-    private final Main main;
+    private final UHCRun main;
     private final SQLManager sqlManager;
 
     public List<Rank> ranks;
 
-    public GameDatabase(Main main) {
+    public GameDatabase(UHCRun main) {
         this.main = main;
         this.sqlManager = main.getSQLManager();
         this.ranks = new ArrayList<>();
@@ -36,8 +34,8 @@ public class GameDatabase {
                     ranks.add(new Rank(rs.getInt("power"), rs.getString("name"), rs.getString("prefix"), rs.getString("tab"), rs.getString("chat_color"), rs.getInt("ordre")));
                 }
                 main.getLogger().info("Load successfully " + ranks.size() + " ranks");
-            } catch (SQLException exception) {
-                exception.printStackTrace();
+            } catch (SQLException throwable) {
+                throwable.printStackTrace();
             }
         });
     }
@@ -55,8 +53,8 @@ public class GameDatabase {
                 data[0] = rs.getInt("rankid");
                 data[1] = rs.getInt("kills");
                 data[2] = rs.getInt("wins");
-            } catch (SQLException exception) {
-                exception.printStackTrace();
+            } catch (SQLException throwable) {
+                throwable.printStackTrace();
             }
         });
         System.out.print("Load connection SQL in " + (System.currentTimeMillis() - start) + " MS");
@@ -95,8 +93,8 @@ public class GameDatabase {
                     q.setString(3, uhcPlayer.getUUID().toString());
                     q.execute();
                     q.close();
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
+                } catch (SQLException throwable) {
+                    throwable.printStackTrace();
                 }
                 continue;
             }
@@ -107,8 +105,8 @@ public class GameDatabase {
                 q.setString(2, uhcPlayer.getUUID().toString());
                 q.execute();
                 q.close();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
+            } catch (SQLException throwable) {
+                throwable.printStackTrace();
             }
         }
 

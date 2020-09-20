@@ -1,6 +1,6 @@
-package fr.niware.uhcrun.game.task;
+package fr.niware.uhcrun.game.tasks;
 
-import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.game.state.GameState;
 import org.bukkit.Bukkit;
@@ -16,10 +16,10 @@ import java.util.UUID;
 
 public class GameTask extends BukkitRunnable {
 
-    private final Main main;
+    private final UHCRun main;
     private final Game game;
 
-    public GameTask(Main main) {
+    public GameTask(UHCRun main) {
         this.main = main;
         this.game = main.getGame();
     }

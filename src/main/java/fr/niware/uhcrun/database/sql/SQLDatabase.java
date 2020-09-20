@@ -2,7 +2,7 @@ package fr.niware.uhcrun.database.sql;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.UHCRun;
 import org.bukkit.Bukkit;
 
 import java.sql.Connection;
@@ -13,9 +13,9 @@ public class SQLDatabase {
     private final int port;
     private final String host, database, username, password;
 
-    private final Main main;
+    private final UHCRun main;
 
-    public SQLDatabase(Main main, String host, String database, String username, String password, int port) {
+    public SQLDatabase(UHCRun main, String host, String database, String username, String password, int port) {
         this.main = main;
 
         this.host = host;

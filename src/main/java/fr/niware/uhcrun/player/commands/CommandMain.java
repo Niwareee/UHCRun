@@ -1,8 +1,8 @@
 package fr.niware.uhcrun.player.commands;
 
-import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.game.Game;
-import fr.niware.uhcrun.game.task.PreGameTask;
+import fr.niware.uhcrun.game.tasks.PreGameTask;
 import fr.niware.uhcrun.player.manager.PlayerManager;
 import fr.niware.uhcrun.utils.structure.StructureLoader;
 import fr.niware.uhcrun.game.state.GameState;
@@ -14,12 +14,12 @@ import org.bukkit.entity.Player;
 
 public class CommandMain implements CommandExecutor {
 
-    private final Main main;
+    private final UHCRun main;
     private final Game game;
     private final PlayerManager playerManager;
     private final StructureLoader structureLoader;
 
-    public CommandMain(Main main) {
+    public CommandMain(UHCRun main) {
         this.main = main;
         this.game = main.getGame();
         this.playerManager = main.getPlayerManager();

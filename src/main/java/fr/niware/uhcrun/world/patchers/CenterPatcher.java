@@ -1,4 +1,4 @@
-package fr.niware.uhcrun.world.patch;
+package fr.niware.uhcrun.world.patchers;
 
 import fr.niware.uhcrun.utils.scoreboard.FastReflection;
 import net.minecraft.server.v1_8_R3.*;

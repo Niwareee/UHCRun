@@ -1,11 +1,11 @@
 package fr.niware.uhcrun.world.listeners;
 
-import fr.niware.uhcrun.Main;
-import fr.niware.uhcrun.world.patch.BiomesPatcher;
-import fr.niware.uhcrun.world.patch.CenterPatcher;
-import fr.niware.uhcrun.world.patch.WorldGenCavesPatcher;
-import fr.niware.uhcrun.world.populator.OrePopulator;
-import fr.niware.uhcrun.world.populator.SurgarCanePopulator;
+import fr.niware.uhcrun.UHCRun;
+import fr.niware.uhcrun.world.patchers.BiomesPatcher;
+import fr.niware.uhcrun.world.patchers.CenterPatcher;
+import fr.niware.uhcrun.world.patchers.WorldGenCavesPatcher;
+import fr.niware.uhcrun.world.populators.OrePopulator;
+import fr.niware.uhcrun.world.populators.SurgarCanePopulator;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;
@@ -14,9 +14,9 @@ import org.bukkit.event.world.WorldInitEvent;
 
 public class WorldInitListener implements Listener {
 
-    private final Main main;
+    private final UHCRun main;
 
-    public WorldInitListener(Main main){
+    public WorldInitListener(UHCRun main){
         this.main = main;
     }
 

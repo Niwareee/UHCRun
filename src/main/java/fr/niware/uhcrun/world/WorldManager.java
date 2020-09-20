@@ -1,6 +1,6 @@
 package fr.niware.uhcrun.world;
 
-import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.game.Game;
 import net.minecraft.server.v1_8_R3.MinecraftServer;
 import org.bukkit.*;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 public class WorldManager {
 
-    private final Main main;
+    private final UHCRun main;
     private final Game game;
 
     public static Location SPAWN;
@@ -27,7 +27,7 @@ public class WorldManager {
     private final List<Entity> entityList;
     private Objective health;
 
-    public WorldManager(Main main) {
+    public WorldManager(UHCRun main) {
         this.main = main;
         this.game = main.getGame();
         this.scoreboard = main.getServer().getScoreboardManager().getMainScoreboard();

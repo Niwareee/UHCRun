@@ -1,11 +1,11 @@
 package fr.niware.uhcrun.game.manager;
 
-import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.game.state.GameState;
-import fr.niware.uhcrun.game.task.EndTask;
-import fr.niware.uhcrun.game.task.GameTask;
-import fr.niware.uhcrun.game.task.ScatterTask;
+import fr.niware.uhcrun.game.tasks.EndTask;
+import fr.niware.uhcrun.game.tasks.GameTask;
+import fr.niware.uhcrun.game.tasks.ScatterTask;
 import fr.niware.uhcrun.utils.packet.ActionBar;
 import fr.niware.uhcrun.utils.packet.Title;
 import fr.niware.uhcrun.utils.structure.BlockData;
@@ -24,13 +24,13 @@ import java.util.UUID;
 
 public class GameManager {
 
-    private final Main main;
+    private final UHCRun main;
     private final Game game;
     private final Title title;
     private final ActionBar actionBar;
     private final WorldManager worldManager;
 
-    public GameManager(Main main) {
+    public GameManager(UHCRun main) {
         this.main = main;
         this.game = main.getGame();
         this.title = new Title();

@@ -1,6 +1,6 @@
 package fr.niware.uhcrun.game;
 
-import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.player.DeadPlayer;
 import fr.niware.uhcrun.player.state.PlayerState;
 import fr.niware.uhcrun.utils.structure.Structure;
@@ -70,7 +70,7 @@ public class Game {
     private final List<PotionEffect> startPotionEffects;
 
 
-    public Game(Main main) {
+    public Game(UHCRun main) {
 
         this.playerState = PlayerState.IN_WAIT;
 

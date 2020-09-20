@@ -1,6 +1,6 @@
 package fr.niware.uhcrun.player;
 
-import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.game.Game;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -20,7 +20,7 @@ import java.util.UUID;
 
 public class DeadPlayer {
 
-    private static final Game game = Main.getInstance().getGame();
+    private static final Game game = UHCRun.getInstance().getGame();
 
     private final UUID uuid;
     private final Location location;

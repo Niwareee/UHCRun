@@ -1,6 +1,6 @@
 package fr.niware.uhcrun.player.listeners;
 
-import fr.niware.uhcrun.Main;
+import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.player.manager.PlayerManager;
 import fr.niware.uhcrun.database.Rank;
 import fr.niware.uhcrun.game.state.GameState;
@@ -15,7 +15,7 @@ public class ChatListener implements Listener {
 
     private final PlayerManager playerManager;
 
-    public ChatListener(Main main) {
+    public ChatListener(UHCRun main) {
         this.playerManager = main.getPlayerManager();
     }
 
