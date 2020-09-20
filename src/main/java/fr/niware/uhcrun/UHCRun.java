@@ -50,15 +50,12 @@ public class UHCRun extends JavaPlugin {
 
         this.log("§6Running with " + Runtime.getRuntime().availableProcessors() + " threads and " + Runtime.getRuntime().maxMemory() / 1024L / 1024L + " Mo.");
         this.log("Plugin successfully enabled in " + (System.currentTimeMillis() - start) + " ms");
-
-
         super.onEnable();
     }
 
     @Override
     public void onDisable() {
         worldManager.onDisable();
-
         super.onDisable();
     }
 
