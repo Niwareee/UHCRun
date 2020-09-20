@@ -1,17 +1,16 @@
 package fr.niware.uhcrun;
 
-import fr.niware.uhcrun.account.AccountManager;
-import fr.niware.uhcrun.database.SQLManager;
+import fr.niware.uhcrun.database.GameDatabase;
+import fr.niware.uhcrun.database.sql.SQLManager;
 import fr.niware.uhcrun.game.Game;
-import fr.niware.uhcrun.game.manager.PlayerManager;
-import fr.niware.uhcrun.game.manager.WinManager;
-import fr.niware.uhcrun.listeners.WorldListener;
-import fr.niware.uhcrun.register.RegisterManager;
-import fr.niware.uhcrun.utils.scoreboard.FastMain;
-import fr.niware.uhcrun.structure.StructureLoader;
+import fr.niware.uhcrun.game.manager.GameManager;
+import fr.niware.uhcrun.game.manager.RegisterManager;
+import fr.niware.uhcrun.player.manager.PlayerManager;
 import fr.niware.uhcrun.utils.PluginMessage;
-import fr.niware.uhcrun.utils.packet.Title;
+import fr.niware.uhcrun.utils.scoreboard.FastMain;
+import fr.niware.uhcrun.utils.structure.StructureLoader;
 import fr.niware.uhcrun.world.WorldManager;
+import fr.niware.uhcrun.world.listeners.WorldInitListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
@@ -19,41 +18,40 @@ public class Main extends JavaPlugin {
     public static Main instance;
 
     private Game game;
-    private Title title;
+    private FastMain fastMain;
 
+    private GameManager gameManager;
     private WorldManager worldManager;
-    private WinManager winManager;
-    private AccountManager accountManager;
+    private GameDatabase accountManager;
     private PlayerManager playerManager;
     private StructureLoader structureLoader;
     private SQLManager sqlManager;
-    private FastMain fastMain;
 
     @Override
     public void onEnable() {
         long start = System.currentTimeMillis();
         instance = this;
 
-        this.getServer().getPluginManager().registerEvents(new WorldListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new WorldInitListener(this), this);
 
         getServer().getScheduler().runTaskLater(this, () -> {
             this.sqlManager = new SQLManager(this);
             this.game = new Game(this);
             this.fastMain = new FastMain(this);
             this.structureLoader = new StructureLoader(this);
-            this.accountManager = new AccountManager(this);
+            this.accountManager = new GameDatabase(this);
             this.playerManager = new PlayerManager(this);
-            this.winManager = new WinManager(this);
+            this.worldManager = new WorldManager(this);
+            this.gameManager = new GameManager(this);
 
             new RegisterManager(this);
-            this.worldManager = new WorldManager(this);
-
             new PluginMessage(this);
         }, 40);
 
-        this.title = new Title();
 
+        this.log("§6Running with " + Runtime.getRuntime().availableProcessors() + " threads and " + Runtime.getRuntime().maxMemory() / 1024L / 1024L + " Mo.");
         this.log("Plugin successfully enabled in " + (System.currentTimeMillis() - start) + " ms");
+
 
         super.onEnable();
     }
@@ -73,19 +71,19 @@ public class Main extends JavaPlugin {
         return game;
     }
 
-    public WorldManager getWorldManager() {
-        return worldManager;
+    public GameManager getGameManager() {
+        return gameManager;
     }
 
-    public WinManager getWinManager() {
-        return winManager;
+    public WorldManager getWorldManager() {
+        return worldManager;
     }
 
     public SQLManager getSQLManager() {
         return sqlManager;
     }
 
-    public AccountManager getAccountManager() {
+    public GameDatabase getAccountManager() {
         return accountManager;
     }
 
@@ -95,10 +93,6 @@ public class Main extends JavaPlugin {
 
     public StructureLoader getStructureLoader() {
         return structureLoader;
-    }
-
-    public Title getTitle() {
-        return title;
     }
 
     public void log(String message) {

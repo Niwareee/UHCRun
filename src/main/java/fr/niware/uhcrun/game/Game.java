@@ -1,9 +1,10 @@
 package fr.niware.uhcrun.game;
 
 import fr.niware.uhcrun.Main;
-import fr.niware.uhcrun.game.player.DeadPlayer;
-import fr.niware.uhcrun.structure.Structure;
-import fr.niware.uhcrun.utils.State;
+import fr.niware.uhcrun.player.DeadPlayer;
+import fr.niware.uhcrun.player.state.PlayerState;
+import fr.niware.uhcrun.utils.structure.Structure;
+import fr.niware.uhcrun.game.state.GameState;
 import net.minecraft.server.v1_8_R3.MinecraftServer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -17,6 +18,8 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.*;
 
 public class Game {
+
+    private PlayerState playerState;
 
     // INIT
 
@@ -69,7 +72,9 @@ public class Game {
 
     public Game(Main main) {
 
-        State.setState(State.PRELOAD);
+        this.playerState = PlayerState.IN_WAIT;
+
+        GameState.setState(GameState.PRELOAD);
         MinecraftServer.getServer().setMotd("§eChargement...");
 
         FileConfiguration config = main.getConfig();
@@ -184,7 +189,7 @@ public class Game {
     public void resetCountdownStart() {
         this.countdownStart = autoStartTime;
         Bukkit.broadcastMessage("§dUHCRun §7» §cIl n'y a pas assez de joueurs pour démarrer.");
-        State.setState(State.WAITING);
+        GameState.setState(GameState.WAITING);
     }
 
     public int getTimer() {
@@ -274,5 +279,13 @@ public class Game {
 
     public Collection<PotionEffect> getStartPotionEffects() {
         return startPotionEffects;
+    }
+
+    public PlayerState getPlayerState() {
+        return playerState;
+    }
+
+    public void setPlayerState(PlayerState playerState) {
+        this.playerState = playerState;
     }
 }

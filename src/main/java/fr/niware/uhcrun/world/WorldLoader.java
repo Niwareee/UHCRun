@@ -1,8 +1,9 @@
 package fr.niware.uhcrun.world;
 
 import fr.niware.uhcrun.Main;
-import fr.niware.uhcrun.structure.StructureLoader;
-import fr.niware.uhcrun.utils.State;
+import fr.niware.uhcrun.utils.structure.StructureLoader;
+import fr.niware.uhcrun.game.state.GameState;
+import fr.niware.uhcrun.world.listeners.WorldListener;
 import net.minecraft.server.v1_8_R3.Chunk;
 import net.minecraft.server.v1_8_R3.ChunkProviderServer;
 import net.minecraft.server.v1_8_R3.MinecraftServer;
@@ -107,8 +108,10 @@ public class WorldLoader {
                             structureLoader.paste(main.getGame().getSpawn(), "spawn", true);
                             structureLoader.load("win");
 
-                            State.setState(State.WAITING);
+                            GameState.setState(GameState.WAITING);
                             MinecraftServer.getServer().setMotd("§bEn attente");
+
+                            main.getServer().getPluginManager().registerEvents(new WorldListener(), main);
 
                             main.getFastMain().launchTask();
                             main.log("§aWorld ready. Ready to play.");

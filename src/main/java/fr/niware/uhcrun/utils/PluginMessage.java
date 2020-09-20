@@ -3,10 +3,11 @@ package fr.niware.uhcrun.utils;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import fr.niware.uhcrun.Main;
-import fr.niware.uhcrun.account.AccountManager;
-import fr.niware.uhcrun.account.Rank;
-import fr.niware.uhcrun.game.manager.PlayerManager;
-import fr.niware.uhcrun.game.player.UHCPlayer;
+import fr.niware.uhcrun.database.GameDatabase;
+import fr.niware.uhcrun.database.Rank;
+import fr.niware.uhcrun.game.Game;
+import fr.niware.uhcrun.player.manager.PlayerManager;
+import fr.niware.uhcrun.player.UHCPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
@@ -14,10 +15,12 @@ import java.util.UUID;
 
 public class PluginMessage implements PluginMessageListener {
 
-    private final AccountManager accountManager;
+    private final Game game;
+    private final GameDatabase accountManager;
     private final PlayerManager playerManager;
 
     public PluginMessage(Main main) {
+        this.game = main.getGame();
         this.accountManager = main.getAccountManager();
         this.playerManager = main.getPlayerManager();
 
@@ -38,10 +41,10 @@ public class PluginMessage implements PluginMessageListener {
         }
 
         String uuid = in.readUTF();
-        int rankId = in.readInt();
-        Rank rank = accountManager.getFromPower(rankId);
+        int rankID = in.readInt();
+        Rank rank = accountManager.getFromPower(rankID);
 
-        playerManager.put(new UHCPlayer(UUID.fromString(uuid), rank, 0, 0));
+        playerManager.put(new UHCPlayer(UUID.fromString(uuid), game.getPlayerState(), rank, 0, 0));
         System.out.print("Action in " + (System.currentTimeMillis() - start) + " ms");
     }
 }

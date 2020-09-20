@@ -1,8 +1,8 @@
 package fr.niware.uhcrun.world.patch;
 
 import fr.niware.uhcrun.Main;
-import fr.niware.uhcrun.register.hook.PotionAttackDamageNerf;
 import fr.niware.uhcrun.utils.scoreboard.FastReflection;
+import fr.niware.uhcrun.world.patch.hook.PotionAttackDamageNerf;
 import net.minecraft.server.v1_8_R3.GenericAttributes;
 import net.minecraft.server.v1_8_R3.MinecraftKey;
 import net.minecraft.server.v1_8_R3.MobEffectList;
@@ -77,9 +77,9 @@ public class NMSPatcher {
             ((Map<?, ?>) byNameField.get(null)).remove("increase_damage");
             ((PotionEffectType[]) byIdField.get(null))[5] = null;
 
-            this.logger.info("Patching Strength Potion (130% => 43.3%, 260% => 86.6%)");
+            this.logger.info("Patching strength potions (130% => 43.3%, 260% => 86.6%)");
             FastReflection.setFinalStatic(MobEffectList.class.getDeclaredField("INCREASE_DAMAGE"), (new PotionAttackDamageNerf(5, new MinecraftKey("strength"), false, 9643043)).c("potion.damageBoost").a(GenericAttributes.ATTACK_DAMAGE, "648D7064-6A60-4F59-8ABE-C2C23A6DD7A9", 2.5D, 2));
-            this.logger.info("Potions patched");
+            this.logger.info("Strength potions successfully patched.");
         } catch (ReflectiveOperationException e) {
             e.printStackTrace();
         }

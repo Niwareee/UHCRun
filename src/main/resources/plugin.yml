@@ -1,9 +1,8 @@
 name: UHCRun
-version: 2.0
-author: Niware
+version: 2.5
 main: fr.niware.uhcrun.Main
+author: [Niware]
+description: Plugin UHCRun pour network minecraft
 load: STARTUP
 commands:
   game:
-    permission: op
-    description: Commande principale de la partie.

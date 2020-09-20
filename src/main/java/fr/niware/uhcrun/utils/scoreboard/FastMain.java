@@ -2,9 +2,9 @@ package fr.niware.uhcrun.utils.scoreboard;
 
 import fr.niware.uhcrun.Main;
 import fr.niware.uhcrun.game.Game;
-import fr.niware.uhcrun.game.manager.PlayerManager;
+import fr.niware.uhcrun.player.manager.PlayerManager;
 import fr.niware.uhcrun.utils.Orientation;
-import fr.niware.uhcrun.utils.State;
+import fr.niware.uhcrun.game.state.GameState;
 import fr.niware.uhcrun.utils.packet.ActionBar;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.bukkit.Location;
@@ -48,7 +48,7 @@ public class FastMain {
     }
 
     private void updateBoard(FastBoard board, Player player) {
-        if (State.isInWait()){
+        if (GameState.isInWait()){
             board.updateLines(
                     "",
                     " §c» §7Joueurs: §e" + game.getAlivePlayers().size() + "/" + game.getSlot(),
@@ -57,14 +57,13 @@ public class FastMain {
                     "§6play.nontia.fr"
             );
             return;
-
         }
 
         int kills = playerManager.getUHCPlayer(player.getUniqueId()).getKillsGame();
         String time = secondsToString(game.getTimer());
 
-        if (State.isInGame()) {
-            if (State.isState(State.MINING)) {
+        if (GameState.isInGame()) {
+            if (GameState.isState(GameState.MINING)) {
                 actionBar.sendToPlayer(board.getPlayer(), "§6Téléportation: " + secondsToStringColor(game.getPvPTime()));
             }
 
@@ -82,7 +81,7 @@ public class FastMain {
             return;
         }
 
-        if (State.isState(State.FINISH)) {
+        if (GameState.isState(GameState.FINISH)) {
             board.updateLines(
                     "§7" + DateFormatUtils.format(System.currentTimeMillis(), "dd/MM/yyyy"),
                     "§5",

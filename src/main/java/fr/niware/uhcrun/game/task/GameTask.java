@@ -2,8 +2,7 @@ package fr.niware.uhcrun.game.task;
 
 import fr.niware.uhcrun.Main;
 import fr.niware.uhcrun.game.Game;
-import fr.niware.uhcrun.utils.Scatter;
-import fr.niware.uhcrun.utils.State;
+import fr.niware.uhcrun.game.state.GameState;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.WorldBorder;
@@ -27,7 +26,7 @@ public class GameTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (State.isState(State.FINISH)) cancel();
+        if (GameState.isState(GameState.FINISH)) this.cancel();
 
         game.addTimer();
         game.removePvPTime();
@@ -42,7 +41,7 @@ public class GameTask extends BukkitRunnable {
             launchTeleport();
         }
 
-        if (State.isState(State.PVP)) {
+        if (GameState.isState(GameState.PVP)) {
             int timer = game.getTimer();
             if (timer == 1210 || timer == 1215 || timer == 1216 || timer == 1217 || timer == 1218 || timer == 1219) {
                 Bukkit.broadcastMessage("§dUHCRun §7» §eDégâts actifs dans §f" + (1220 - timer) + " §e" + (timer != 1219 ? "secondes." : "seconde."));
@@ -60,12 +59,12 @@ public class GameTask extends BukkitRunnable {
     }
 
     public void launchTeleport() {
-        State.setState(State.PVP);
+        GameState.setState(GameState.PVP);
 
         game.setInvincibility(true);
         game.getWorld().setPVP(true);
 
-        new Scatter(main,false).runTaskTimer(main, 0L, 5L);
+        new ScatterTask(main,false).runTaskTimer(main, 0L, 5L);
 
         Bukkit.broadcastMessage("§7§m+---------------------+");
         Bukkit.broadcastMessage("              §6● §eCombats §6●");
@@ -107,7 +106,7 @@ public class GameTask extends BukkitRunnable {
         uuids.stream().filter(uuid -> Bukkit.getPlayer(uuid) == null).forEach(uuid -> game.getAlivePlayers().remove(uuid));
 
         Bukkit.broadcastMessage("§dUHCRun §7» §cLes joueurs déconnectés ont été éliminés.");
-        main.getWinManager().checkWin();
+        main.getPlayerManager().isOnePlayerLeft();
     }
 }
 
