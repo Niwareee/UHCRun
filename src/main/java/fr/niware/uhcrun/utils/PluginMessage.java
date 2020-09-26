@@ -25,7 +25,7 @@ public class PluginMessage implements PluginMessageListener {
         this.playerManager = main.getPlayerManager();
 
         main.getServer().getMessenger().registerOutgoingPluginChannel(main, "BungeeCord");
-        main.getServer().getMessenger().registerIncomingPluginChannel(main, "BungeeCord", this);
+        // main.getServer().getMessenger().registerIncomingPluginChannel(main, "BungeeCord", this);
 
         main.log("Messenger system successfully load.");
     }

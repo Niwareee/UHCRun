@@ -72,7 +72,7 @@ public class Game {
 
     public Game(UHCRun main) {
 
-        this.playerState = PlayerState.IN_WAIT;
+        this.playerState = PlayerState.WAITING;
 
         GameState.setState(GameState.PRELOAD);
         MinecraftServer.getServer().setMotd("§eChargement...");

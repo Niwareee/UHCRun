@@ -44,8 +44,11 @@ public class ConnectionListener implements Listener {
 
         if (game.getAlivePlayers().size() >= game.getSlot()) {
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_FULL, "§cLe serveur est plein. (" + game.getAlivePlayers().size() + "/" + game.getSlot() + ")");
+            return;
         }
 
-        playerManager.loadSQLAccount(event.getUniqueId());
+        if (event.getLoginResult() == AsyncPlayerPreLoginEvent.Result.ALLOWED) {
+            playerManager.loadSQLAccount(event.getUniqueId());
+        }
     }
 }

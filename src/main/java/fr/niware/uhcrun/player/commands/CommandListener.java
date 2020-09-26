@@ -12,14 +12,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class CommandMain implements CommandExecutor {
+public class CommandListener implements CommandExecutor {
 
     private final UHCRun main;
     private final Game game;
     private final PlayerManager playerManager;
     private final StructureLoader structureLoader;
 
-    public CommandMain(UHCRun main) {
+    public CommandListener(UHCRun main) {
         this.main = main;
         this.game = main.getGame();
         this.playerManager = main.getPlayerManager();
@@ -116,6 +116,7 @@ public class CommandMain implements CommandExecutor {
                 default:
                     return false;
             }
+            return false;
         }
         return false;
     }

@@ -1,7 +1,7 @@
 package fr.niware.uhcrun.game.manager;
 
 import fr.niware.uhcrun.UHCRun;
-import fr.niware.uhcrun.player.commands.CommandMain;
+import fr.niware.uhcrun.player.commands.CommandListener;
 import fr.niware.uhcrun.player.listeners.*;
 import fr.niware.uhcrun.world.listeners.BlockListener;
 import fr.niware.uhcrun.world.listeners.ChunkListener;
@@ -53,6 +53,6 @@ public class RegisterManager {
         pluginCommand.setPermission("op");
         pluginCommand.setPermissionMessage("§cErreur: Vous n'avez pas la permission");
         pluginCommand.setDescription("Commande principale de la partie.");
-        pluginCommand.setExecutor(new CommandMain(main));
+        pluginCommand.setExecutor(new CommandListener(main));
     }
 }

@@ -17,8 +17,8 @@ public class UHCRun extends JavaPlugin {
 
     public static UHCRun instance;
 
-    private Game game;
     private FastMain fastMain;
+    private Game game;
 
     private GameManager gameManager;
     private WorldManager worldManager;
