@@ -29,6 +29,11 @@ public class WorldListener implements Listener {
     }
 
     @EventHandler
+    public void onPortalCreate(PortalCreateEvent event) {
+        event.setCancelled(true);
+    }
+
+    @EventHandler
     public void onItemSpawn(ItemSpawnEvent event) {
         if (event.getEntityType() != EntityType.DROPPED_ITEM) {
             return;
@@ -92,10 +97,5 @@ public class WorldListener implements Listener {
     public void spawnExtraXp(Location location, int quantity) {
         net.minecraft.server.v1_8_R3.World world = ((CraftWorld) location.getWorld()).getHandle();
         world.addEntity(new EntityExperienceOrb(world, location.getX(), location.getY(), location.getZ(), quantity));
-    }
-
-    @EventHandler
-    public void onPortalCreate(PortalCreateEvent event) {
-        event.setCancelled(true);
     }
 }

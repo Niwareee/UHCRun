@@ -1,4 +1,4 @@
-package fr.niware.uhcrun.game.manager;
+package fr.niware.uhcrun.game;
 
 import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.player.commands.CommandListener;
@@ -13,19 +13,28 @@ import org.bukkit.plugin.PluginManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RegisterManager {
+public class Register {
 
     private final UHCRun main;
 
-    public RegisterManager(UHCRun main){
+    public Register(UHCRun main){
         this.main = main;
 
-        registerCommands();
-        registerListener();
+        this.registerCommands();
+        this.registerListener();
 
         NMSPatcher nmsPatcher = new NMSPatcher(main);
         nmsPatcher.patchSlots(main.getGame().getSlot());
-        nmsPatcher.patchStrength();
+        nmsPatcher.patchStrengthPotions();
+    }
+
+    public void registerCommands() {
+        PluginCommand pluginCommand = main.getCommand("game");
+        pluginCommand.setUsage("§cUtilisation: /game <start/revive/checkwin/togglepvp>.");
+        pluginCommand.setPermissionMessage("§cErreur: Vous n'avez pas la permission.");
+        pluginCommand.setDescription("Commande principale de la partie.");
+        pluginCommand.setExecutor(new CommandListener(main));
+        pluginCommand.setPermission("op");
     }
 
     public void registerListener() {
@@ -39,20 +48,11 @@ public class RegisterManager {
         listeners.add(new GameListener(main));
         listeners.add(new MoveListener(main).moveListener);
         listeners.add(new PlayerListener(main));
-
         listeners.add(new BlockListener(main));
         listeners.add(new ChunkListener().chunkListener);
 
         for (Listener listener : listeners) {
             pluginManager.registerEvents(listener, main);
         }
-    }
-
-    public void registerCommands() {
-        PluginCommand pluginCommand = main.getCommand("game");
-        pluginCommand.setPermission("op");
-        pluginCommand.setPermissionMessage("§cErreur: Vous n'avez pas la permission");
-        pluginCommand.setDescription("Commande principale de la partie.");
-        pluginCommand.setExecutor(new CommandListener(main));
     }
 }

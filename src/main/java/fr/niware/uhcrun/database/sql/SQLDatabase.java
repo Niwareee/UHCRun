@@ -44,9 +44,9 @@ public class SQLDatabase {
 
                 updateTables();
             }
-        } catch (Exception e) {
+        } catch (Exception exception) {
             main.log("§cError to connect to MySQL:");
-            main.log(e.getMessage());
+            main.log(exception.getMessage());
         }
     }
 
@@ -59,9 +59,9 @@ public class SQLDatabase {
                     main.log("§aSuccessful update table !");
                 });
             }
-        } catch (Exception e) {
+        } catch (Exception exception) {
             main.log("§cUnable to update table to MySQL:");
-            main.log(e.getMessage());
+            main.log(exception.getMessage());
         }
     }
 
@@ -84,9 +84,9 @@ public class SQLDatabase {
     public Connection getResource() {
         try {
             return hikariDataSource.getConnection();
-        } catch (Exception e) {
+        } catch (Exception exception) {
             main.log("§cUnable to get connection from MySQL:");
-            main.log(e.getMessage());
+            main.log(exception.getMessage());
             return null;
         }
     }

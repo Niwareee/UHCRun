@@ -44,7 +44,7 @@ public class PluginMessage implements PluginMessageListener {
         int rankID = in.readInt();
         Rank rank = accountManager.getFromPower(rankID);
 
-        playerManager.put(new UHCPlayer(UUID.fromString(uuid), game.getPlayerState(), rank, 0, 0));
+        playerManager.put(UUID.fromString(uuid), new UHCPlayer(game.getPlayerState(), rank, 0, 0));
         System.out.print("Action in " + (System.currentTimeMillis() - start) + " ms");
     }
 }

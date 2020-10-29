@@ -2,7 +2,6 @@ package fr.niware.uhcrun.game.tasks;
 
 import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.game.Game;
-import fr.niware.uhcrun.utils.packet.ActionBar;
 import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -21,7 +20,6 @@ import java.util.concurrent.CompletableFuture;
 public class ScatterTask extends BukkitRunnable {
 
     private final Game game;
-    private final ActionBar actionBar;
 
     private final List<Player> players;
 
@@ -30,7 +28,6 @@ public class ScatterTask extends BukkitRunnable {
 
     public ScatterTask(UHCRun main, boolean isStart) {
         this.game = main.getGame();
-        this.actionBar = new ActionBar();
 
         this.players = new ArrayList<>();
         this.isStart = isStart;
@@ -43,7 +40,7 @@ public class ScatterTask extends BukkitRunnable {
         if (this.players.size() == 0) {
             game.setRunnable(true);
             this.cancel();
-            if (this.isStart) actionBar.sendToAll("§aTéléportation des joueurs avec succès");
+            if (this.isStart) game.sendToAll("§aTéléportation des joueurs avec succès");
             return;
         }
 
@@ -57,7 +54,7 @@ public class ScatterTask extends BukkitRunnable {
 
             if (this.isStart) {
                 int percent = Math.round((float) 100 / this.players.size());
-                actionBar.sendToAll("§7Téléportation en cours...  §6(" + percent + "%)");
+                game.sendToAll("§7Téléportation en cours...  §6(" + percent + "%)");
                 setSpawnSpot(playerToTp);
             }
         }

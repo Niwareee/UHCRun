@@ -103,19 +103,15 @@ public class WorldLoader {
                         Bukkit.getScheduler().cancelAllTasks();
 
                         if (environment == Environment.NETHER) {
-
                             structureLoader.load("spawn");
                             structureLoader.paste(main.getGame().getSpawn(), "spawn", true);
                             structureLoader.load("win");
 
                             GameState.setState(GameState.WAITING);
-                            MinecraftServer.getServer().setMotd("§bEn attente");
-
                             main.getServer().getPluginManager().registerEvents(new WorldListener(), main);
-
                             main.getFastMain().launchTask();
-                            main.log("§aWorld ready. Ready to play.");
 
+                            main.log("§aWorld ready. Ready to play.");
                             return;
                         }
 

@@ -2,7 +2,6 @@ package fr.niware.uhcrun.player;
 
 import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.game.Game;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -40,9 +39,7 @@ public class DeadPlayer {
         game.getDeadPlayers().put(uuid, this);
     }
 
-    public void revive() {
-        Player player = Bukkit.getPlayer(uuid);
-
+    public void revive(Player player) {
         for (Entity entity : location.getChunk().getEntities()) {
             if (entity.getType() == EntityType.DROPPED_ITEM) {
                 entity.remove();

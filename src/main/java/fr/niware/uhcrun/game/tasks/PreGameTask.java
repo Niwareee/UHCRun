@@ -4,7 +4,6 @@ import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.game.manager.GameManager;
 import fr.niware.uhcrun.game.state.GameState;
-import fr.niware.uhcrun.utils.packet.ActionBar;
 import fr.niware.uhcrun.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -13,20 +12,15 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class PreGameTask extends BukkitRunnable {
 
     private final Game game;
-    private final ActionBar actionBar;
-    private final GameManager gameManager;
     private final WorldManager worldManager;
 
     private final boolean forceStart;
 
     public PreGameTask(UHCRun main, boolean forceStart) {
         this.game = main.getGame();
-        this.actionBar = new ActionBar();
-        this.gameManager = main.getGameManager();
         this.worldManager = main.getWorldManager();
 
         this.forceStart = forceStart;
-
         game.setRunnable(true);
         GameState.setState(GameState.STARTING);
 
@@ -39,10 +33,9 @@ public class PreGameTask extends BukkitRunnable {
         if (!game.isRunnable()) {
             return;
         }
-
         game.removeCountdownStart();
-        int countdown = game.getCountdownStart();
 
+        int countdown = game.getCountdownStart();
         if (countdown > 0) {
             Bukkit.getOnlinePlayers().forEach(players -> players.setLevel(countdown));
             if (countdown < 4) {
@@ -58,7 +51,7 @@ public class PreGameTask extends BukkitRunnable {
                 return;
             }
 
-            gameManager.startTeleport();
+            GameManager.get().startTeleport();
             return;
         }
 
@@ -68,13 +61,13 @@ public class PreGameTask extends BukkitRunnable {
         }
 
         if (countdown < -5 && countdown > -9) {
-            actionBar.sendToAll("§7» §eDémarrage dans §f" + (countdown + 9) + "s§e.");
+            game.sendToAll("§7» §eDémarrage dans §f" + (countdown + 9) + "s§e.");
             return;
         }
 
         if (countdown == -9) {
             this.cancel();
-            gameManager.startGame();
+            GameManager.get().startGame();
         }
     }
 }

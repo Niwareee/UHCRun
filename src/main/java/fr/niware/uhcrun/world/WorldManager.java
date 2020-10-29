@@ -23,13 +23,14 @@ public class WorldManager {
     public static Location SPAWN;
     public static World WORLD;
 
+    private Objective tagHealth;
     private final Scoreboard scoreboard;
     private final List<Entity> entityList;
-    private Objective health;
 
     public WorldManager(UHCRun main) {
         this.main = main;
         this.game = main.getGame();
+
         this.scoreboard = main.getServer().getScoreboardManager().getMainScoreboard();
         this.entityList = new ArrayList<>();
 
@@ -37,21 +38,21 @@ public class WorldManager {
         WORLD = game.setWorld(game.getSpawn().getWorld());
         game.setSpecSpawn(WORLD.getHighestBlockAt(0, 0).getLocation());
 
-        registerTabTeam();
-        patchWorlds();
+        this.registerTabTeam();
+        this.patchWorlds();
     }
 
     public void registerObjectives() {
         scoreboard.getObjectives().forEach(Objective::unregister);
 
-        Objective health = scoreboard.registerNewObjective("health", "health");
-        health.setDisplaySlot(DisplaySlot.PLAYER_LIST);
+        Objective tabHealth = scoreboard.registerNewObjective("health", "health");
+        tabHealth.setDisplaySlot(DisplaySlot.PLAYER_LIST);
 
-        this.health = scoreboard.registerNewObjective("showhealth", "dummy");
-        health.setDisplaySlot(DisplaySlot.BELOW_NAME);
-        health.setDisplayName("%");
+        tagHealth = scoreboard.registerNewObjective("tagHealth", "dummy");
+        tagHealth.setDisplaySlot(DisplaySlot.BELOW_NAME);
+        tagHealth.setDisplayName("%");
 
-        scoreboard.registerNewObjective("playerkills", "playerKillCount");
+        scoreboard.registerNewObjective("playerKills", "playerKillCount");
     }
 
     public void registerTabTeam() {
@@ -71,7 +72,7 @@ public class WorldManager {
     }
 
     public Map<String, Integer> getTop10() {
-        Objective objective = scoreboard.getObjective("playerkills");
+        Objective objective = scoreboard.getObjective("playerKills");
 
         Map<String, Integer> stats = new HashMap<>();
         scoreboard.getEntries().forEach(playerName -> stats.put(playerName, objective.getScore(playerName).getScore()));
@@ -83,9 +84,9 @@ public class WorldManager {
     }
 
     public void updateHealth(Player player) {
-        if (health == null) return;
+        if (tagHealth == null) return;
         double newPHealth = player.getHealth();
-        health.getScore(player.getName()).setScore((int) newPHealth * 5);
+        tagHealth.getScore(player.getName()).setScore((int) newPHealth * 5);
     }
 
     public void clearAllCustomEntities() {
@@ -134,19 +135,18 @@ public class WorldManager {
         main.getServer().setSpawnRadius(0);
         main.getServer().getWhitelistedPlayers().clear();
         main.getServer().setWhitelist(false);
-
         MinecraftServer.getServer().setAllowFlight(true);
 
         main.log("§aWorlds successfully patch");
+
         boolean regen = main.getConfig().getBoolean("game.preload");
         main.log("Preload maps is " + (regen ? "§aenabled" : "§cdisabled"));
-
         if (regen) {
             new WorldLoader(main).generateChunks(WORLD, game.getPreLoad());
         }
     }
 
-    public static Location stringToLoc(String string) {
+    public Location stringToLoc(String string) {
         String[] args = string.split(", ");
         return new Location(Bukkit.getWorld(args[0]), Double.parseDouble(args[1]), Double.parseDouble(args[2]), Double.parseDouble(args[3]), Float.parseFloat(args[4]), Float.parseFloat(args[5]));
     }

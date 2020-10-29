@@ -73,12 +73,12 @@ public class PlayerListener implements Listener {
         }
     }
 
-    private String getPercent(int s) {
-        if (s < 6) return "§4" + s;
-        if (s < 16) return "§c" + s;
-        if (s < 51) return "§e" + s;
+    private String getPercent(int hearth) {
+        if (hearth < 6) return "§4" + hearth;
+        if (hearth < 16) return "§c" + hearth;
+        if (hearth < 51) return "§e" + hearth;
 
-        return "§a" + s;
+        return "§a" + hearth;
     }
 
     @EventHandler
@@ -122,11 +122,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onPlayerInteractEntityEvent(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
-        if (player.getGameMode() != GameMode.SPECTATOR) {
-            return;
-        }
-
-        if (event.getRightClicked().getType() != EntityType.PLAYER) {
+        if (player.getGameMode() != GameMode.SPECTATOR || event.getRightClicked().getType() != EntityType.PLAYER) {
             return;
         }
 
@@ -148,7 +144,6 @@ public class PlayerListener implements Listener {
         inventory.setItem(46, new ItemBuilder(Material.BREWING_STAND_ITEM).setName("§6Effets de potions").setLore((lore.isEmpty() ? (Collections.singletonList("§f» §7Aucun")) : lore)).toItemStack());
 
         ItemStack glass = new ItemBuilder(Material.STAINED_GLASS_PANE).setName(" ").toItemStack();
-
         for (int i = 36; i < 44; i++) {
             inventory.setItem(i, glass);
         }
@@ -200,5 +195,4 @@ public class PlayerListener implements Listener {
             event.getRecipe().getResult().setType(Material.AIR);
         }
     }
-
 }

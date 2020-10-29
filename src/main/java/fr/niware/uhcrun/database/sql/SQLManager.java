@@ -45,9 +45,9 @@ public class SQLManager {
         try (Connection c = getResource();
              PreparedStatement state = c.prepareStatement(qry)) {
              state.executeUpdate();
-        } catch (Exception ex) {
+        } catch (Exception exception) {
             Bukkit.getConsoleSender().sendMessage("§cUpdate Failed:");
-            Bukkit.getConsoleSender().sendMessage(ex.getMessage());
+            Bukkit.getConsoleSender().sendMessage(exception.getMessage());
         }
     }
 
@@ -56,8 +56,8 @@ public class SQLManager {
              PreparedStatement state = c.prepareStatement(qry);
              ResultSet resultSet = state.executeQuery()) {
             return consumer.apply(resultSet);
-        } catch (SQLException e) {
-            throw new IllegalStateException("Some things went wrong..." + e.getMessage());
+        } catch (SQLException exception) {
+            throw new IllegalStateException("Some things went wrong..." + exception.getMessage());
         }
     }
 
@@ -66,8 +66,8 @@ public class SQLManager {
              PreparedStatement state = c.prepareStatement(qry);
              ResultSet resultSet = state.executeQuery()) {
             consumer.accept(resultSet);
-        } catch (SQLException e) {
-            throw new IllegalStateException("Some things went wrong..." + e.getMessage());
+        } catch (SQLException exception) {
+            throw new IllegalStateException("Some things went wrong..." + exception.getMessage());
         }
     }
 

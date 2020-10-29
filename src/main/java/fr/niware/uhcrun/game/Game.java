@@ -1,16 +1,18 @@
 package fr.niware.uhcrun.game;
 
 import fr.niware.uhcrun.UHCRun;
+import fr.niware.uhcrun.game.state.GameState;
 import fr.niware.uhcrun.player.DeadPlayer;
 import fr.niware.uhcrun.player.state.PlayerState;
 import fr.niware.uhcrun.utils.structure.Structure;
-import fr.niware.uhcrun.game.state.GameState;
-import net.minecraft.server.v1_8_R3.MinecraftServer;
+import net.minecraft.server.v1_8_R3.IChatBaseComponent;
+import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -69,13 +71,9 @@ public class Game {
     private final List<PotionEffect> deathPotionEffects;
     private final List<PotionEffect> startPotionEffects;
 
-
     public Game(UHCRun main) {
-
         this.playerState = PlayerState.WAITING;
-
         GameState.setState(GameState.PRELOAD);
-        MinecraftServer.getServer().setMotd("§eChargement...");
 
         FileConfiguration config = main.getConfig();
         this.sizeMap = config.getInt("world.sizeMap");
@@ -109,31 +107,31 @@ public class Game {
 
     //---------------------------------------------------//
 
-    public long getStartMillis(){
+    public long getStartMillis() {
         return startMillis;
     }
 
-    public void setStartMillis(long startMillis){
+    public void setStartMillis(long startMillis) {
         this.startMillis = startMillis;
     }
 
-    public int getSizePlayers(){
+    public int getSizePlayers() {
         return sizePlayers;
     }
 
-    public void setSizePlayers(int sizePlayers){
+    public void setSizePlayers(int sizePlayers) {
         this.sizePlayers = sizePlayers;
     }
 
-    public Player getWinner(){
+    public Player getWinner() {
         return winner;
     }
 
-    public boolean isWinner(UUID uuid){
+    public boolean isWinner(UUID uuid) {
         return uuid == winner.getUniqueId();
     }
 
-    public void setWinner(Player winner){
+    public void setWinner(Player winner) {
         this.winner = winner;
     }
 
@@ -287,5 +285,15 @@ public class Game {
 
     public void setPlayerState(PlayerState playerState) {
         this.playerState = playerState;
+    }
+
+    public void sendActionBar(Player player, String text) {
+        PacketPlayOutChat packet = new PacketPlayOutChat(IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + text + "\"}"), (byte) 2);
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+    }
+
+    public void sendToAll(String text) {
+        PacketPlayOutChat packet = new PacketPlayOutChat(IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + text + "\"}"), (byte) 2);
+        Bukkit.getServer().getOnlinePlayers().forEach(all -> ((CraftPlayer) all).getHandle().playerConnection.sendPacket(packet));
     }
 }

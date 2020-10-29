@@ -2,10 +2,11 @@ package fr.niware.uhcrun.utils.scoreboard;
 
 import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.game.Game;
+import fr.niware.uhcrun.player.UHCPlayer;
 import fr.niware.uhcrun.player.manager.PlayerManager;
 import fr.niware.uhcrun.utils.Orientation;
 import fr.niware.uhcrun.game.state.GameState;
-import fr.niware.uhcrun.utils.packet.ActionBar;
+import fr.niware.uhcrun.world.WorldManager;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -19,7 +20,6 @@ public class FastMain {
 
     private final Game game;
     private final Orientation orientation;
-    private final ActionBar actionBar;
 
     private Location spawn;
     private final Map<UUID, FastBoard> boards;
@@ -28,8 +28,8 @@ public class FastMain {
         this.main = main;
         this.game = main.getGame();
 
+
         this.orientation = new Orientation();
-        this.actionBar = new ActionBar();
         this.boards = new HashMap<>();
     }
 
@@ -39,6 +39,7 @@ public class FastMain {
 
         main.getServer().getScheduler().runTaskTimerAsynchronously(main, () -> {
             for (FastBoard board : boards.values()) {
+                main.getWorldManager().updateHealth(board.getPlayer());
                 updateBoard(board, board.getPlayer());
             }
         }, 0, 5);
@@ -59,19 +60,19 @@ public class FastMain {
             return;
         }
 
-        int kills = playerManager.getUHCPlayer(player.getUniqueId()).getKillsGame();
+        UHCPlayer uhcPlayer = playerManager.getUHCPlayer(player.getUniqueId());
         String time = secondsToString(game.getTimer());
 
         if (GameState.isInGame()) {
             if (GameState.isState(GameState.MINING)) {
-                actionBar.sendToPlayer(board.getPlayer(), "§6Téléportation: " + secondsToStringColor(game.getPvPTime()));
+                uhcPlayer.sendActionBar("§6Téléportation: " + secondsToStringColor(game.getPvPTime()));
             }
 
             board.updateLines(
                     "§7§m+--------------+",
                     " §7» §eJoueurs: §a" + game.getAlivePlayers().size() + "/" + game.getSlot(),
                     " §7» §eBordure: §b" + (int) game.getWorld().getWorldBorder().getSize() / 2,
-                    " §7» §eKills: §b" + kills,
+                    " §7» §eKills: §b" + uhcPlayer.getKillsGame(),
                     "§6§9§7§m+--------------+",
                     " §7» §eDurée: §b" + time,
                     " §7» §eCentre: §b" + (int) Math.ceil(player.getLocation().distance(spawn)) + " " + orientation.getOrientation(player),
@@ -88,7 +89,7 @@ public class FastMain {
                     "§7Gagnant:",
                     "§f» §a" + game.getWinner().getName(),
                     "§8",
-                    "§7Kills: §e" + kills,
+                    "§7Kills: §e" + uhcPlayer.getKillsGame(),
                     "§7Durée: §e" + time + "s",
                     "§3",
                     "§6play.nontia.fr"

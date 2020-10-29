@@ -29,17 +29,16 @@ public class DeathListener implements Listener {
     @EventHandler
     public void onDeathEvent(PlayerDeathEvent event) {
         Player player = event.getEntity();
-
         playerManager.onDeath(player);
 
-        Bukkit.getScheduler().scheduleSyncDelayedTask(main, playerManager::isOnePlayerLeft, 10);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(main, playerManager::checkIsEnd, 10);
 
         if (player.getKiller() == null) {
             event.setDeathMessage("§dUHCRun §7» §c" + player.getName() + " §6est mort.");
             return;
         }
 
-        playerManager.getUHCPlayer(player.getUniqueId()).setKillsGame(scoreboard.getObjective("playerkills").getScore(player.getName()).getScore());
+        playerManager.getUHCPlayer(player.getUniqueId()).setKillsGame(scoreboard.getObjective("playerKills").getScore(player.getName()).getScore());
         game.getDeathPotionEffects().forEach(player.getKiller()::addPotionEffect);
         event.setDeathMessage("§dUHCRun §7» §c" + player.getName() + " §6a été tué par §a" + player.getKiller().getName() + "§6.");
     }

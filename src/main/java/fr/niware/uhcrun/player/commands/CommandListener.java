@@ -30,14 +30,17 @@ public class CommandListener implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String msg, String[] args) {
         if (cmd.getName().equalsIgnoreCase("game")) {
             if (args.length == 0) {
-                sender.sendMessage("§cUtilisation: /game <start/revive/checkwin/togglepvp>.");
-                return true;
+                return false;
             }
 
             switch (args[0]) {
                 case "revive":
                     if (args.length != 2) {
                         sender.sendMessage("§cUtilisation: /game revive <Joueur>.");
+                        return true;
+                    }
+
+                    if (GameState.isInWait()) {
                         return true;
                     }
 
@@ -54,17 +57,17 @@ public class CommandListener implements CommandExecutor {
                     }
 
                     if (game.getDeadPlayers().get(target.getUniqueId()) == null) {
-                        sender.sendMessage("§cErreur: Le joueur '" + args[1] + "' n'a jamais été mort.");
+                        sender.sendMessage("§cErreur: Le joueur '" + args[1] + "' n'est pas mort.");
                         return true;
                     }
 
-                    game.getDeadPlayers().get(target.getUniqueId()).revive();
+                    game.getDeadPlayers().get(target.getUniqueId()).revive(target);
                     sender.sendMessage("§dUHCRun §7» §aVous avez ressuscité le joueur §9" + target.getName() + "§a.");
-                    break;
+                    return true;
 
                 case "start":
                     if (GameState.isState(GameState.STARTING)) {
-                        sender.sendMessage("§cErreur: Le partie est déjà en démarrage.");
+                        sender.sendMessage("§cErreur: Le partie est déjà en train de démarrer.");
                         return true;
                     }
 
@@ -74,7 +77,7 @@ public class CommandListener implements CommandExecutor {
                     }
 
                     new PreGameTask(main, true).runTaskTimer(main, 0L, 20L);
-                    break;
+                    return true;
 
                 case "checkwin":
                     if (GameState.isInWait()) {
@@ -83,8 +86,8 @@ public class CommandListener implements CommandExecutor {
                     }
 
                     sender.sendMessage("§dLancement du test...");
-                    playerManager.isOnePlayerLeft();
-                    break;
+                    playerManager.checkIsEnd();
+                    return true;
 
                 case "savestructure":
                     String[] cos1 = args[2].split(",");
@@ -95,14 +98,18 @@ public class CommandListener implements CommandExecutor {
                     Player player = (Player) sender;
                     Location location = player.getLocation();
                     structureLoader.save(location1, location2, location, args[1]);
-                    break;
+                    return true;
 
                 case "pastestructure":
                     structureLoader.load(args[1]);
                     structureLoader.paste(((Player) sender).getLocation(), args[1], true);
-                    break;
+                    return true;
 
                 case "togglepvp":
+                    if (GameState.isInWait()) {
+                        return true;
+                    }
+
                     if (game.getWorld().getPVP()) {
                         game.getWorld().setPVP(false);
                         sender.sendMessage("§dUHCRun §7» §aLe pvp a été §cdésactivée§a.");
@@ -111,12 +118,12 @@ public class CommandListener implements CommandExecutor {
 
                     game.getWorld().setPVP(true);
                     sender.sendMessage("§dUHCRun §7» §aLe pvp a été §eactivée§a.");
-                    break;
+                    return true;
 
                 default:
-                    return false;
+                    return true;
             }
-            return false;
+            return true;
         }
         return false;
     }

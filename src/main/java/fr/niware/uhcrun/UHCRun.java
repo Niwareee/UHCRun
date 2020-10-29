@@ -4,7 +4,7 @@ import fr.niware.uhcrun.database.GameDatabase;
 import fr.niware.uhcrun.database.sql.SQLManager;
 import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.game.manager.GameManager;
-import fr.niware.uhcrun.game.manager.RegisterManager;
+import fr.niware.uhcrun.game.Register;
 import fr.niware.uhcrun.player.manager.PlayerManager;
 import fr.niware.uhcrun.utils.PluginMessage;
 import fr.niware.uhcrun.utils.scoreboard.FastMain;
@@ -17,10 +17,9 @@ public class UHCRun extends JavaPlugin {
 
     public static UHCRun instance;
 
-    private FastMain fastMain;
     private Game game;
+    private FastMain fastMain;
 
-    private GameManager gameManager;
     private WorldManager worldManager;
     private GameDatabase accountManager;
     private PlayerManager playerManager;
@@ -42,9 +41,9 @@ public class UHCRun extends JavaPlugin {
             this.accountManager = new GameDatabase(this);
             this.playerManager = new PlayerManager(this);
             this.worldManager = new WorldManager(this);
-            this.gameManager = new GameManager(this);
 
-            new RegisterManager(this);
+            new GameManager(this);
+            new Register(this);
             new PluginMessage(this);
         }, 40);
 
@@ -65,10 +64,6 @@ public class UHCRun extends JavaPlugin {
 
     public Game getGame() {
         return game;
-    }
-
-    public GameManager getGameManager() {
-        return gameManager;
     }
 
     public WorldManager getWorldManager() {

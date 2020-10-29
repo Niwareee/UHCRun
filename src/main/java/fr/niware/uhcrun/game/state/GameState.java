@@ -1,36 +1,41 @@
 package fr.niware.uhcrun.game.state;
 
+import net.minecraft.server.v1_8_R3.MinecraftServer;
+
 public enum GameState {
 
-    PRELOAD(0),
-    WAITING(1),
-    STARTING(1),
-    TELEPORT(2),
-    MINING(2),
-    PVP(2),
-    FINISH(3);
+    PRELOAD(0, "§eChargement..."),
+    WAITING(1, "§bEn attente..."),
+    STARTING(1, "§cDémarrage..."),
+    TELEPORT(2, "§cTéléportation..."),
+    MINING(2, "§cEn cours"),
+    PVP(2, "§cEn cours"),
+    FINISH(3, "§6Fin de la partie");
 
-    private static GameState current = WAITING;
+    private static GameState currentState;
     private final int value;
+    private final String motd;
 
-    GameState(int value) {
+    GameState(int value, String motd) {
         this.value = value;
+        this.motd = motd;
     }
 
     public static boolean isState(GameState state) {
-        return current == state;
+        return currentState == state;
     }
 
     public static void setState(GameState state) {
-        current = state;
+        currentState = state;
+        MinecraftServer.getServer().setMotd(currentState.motd);
     }
 
     public static boolean isInWait() {
-        return current.value == 1;
+        return currentState.value == 1;
     }
 
     public static boolean isInGame() {
-        return current.value == 2;
+        return currentState.value == 2;
     }
 }
 
