@@ -25,6 +25,10 @@ public enum GameState {
         return currentState == state;
     }
 
+    public static GameState getState() {
+        return currentState;
+    }
+
     public static void setState(GameState state) {
         currentState = state;
         MinecraftServer.getServer().setMotd(currentState.motd);

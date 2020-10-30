@@ -1,23 +1,21 @@
 package fr.niware.uhcrun.utils;
 
-import org.bukkit.entity.Player;
-
 public class Orientation {
 
-    public String getOrientation(Player player) {
-        double oppose = player.getLocation().getZ();
+    public String getOrientation(double x, double z, double yawP) {
+        double oppose = z;
         oppose = Math.sqrt(oppose * oppose);
-        double adjacent = player.getLocation().getX();
+        double adjacent = x;
         adjacent = Math.sqrt(adjacent * adjacent);
         double angle = Math.atan(oppose / adjacent) * 57.29577951308232D;
         int playerOrientation = 0;
-        if (0.0D >= player.getLocation().getX()) {
-            playerOrientation = getPlayerOrientation(player, angle, playerOrientation, 2, 3, 1);
-        } else if (0.0D < player.getLocation().getX()) {
-            playerOrientation = getPlayerOrientation(player, angle, playerOrientation, 6, 5, 7);
+        if (0.0D >= x) {
+            playerOrientation = getPlayerOrientation(z, angle, playerOrientation, 2, 3, 1);
+        } else if (0.0D < x) {
+            playerOrientation = getPlayerOrientation(z, angle, playerOrientation, 6, 5, 7);
         }
 
-        double yaw = (player.getLocation().getYaw() - 90.0F) % 360.0F;
+        double yaw = (yawP - 90.0F) % 360.0F;
         if (yaw < 0.0D) {
             yaw += 360.0D;
         }
@@ -88,9 +86,9 @@ public class Orientation {
         return seeOrientation;
     }
 
-    private int getPlayerOrientation(Player player, double angle, int playerOrientation, int i, int i2, int i3) {
+    private int getPlayerOrientation(double zP, double angle, int playerOrientation, int i, int i2, int i3) {
         double z = 0.0D;
-        if (z >= player.getLocation().getZ()) {
+        if (z >= zP) {
             if (angle <= 30.0D) {
                 playerOrientation = i;
             } else if (angle <= 60.0D) {
@@ -103,7 +101,6 @@ public class Orientation {
         } else if (angle <= 60.0D) {
             playerOrientation = i3;
         }
-
         return playerOrientation;
     }
 }

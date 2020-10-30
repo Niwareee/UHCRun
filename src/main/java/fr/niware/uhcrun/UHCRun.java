@@ -3,7 +3,6 @@ package fr.niware.uhcrun;
 import fr.niware.uhcrun.database.GameDatabase;
 import fr.niware.uhcrun.database.sql.SQLManager;
 import fr.niware.uhcrun.game.Game;
-import fr.niware.uhcrun.game.manager.GameManager;
 import fr.niware.uhcrun.game.Register;
 import fr.niware.uhcrun.player.manager.PlayerManager;
 import fr.niware.uhcrun.utils.PluginMessage;
@@ -42,7 +41,6 @@ public class UHCRun extends JavaPlugin {
             this.playerManager = new PlayerManager(this);
             this.worldManager = new WorldManager(this);
 
-            new GameManager(this);
             new Register(this);
             new PluginMessage(this);
         }, 40);

@@ -1,10 +1,10 @@
 package fr.niware.uhcrun.game.event.list;
 
 import fr.niware.uhcrun.game.Game;
-import fr.niware.uhcrun.game.event.Event;
+import fr.niware.uhcrun.game.event.UHCEvent;
 import org.bukkit.WorldBorder;
 
-public class MoveBorder extends Event {
+public class MoveBorder extends UHCEvent {
 
     private final Game game;
 

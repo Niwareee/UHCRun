@@ -1,6 +1,6 @@
 package fr.niware.uhcrun.game.event;
 
-public abstract class Event {
+public abstract class UHCEvent {
 
     public void executeEvent() {
         activate();

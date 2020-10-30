@@ -38,8 +38,9 @@ public class DeathListener implements Listener {
             return;
         }
 
-        playerManager.getUHCPlayer(player.getUniqueId()).setKillsGame(scoreboard.getObjective("playerKills").getScore(player.getName()).getScore());
-        game.getDeathPotionEffects().forEach(player.getKiller()::addPotionEffect);
-        event.setDeathMessage("§dUHCRun §7» §c" + player.getName() + " §6a été tué par §a" + player.getKiller().getName() + "§6.");
+        Player killer = player.getKiller();
+        playerManager.getUHCPlayer(killer.getUniqueId()).setKillsGame(scoreboard.getObjective("playerKills").getScore(killer.getName()).getScore());
+        game.getDeathPotionEffects().forEach(killer::addPotionEffect);
+        event.setDeathMessage("§dUHCRun §7» §c" + player.getName() + " §6a été tué par §a" + killer.getName() + "§6.");
     }
 }

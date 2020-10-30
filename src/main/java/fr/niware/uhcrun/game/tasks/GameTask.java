@@ -2,10 +2,10 @@ package fr.niware.uhcrun.game.tasks;
 
 import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.game.Game;
-import fr.niware.uhcrun.game.manager.GameManager;
+import fr.niware.uhcrun.game.event.list.EnableDamage;
+import fr.niware.uhcrun.game.event.list.StartPvP;
 import fr.niware.uhcrun.game.state.GameState;
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class GameTask extends BukkitRunnable {
@@ -30,7 +30,7 @@ public class GameTask extends BukkitRunnable {
         }
 
         if (pvpTime == 0) {
-            GameManager.get().launchPvP();
+            new StartPvP(UHCRun.getInstance()).activate();
             return;
         }
 
@@ -42,12 +42,7 @@ public class GameTask extends BukkitRunnable {
             }
 
             if (timer == 1220) {
-                game.setInvincibility(false);
-
-                // AVOID LAGS
-                game.getWorld().setGameRuleValue("randomTickSpeed", "0");
-                game.getWorld().setGameRuleValue("doMobSpawning", "false");
-                Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.WOLF_GROWL, 2F, 2F));
+                new EnableDamage(game).activate();
             }
         }
     }

@@ -2,33 +2,32 @@ package fr.niware.uhcrun.utils.scoreboard;
 
 import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.game.Game;
+import fr.niware.uhcrun.game.state.GameState;
 import fr.niware.uhcrun.player.UHCPlayer;
 import fr.niware.uhcrun.player.manager.PlayerManager;
 import fr.niware.uhcrun.utils.Orientation;
-import fr.niware.uhcrun.game.state.GameState;
-import fr.niware.uhcrun.world.WorldManager;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class FastMain {
 
     private final UHCRun main;
-    private PlayerManager playerManager;
-
     private final Game game;
+
     private final Orientation orientation;
+    private final Map<UUID, FastBoard> boards;
 
     private Location spawn;
-    private final Map<UUID, FastBoard> boards;
+    private PlayerManager playerManager;
 
     public FastMain(UHCRun main) {
         this.main = main;
         this.game = main.getGame();
-
-
         this.orientation = new Orientation();
         this.boards = new HashMap<>();
     }
@@ -68,6 +67,8 @@ public class FastMain {
                 uhcPlayer.sendActionBar("§6Téléportation: " + secondsToStringColor(game.getPvPTime()));
             }
 
+            Location location = player.getLocation();
+
             board.updateLines(
                     "§7§m+--------------+",
                     " §7» §eJoueurs: §a" + game.getAlivePlayers().size() + "/" + game.getSlot(),
@@ -75,7 +76,7 @@ public class FastMain {
                     " §7» §eKills: §b" + uhcPlayer.getKillsGame(),
                     "§6§9§7§m+--------------+",
                     " §7» §eDurée: §b" + time,
-                    " §7» §eCentre: §b" + (int) Math.ceil(player.getLocation().distance(spawn)) + " " + orientation.getOrientation(player),
+                    " §7» §eCentre: §b" + (int) Math.ceil(location.distance(spawn)) + " " + orientation.getOrientation(location.getX(), location.getZ(), location.getYaw()),
                     "§9§7§m+--------------+",
                     "§6play.nontia.fr"
             );

@@ -1,14 +1,14 @@
 package fr.niware.uhcrun.game.event.list;
 
 import fr.niware.uhcrun.UHCRun;
-import fr.niware.uhcrun.game.event.Event;
+import fr.niware.uhcrun.game.event.UHCEvent;
 import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class KickOffLine extends Event {
+public class KickOffLine extends UHCEvent {
 
     private final UHCRun main;
 

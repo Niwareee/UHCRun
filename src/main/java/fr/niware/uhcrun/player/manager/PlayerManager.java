@@ -4,12 +4,12 @@ import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.database.GameDatabase;
 import fr.niware.uhcrun.database.Rank;
 import fr.niware.uhcrun.game.Game;
-import fr.niware.uhcrun.game.manager.GameManager;
+import fr.niware.uhcrun.game.event.list.EndGame;
+import fr.niware.uhcrun.game.state.GameState;
 import fr.niware.uhcrun.game.tasks.PreGameTask;
 import fr.niware.uhcrun.player.DeadPlayer;
 import fr.niware.uhcrun.player.UHCPlayer;
 import fr.niware.uhcrun.utils.scoreboard.FastMain;
-import fr.niware.uhcrun.game.state.GameState;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
@@ -169,7 +169,7 @@ public class PlayerManager {
 
     public void checkIsEnd() {
         if (game.getAlivePlayers().size() == 1) {
-            GameManager.get().endGame(game.getAlivePlayers().get(0));
+            new EndGame(main).activate(game.getAlivePlayers().get(0));
         }
     }
 }
