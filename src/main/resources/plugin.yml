@@ -1,8 +1,8 @@
-name: UHCRun
-version: 2.5
+name: ${project.name}
+version: ${project.version}
 main: fr.niware.uhcrun.UHCRun
-author: [Niware]
-description: Plugin UHCRun pour network minecraft
+author: Niware
+description: Plugin UHCRun pour network Minecraft
 load: STARTUP
 commands:
   game:

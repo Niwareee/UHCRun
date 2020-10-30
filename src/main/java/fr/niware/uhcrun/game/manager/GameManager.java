@@ -2,6 +2,8 @@ package fr.niware.uhcrun.game.manager;
 
 import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.game.Game;
+import fr.niware.uhcrun.game.event.list.KickOffLine;
+import fr.niware.uhcrun.game.event.list.MoveBorder;
 import fr.niware.uhcrun.game.state.GameState;
 import fr.niware.uhcrun.game.tasks.EndTask;
 import fr.niware.uhcrun.game.tasks.GameTask;
@@ -218,15 +220,8 @@ public class GameManager {
         }
 
         // REDUCE BORDER
-        WorldBorder worldBorder = game.getWorld().getWorldBorder();
-        worldBorder.setSize(game.getSizeTpBorder() * 2);
-        worldBorder.setSize(game.getFinalBorderSize() * 2, game.getBorderMoveTime() * 60);
-
+        new MoveBorder(game).activate();
         // REMOVE OFFLINE PLAYERS FROM GAME
-        List<UUID> uuids = new ArrayList<>(game.getAlivePlayers());
-
-        uuids.stream().filter(uuid -> Bukkit.getPlayer(uuid) == null).forEach(uuid -> game.getAlivePlayers().remove(uuid));
-        Bukkit.broadcastMessage("§dUHCRun §7» §cLes joueurs déconnectés ont été éliminés.");
-        playerManager.checkIsEnd();
+        new KickOffLine(main).activate();
     }
 }
