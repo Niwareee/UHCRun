@@ -7,10 +7,8 @@ import org.bukkit.Sound;
 
 public class EnableDamage extends UHCEvent {
 
-    private final Game game;
-
-    public EnableDamage(Game game){
-        this.game = game;
+    public EnableDamage(Game game) {
+        super(game);
     }
 
     @Override

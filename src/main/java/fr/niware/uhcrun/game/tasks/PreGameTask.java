@@ -5,7 +5,6 @@ import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.game.event.list.StartGame;
 import fr.niware.uhcrun.game.event.list.Teleportation;
 import fr.niware.uhcrun.game.state.GameState;
-import fr.niware.uhcrun.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -14,14 +13,12 @@ public class PreGameTask extends BukkitRunnable {
 
     private final UHCRun main;
     private final Game game;
-    private final WorldManager worldManager;
 
     private final boolean forceStart;
 
     public PreGameTask(UHCRun main, boolean forceStart) {
         this.main = main;
         this.game = main.getGame();
-        this.worldManager = main.getWorldManager();
 
         this.forceStart = forceStart;
         game.setRunnable(true);
@@ -54,12 +51,7 @@ public class PreGameTask extends BukkitRunnable {
                 return;
             }
 
-            new Teleportation(main).activate();
-            return;
-        }
-
-        if (countdown == -5) {
-            worldManager.clearAllCustomEntities();
+            new Teleportation(main, game).activate();
             return;
         }
 

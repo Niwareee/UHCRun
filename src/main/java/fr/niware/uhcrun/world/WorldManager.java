@@ -4,7 +4,6 @@ import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.game.Game;
 import net.minecraft.server.v1_8_R3.MinecraftServer;
 import org.bukkit.*;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -12,7 +11,9 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import java.io.File;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class WorldManager {
@@ -25,14 +26,12 @@ public class WorldManager {
 
     private Objective tagHealth;
     private final Scoreboard scoreboard;
-    private final List<Entity> entityList;
 
     public WorldManager(UHCRun main) {
         this.main = main;
         this.game = main.getGame();
 
         this.scoreboard = main.getServer().getScoreboardManager().getMainScoreboard();
-        this.entityList = new ArrayList<>();
 
         SPAWN = game.setSpawn(stringToLoc(main.getConfig().getString("world.spawn.location")));
         WORLD = game.setWorld(game.getSpawn().getWorld());
@@ -87,11 +86,6 @@ public class WorldManager {
         if (tagHealth == null) return;
         double newPHealth = player.getHealth();
         tagHealth.getScore(player.getName()).setScore((int) newPHealth * 5);
-    }
-
-    public void clearAllCustomEntities() {
-        entityList.forEach(Entity::remove);
-        entityList.clear();
     }
 
     public void deleteWorld(File path) {

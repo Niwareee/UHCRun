@@ -1,7 +1,6 @@
 package fr.niware.uhcrun.game.event.list;
 
 import fr.niware.uhcrun.UHCRun;
-import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.game.event.UHCEvent;
 import fr.niware.uhcrun.game.state.GameState;
 import fr.niware.uhcrun.game.tasks.EndTask;
@@ -17,12 +16,8 @@ import java.util.UUID;
 
 public class EndGame extends UHCEvent {
 
-    private final UHCRun main;
-    private final Game game;
-
-    public EndGame(UHCRun main){
-        this.main = main;
-        this.game = main.getGame();
+    public EndGame(UHCRun main) {
+        super(main);
     }
 
     public void activate(UUID uuid) {
@@ -37,7 +32,7 @@ public class EndGame extends UHCEvent {
         Bukkit.getScheduler().runTaskLater(main, () -> {
             main.getStructureLoader().paste(winLocation, "win", true);
 
-            for (UHCPlayer uhcPlayer : main.getPlayerManager().getPlayers()) {
+            for (UHCPlayer uhcPlayer : playerManager.getPlayers()) {
                 Player player = uhcPlayer.getPlayer();
                 PaperLib.teleportAsync(player, winLocation);
 
@@ -52,18 +47,18 @@ public class EndGame extends UHCEvent {
             }
 
             game.getWorld().getWorldBorder().setSize(400);
-            int killsWinner = main.getPlayerManager().getUHCPlayer(winner.getUniqueId()).getKillsGame();
+            int killsWinner = playerManager.getUHCPlayer(winner.getUniqueId()).getKillsGame();
 
             Bukkit.broadcastMessage("§f§m+-------§6§m-----------§f§m-------+");
-            Bukkit.broadcastMessage("      §a§l● §ePartie terminée §a§l●");
+            Bukkit.broadcastMessage("        §a§l● §ePartie terminée §a§l●");
             Bukkit.broadcastMessage(" ");
             Bukkit.broadcastMessage(" §7Victoire de §a" + winner.getName() + "§7.");
-            Bukkit.broadcastMessage(" §7Avec un total de §f" + killsWinner + " §7kills.");
+            Bukkit.broadcastMessage(" §7Avec un total de §f" + killsWinner + " §7" + (killsWinner > 1 ? "kills." : "kill."));
             Bukkit.broadcastMessage(" ");
 
             Bukkit.broadcastMessage(" §aTop Kills:");
 
-            Map<String, Integer> top10 = main.getWorldManager().getTop10();
+            Map<String, Integer> top10 = worldManager.getTop10();
             for (int i = 0; i < 3; i++) {
                 if (top10.isEmpty()) {
                     Bukkit.broadcastMessage(" §7- §cAucun");

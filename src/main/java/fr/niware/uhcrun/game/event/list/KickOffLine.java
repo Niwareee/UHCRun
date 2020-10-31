@@ -1,6 +1,7 @@
 package fr.niware.uhcrun.game.event.list;
 
 import fr.niware.uhcrun.UHCRun;
+import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.game.event.UHCEvent;
 import org.bukkit.Bukkit;
 
@@ -10,10 +11,8 @@ import java.util.UUID;
 
 public class KickOffLine extends UHCEvent {
 
-    private final UHCRun main;
-
-    public KickOffLine(UHCRun main){
-        this.main = main;
+    public KickOffLine(UHCRun main, Game game) {
+        super(main, game);
     }
 
     @Override

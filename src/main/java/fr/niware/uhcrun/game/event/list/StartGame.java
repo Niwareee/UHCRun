@@ -1,7 +1,6 @@
 package fr.niware.uhcrun.game.event.list;
 
 import fr.niware.uhcrun.UHCRun;
-import fr.niware.uhcrun.game.Game;
 import fr.niware.uhcrun.game.event.UHCEvent;
 import fr.niware.uhcrun.game.state.GameState;
 import fr.niware.uhcrun.game.tasks.GameTask;
@@ -14,12 +13,8 @@ import org.bukkit.inventory.ItemStack;
 
 public class StartGame extends UHCEvent {
 
-    private final UHCRun main;
-    private final Game game;
-
-    public StartGame(UHCRun main){
-        this.main = main;
-        this.game = main.getGame();
+    public StartGame(UHCRun main) {
+        super(main);
     }
 
     @Override
@@ -33,7 +28,7 @@ public class StartGame extends UHCEvent {
         game.getBlocks().forEach(block -> block.setType(Material.AIR));
         game.getBlocks().clear();
 
-        for (UHCPlayer uhcPlayer : main.getPlayerManager().getPlayers()) {
+        for (UHCPlayer uhcPlayer : playerManager.getPlayers()) {
             uhcPlayer.sendActionBar("§7» §eQue le meilleur gagne !");
             if (uhcPlayer.getPlayer() == null) continue;
             Player player = uhcPlayer.getPlayer();
@@ -47,7 +42,7 @@ public class StartGame extends UHCEvent {
         }
 
         Bukkit.broadcastMessage("§7§m+-------------------------------+");
-        Bukkit.broadcastMessage("               §6● §eDébut de la partie §6●");
+        Bukkit.broadcastMessage("           §6● §eDébut de la partie §6●");
         Bukkit.broadcastMessage(" ");
         Bukkit.broadcastMessage("  §7» §aAlliances §cinterdites§7.");
         Bukkit.broadcastMessage("  §7» §aInvincibilité pendant §e30 §asecondes.");

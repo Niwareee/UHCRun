@@ -42,12 +42,12 @@ public class OrePopulator extends BlockPopulator {
         else if (xr <= -50)
             new WorldGenCanyon().a(handle.getHandle().chunkProviderServer, handle.getHandle(), chunk.getX(), chunk.getZ(), new ChunkSnapshot());
 
-        for (Rule bloc : this.rules) {
-            for (int i = 0; i < bloc.round; i++) {
+        for (Rule block : this.rules) {
+            for (int i = 0; i < block.round; i++) {
                 int x = chunk.getX() * 16 + random.nextInt(16);
-                int y = bloc.minY + random.nextInt(bloc.maxY - bloc.minY);
+                int y = block.minY + random.nextInt(block.maxY - block.minY);
                 int z = chunk.getZ() * 16 + random.nextInt(16);
-                this.generate(world, random, x, y, z, bloc.size, bloc);
+                this.generate(world, random, x, y, z, block.size, block);
             }
         }
 

@@ -6,10 +6,8 @@ import org.bukkit.WorldBorder;
 
 public class MoveBorder extends UHCEvent {
 
-    private final Game game;
-
-    public MoveBorder(Game game){
-        this.game = game;
+    public MoveBorder(Game game) {
+        super(game);
     }
 
     @Override

@@ -9,8 +9,8 @@ nether:
 sql:
   host: "host"
   database: "database"
-  username: "user"
-  password: "mdp"
+  username: "username"
+  password: "password"
   port: 3306
 game:
   preload: true

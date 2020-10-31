@@ -56,7 +56,7 @@ public class UHCRun extends JavaPlugin {
         super.onDisable();
     }
 
-    public static UHCRun getInstance() {
+    public static UHCRun get() {
         return UHCRun.instance;
     }
 

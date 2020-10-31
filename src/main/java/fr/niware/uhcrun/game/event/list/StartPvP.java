@@ -12,12 +12,8 @@ import org.bukkit.potion.PotionEffectType;
 
 public class StartPvP extends UHCEvent {
 
-    private final UHCRun main;
-    private final Game game;
-
-    public StartPvP(UHCRun main){
-        this.main = main;
-        this.game = main.getGame();
+    public StartPvP(Game game) {
+        super(game);
     }
 
     @Override
@@ -42,7 +38,7 @@ public class StartPvP extends UHCEvent {
         Bukkit.broadcastMessage(" ");
         Bukkit.broadcastMessage("§7§m+---------------------+");
 
-        for (UHCPlayer uhcPlayer : main.getPlayerManager().getPlayers()) {
+        for (UHCPlayer uhcPlayer : playerManager.getPlayers()) {
             if (uhcPlayer.getPlayer() == null) continue;
             Player player = uhcPlayer.getPlayer();
 
@@ -56,6 +52,6 @@ public class StartPvP extends UHCEvent {
         // REDUCE BORDER
         new MoveBorder(game).activate();
         // REMOVE OFFLINE PLAYERS FROM GAME
-        new KickOffLine(main).activate();
+        new KickOffLine(UHCRun.get(), game).activate();
     }
 }

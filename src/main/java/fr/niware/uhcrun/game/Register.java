@@ -1,6 +1,7 @@
 package fr.niware.uhcrun.game;
 
 import fr.niware.uhcrun.UHCRun;
+import fr.niware.uhcrun.game.event.UHCEvent;
 import fr.niware.uhcrun.player.commands.CommandListener;
 import fr.niware.uhcrun.player.listeners.*;
 import fr.niware.uhcrun.world.listeners.BlockListener;

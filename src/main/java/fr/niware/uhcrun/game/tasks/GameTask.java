@@ -30,7 +30,7 @@ public class GameTask extends BukkitRunnable {
         }
 
         if (pvpTime == 0) {
-            new StartPvP(UHCRun.getInstance()).activate();
+            new StartPvP(game).activate();
             return;
         }
 

@@ -2,10 +2,10 @@ package fr.niware.uhcrun.player.commands;
 
 import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.game.Game;
+import fr.niware.uhcrun.game.state.GameState;
 import fr.niware.uhcrun.game.tasks.PreGameTask;
 import fr.niware.uhcrun.player.manager.PlayerManager;
 import fr.niware.uhcrun.utils.structure.StructureLoader;
-import fr.niware.uhcrun.game.state.GameState;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -45,7 +45,6 @@ public class CommandListener implements CommandExecutor {
                     }
 
                     Player target = main.getServer().getPlayer(args[1]);
-
                     if (target == null) {
                         sender.sendMessage("§cErreur: Le joueur '§f" + args[1] + "§c' n'est pas connecté.");
                         return true;
@@ -112,16 +111,20 @@ public class CommandListener implements CommandExecutor {
 
                     if (game.getWorld().getPVP()) {
                         game.getWorld().setPVP(false);
-                        sender.sendMessage("§dUHCRun §7» §aLe pvp a été §cdésactivée§a.");
+                        sender.sendMessage("§dUHCRun §7» §aLe PvP a été §cdésactivée§a.");
                         break;
                     }
 
                     game.getWorld().setPVP(true);
-                    sender.sendMessage("§dUHCRun §7» §aLe pvp a été §eactivée§a.");
+                    sender.sendMessage("§dUHCRun §7» §aLe PvP a été §eactivée§a.");
+                    return true;
+
+                case "version":
+                    sender.sendMessage("§aVersion du plugin: §6" + main.getDescription().getVersion());
                     return true;
 
                 default:
-                    return true;
+                    return false;
             }
             return true;
         }

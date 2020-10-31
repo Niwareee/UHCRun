@@ -30,20 +30,18 @@ public class PlayerManager {
     private final UHCRun main;
     private final Game game;
     private final FastMain fastMain;
-
-    private final Scoreboard scoreboard;
     private final GameDatabase accountManager;
 
+    private final Scoreboard scoreboard;
     private final Map<UUID, UHCPlayer> players;
 
     public PlayerManager(UHCRun main) {
         this.main = main;
         this.game = main.getGame();
         this.fastMain = main.getFastMain();
-
-        this.scoreboard = main.getServer().getScoreboardManager().getMainScoreboard();
         this.accountManager = main.getAccountManager();
 
+        this.scoreboard = main.getServer().getScoreboardManager().getMainScoreboard();
         this.players = new HashMap<>();
     }
 
@@ -158,7 +156,7 @@ public class PlayerManager {
     }
 
     public void onDeath(Player player) {
-        new DeadPlayer(player.getUniqueId(), player.getLocation(), player.getLevel(), player.getInventory().getArmorContents(), player.getInventory().getContents(), player.getActivePotionEffects());
+        game.getDeadPlayers().put(player.getUniqueId(), new DeadPlayer(player.getUniqueId(), player.getLocation(), player.getLevel(), player.getInventory().getArmorContents(), player.getInventory().getContents(), player.getActivePotionEffects()));
         game.getAlivePlayers().remove(player.getUniqueId());
 
         player.setHealth(20D);

@@ -19,7 +19,7 @@ import java.util.UUID;
 
 public class DeadPlayer {
 
-    private static final Game game = UHCRun.getInstance().getGame();
+    private static final Game game = UHCRun.get().getGame();
 
     private final UUID uuid;
     private final Location location;
@@ -35,8 +35,6 @@ public class DeadPlayer {
         this.armor = armor;
         this.inventory = inventory;
         this.potionEffects = new ArrayList<>(potionEffects);
-
-        game.getDeadPlayers().put(uuid, this);
     }
 
     public void revive(Player player) {
@@ -63,5 +61,4 @@ public class DeadPlayer {
         game.getAlivePlayers().add(uuid);
         game.getDeadPlayers().remove(uuid);
     }
-
 }

@@ -2,6 +2,7 @@ package fr.niware.uhcrun.player.listeners;
 
 import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.game.Game;
+import fr.niware.uhcrun.player.UHCPlayer;
 import fr.niware.uhcrun.player.manager.PlayerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -13,17 +14,13 @@ import org.bukkit.scoreboard.Scoreboard;
 public class DeathListener implements Listener {
 
     private final UHCRun main;
-
     private final Game game;
-    private final Scoreboard scoreboard;
     private final PlayerManager playerManager;
 
     public DeathListener(UHCRun main) {
         this.main = main;
-
         this.game = main.getGame();
         this.playerManager = main.getPlayerManager();
-        this.scoreboard = main.getServer().getScoreboardManager().getMainScoreboard();
     }
 
     @EventHandler
@@ -39,7 +36,9 @@ public class DeathListener implements Listener {
         }
 
         Player killer = player.getKiller();
-        playerManager.getUHCPlayer(killer.getUniqueId()).setKillsGame(scoreboard.getObjective("playerKills").getScore(killer.getName()).getScore());
+        UHCPlayer uhcKiller = playerManager.getUHCPlayer(killer.getUniqueId());
+
+        uhcKiller.setKillsGame(uhcKiller.getKillsGame() + 1);
         game.getDeathPotionEffects().forEach(killer::addPotionEffect);
         event.setDeathMessage("§dUHCRun §7» §c" + player.getName() + " §6a été tué par §a" + killer.getName() + "§6.");
     }

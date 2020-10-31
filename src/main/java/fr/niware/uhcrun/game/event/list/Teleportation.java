@@ -12,12 +12,8 @@ import org.bukkit.entity.Player;
 
 public class Teleportation extends UHCEvent {
 
-    private final UHCRun main;
-    private final Game game;
-
-    public Teleportation(UHCRun main){
-        this.main = main;
-        this.game = main.getGame();
+    public Teleportation(UHCRun main, Game game) {
+        super(main, game);
     }
 
     @Override
