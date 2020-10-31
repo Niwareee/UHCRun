@@ -22,9 +22,8 @@ public class ScatterTask extends BukkitRunnable {
     private final Game game;
 
     private final List<Player> players;
-
-    private int index;
     private final boolean isStart;
+    private int index;
 
     public ScatterTask(UHCRun main, boolean isStart) {
         this.game = main.getGame();
@@ -69,12 +68,7 @@ public class ScatterTask extends BukkitRunnable {
         double a = index * 2.0D * Math.PI / game.getAlivePlayers().size();
         int x = (int) Math.round(sizeTP / 3.0D * Math.cos(a) + game.getSpawn().getX());
         int z = (int) Math.round(sizeTP / 3.0D * Math.sin(a) + game.getSpawn().getZ());
-
         System.out.print("Found new location in x: " + x + " z: " + z);
-        //Random random = new Random();
-        // int x = (random.nextInt(2) == 0 ? +1 : -1) * random.nextInt(sizeTP);
-        // int z = (random.nextInt(2) == 0 ? +1 : -1) * random.nextInt(sizeTP);
-        // Location location = game.getWorld().getHighestBlockAt(x, z).getLocation().add(0, 50, 0);
 
         CompletableFuture<Chunk> chunk = PaperLib.getChunkAtAsync(game.getWorld(), x, z);
         Location location = chunk.join().getWorld().getHighestBlockAt(x, z).getLocation().add(0, 50, 0);
@@ -82,7 +76,6 @@ public class ScatterTask extends BukkitRunnable {
             chunk.join().load();
         }
         return location;
-
     }
 
     @SuppressWarnings("deprecation")

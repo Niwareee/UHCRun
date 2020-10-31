@@ -32,17 +32,14 @@ public class PlayerManager {
     private final FastMain fastMain;
     private final GameDatabase accountManager;
 
-    private final Scoreboard scoreboard;
-    private final Map<UUID, UHCPlayer> players;
+    private final Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+    private final Map<UUID, UHCPlayer> players = new HashMap<>();
 
     public PlayerManager(UHCRun main) {
         this.main = main;
         this.game = main.getGame();
         this.fastMain = main.getFastMain();
         this.accountManager = main.getAccountManager();
-
-        this.scoreboard = main.getServer().getScoreboardManager().getMainScoreboard();
-        this.players = new HashMap<>();
     }
 
     public UHCPlayer put(UUID uuid, UHCPlayer uhcPlayer) {
@@ -50,7 +47,7 @@ public class PlayerManager {
     }
 
     public UHCPlayer getUHCPlayer(UUID uuid) {
-        return players.getOrDefault(uuid, put(uuid, new UHCPlayer(game.getPlayerState(), accountManager.getFromPower(0), 0, 0)));
+        return players.getOrDefault(uuid, put(uuid, new UHCPlayer(accountManager.getFromPower(0), 0, 0)));
     }
 
     public Collection<UHCPlayer> getPlayers() {
@@ -71,7 +68,7 @@ public class PlayerManager {
     }
 
     public void setJoinInventory(UHCPlayer uhcPlayer) {
-        uhcPlayer.joinEffects();
+        uhcPlayer.clearEffects();
 
         Player player = uhcPlayer.getPlayer();
         player.teleport(game.getSpawn());
@@ -82,7 +79,7 @@ public class PlayerManager {
     public void loadSQLAccount(UUID uuid) {
         int[] account = accountManager.getDatabaseAccount(uuid);
         Rank rank = accountManager.getFromPower(account[0]);
-        put(uuid, new UHCPlayer(game.getPlayerState(), rank, account[1], account[2]));
+        put(uuid, new UHCPlayer(rank, account[1], account[2]));
     }
 
     public void onJoin(Player player) {

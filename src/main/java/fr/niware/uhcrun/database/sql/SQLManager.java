@@ -19,9 +19,8 @@ public class SQLManager {
     private final int port;
 
     public SQLManager(UHCRun main) {
-
-        main.saveDefaultConfig();
         this.main = main;
+        main.saveDefaultConfig();
 
         FileConfiguration config = main.getConfig();
         this.host = config.getString("sql.host");
@@ -30,7 +29,7 @@ public class SQLManager {
         this.password = config.getString("sql.password");
         this.port = config.getInt("sql.port");
 
-        connect();
+        this.connect();
     }
 
     public Connection getResource() {

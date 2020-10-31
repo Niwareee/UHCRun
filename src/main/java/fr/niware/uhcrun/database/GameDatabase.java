@@ -19,13 +19,12 @@ public class GameDatabase {
     private final Game game;
     private final SQLManager sqlManager;
 
-    public List<Rank> ranks;
+    public List<Rank> ranks = new ArrayList<>();
 
     public GameDatabase(UHCRun main) {
         this.main = main;
         this.game = main.getGame();
         this.sqlManager = main.getSQLManager();
-        this.ranks = new ArrayList<>();
 
         this.initRanks();
     }

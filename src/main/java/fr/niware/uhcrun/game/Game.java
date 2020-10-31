@@ -3,7 +3,6 @@ package fr.niware.uhcrun.game;
 import fr.niware.uhcrun.UHCRun;
 import fr.niware.uhcrun.game.state.GameState;
 import fr.niware.uhcrun.player.DeadPlayer;
-import fr.niware.uhcrun.player.state.PlayerState;
 import fr.niware.uhcrun.utils.structure.Structure;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
 import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
@@ -21,22 +20,15 @@ import java.util.*;
 
 public class Game {
 
-    private PlayerState playerState;
-
     // INIT
+
+    private Player winner;
+    private World world;
 
     private long startMillis;
     private int sizePlayers;
-    private Player winner;
-
-    private World world;
     private Location spawn;
     private Location specSpawn;
-
-    private final Map<String, Structure> structure;
-    private final Map<UUID, DeadPlayer> deadPlayers;
-    private final List<UUID> alivePlayers;
-    private final List<UUID> decoPlayers;
 
     // CONFIGURATION
 
@@ -50,7 +42,7 @@ public class Game {
 
     private boolean invincibility = true;
 
-    private int slot;
+    private final int slot;
     private boolean runnable;
     private final int autoStartSize;
     private final int autoStartTime;
@@ -61,18 +53,21 @@ public class Game {
     private final int preLoad;
     private final int preLoadNether;
 
-    // PLATFORMS BLOCS
+    // LIST
 
-    private final List<Block> blocks;
-    private final Map<UUID, Location> stayLocs;
+    private final Map<String, Structure> structure = new HashMap<>();
+    private final Map<UUID, DeadPlayer> deadPlayers = new HashMap<>();
+    private final List<UUID> alivePlayers = new ArrayList<>();
+    private final List<UUID> decoPlayers = new ArrayList<>();
 
-    // POTION EFFECTS
+    private final List<Block> blocks = new ArrayList<>();
+    private final Map<UUID, Location> stayLocs = new HashMap<>();
 
-    private final List<PotionEffect> deathPotionEffects;
-    private final List<PotionEffect> startPotionEffects;
+    private final List<PotionEffect> deathPotionEffects = new ArrayList<>();
+    private final List<PotionEffect> startPotionEffects = new ArrayList<>();
+
 
     public Game(UHCRun main) {
-        this.playerState = PlayerState.WAITING;
         GameState.setState(GameState.PRELOAD);
 
         FileConfiguration config = main.getConfig();
@@ -87,19 +82,9 @@ public class Game {
         this.hubServerName = config.getString("game.hubServerName");
         this.countdownStart = autoStartTime;
 
-        this.structure = new HashMap<>();
-        this.deadPlayers = new HashMap<>();
-        this.alivePlayers = new ArrayList<>();
-        this.decoPlayers = new ArrayList<>();
-
-        this.blocks = new ArrayList<>();
-        this.stayLocs = new HashMap<>();
-
-        this.deathPotionEffects = new ArrayList<>();
         this.deathPotionEffects.add(new PotionEffect(PotionEffectType.ABSORPTION, 2400, 0, false, false));
         this.deathPotionEffects.add(new PotionEffect(PotionEffectType.REGENERATION, 100, 1, false, false));
 
-        this.startPotionEffects = new ArrayList<>();
         this.startPotionEffects.add(new PotionEffect(PotionEffectType.ABSORPTION, 2, 0, false, false));
         this.startPotionEffects.add(new PotionEffect(PotionEffectType.FAST_DIGGING, 999999, 0, false, false));
         this.startPotionEffects.add(new PotionEffect(PotionEffectType.NIGHT_VISION, 999999, 0, false, false));
@@ -277,19 +262,6 @@ public class Game {
 
     public Collection<PotionEffect> getStartPotionEffects() {
         return startPotionEffects;
-    }
-
-    public PlayerState getPlayerState() {
-        return playerState;
-    }
-
-    public void setPlayerState(PlayerState playerState) {
-        this.playerState = playerState;
-    }
-
-    public void sendActionBar(Player player, String text) {
-        PacketPlayOutChat packet = new PacketPlayOutChat(IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + text + "\"}"), (byte) 2);
-        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
     }
 
     public void sendToAll(String text) {

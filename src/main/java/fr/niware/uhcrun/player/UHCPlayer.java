@@ -1,7 +1,6 @@
 package fr.niware.uhcrun.player;
 
 import fr.niware.uhcrun.database.Rank;
-import fr.niware.uhcrun.player.state.PlayerState;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
 import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
 import net.minecraft.server.v1_8_R3.PacketPlayOutTitle;
@@ -16,14 +15,12 @@ import java.util.UUID;
 public class UHCPlayer {
 
     private CraftPlayer player;
-    private PlayerState playerState;
     private final Rank rank;
     private int killsGame;
     private final int killsAll;
     private final int wins;
 
-    public UHCPlayer(PlayerState playerState, Rank rank, int killsAll, int wins){
-        this.playerState = playerState;
+    public UHCPlayer(Rank rank, int killsAll, int wins){
         this.rank = rank;
         this.killsGame = 0;
         this.killsAll = killsAll;
@@ -40,14 +37,6 @@ public class UHCPlayer {
 
     public UUID getUUID() {
         return player.getUniqueId();
-    }
-
-    public PlayerState getPlayerState() {
-        return playerState;
-    }
-
-    public void setPlayerState(PlayerState playerState) {
-        this.playerState = playerState;
     }
 
     public int getKillsGame() {
@@ -94,7 +83,7 @@ public class UHCPlayer {
         }
     }
 
-    public void joinEffects() {
+    public void clearEffects() {
         player.getInventory().clear();
         player.getInventory().setArmorContents(null);
         player.setWalkSpeed(0.2f);

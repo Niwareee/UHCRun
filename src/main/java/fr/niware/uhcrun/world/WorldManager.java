@@ -25,13 +25,11 @@ public class WorldManager {
     public static World WORLD;
 
     private Objective tagHealth;
-    private final Scoreboard scoreboard;
+    private final Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
 
     public WorldManager(UHCRun main) {
         this.main = main;
         this.game = main.getGame();
-
-        this.scoreboard = main.getServer().getScoreboardManager().getMainScoreboard();
 
         SPAWN = game.setSpawn(stringToLoc(main.getConfig().getString("world.spawn.location")));
         WORLD = game.setWorld(game.getSpawn().getWorld());
@@ -43,15 +41,13 @@ public class WorldManager {
 
     public void registerObjectives() {
         scoreboard.getObjectives().forEach(Objective::unregister);
+        scoreboard.registerNewObjective("playerKills", "playerKillCount");
 
         Objective tabHealth = scoreboard.registerNewObjective("health", "health");
         tabHealth.setDisplaySlot(DisplaySlot.PLAYER_LIST);
-
         tagHealth = scoreboard.registerNewObjective("tagHealth", "dummy");
         tagHealth.setDisplaySlot(DisplaySlot.BELOW_NAME);
         tagHealth.setDisplayName("%");
-
-        scoreboard.registerNewObjective("playerKills", "playerKillCount");
     }
 
     public void registerTabTeam() {

@@ -37,12 +37,11 @@ public class GameListener implements Listener {
 
     private final UHCRun main;
     private final Game game;
-    private final SimpleDateFormat simpleDateFormat;
+    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm'm' ss's'");
 
     public GameListener(UHCRun main) {
         this.main = main;
         this.game = main.getGame();
-        this.simpleDateFormat = new SimpleDateFormat("mm'm' ss's'");
     }
 
     @EventHandler

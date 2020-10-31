@@ -19,8 +19,8 @@ public class FastMain {
     private final UHCRun main;
     private final Game game;
 
-    private final Orientation orientation;
-    private final Map<UUID, FastBoard> boards;
+    private final Orientation orientation = new Orientation();
+    private final Map<UUID, FastBoard> boards = new HashMap<>();
 
     private Location spawn;
     private PlayerManager playerManager;
@@ -28,8 +28,6 @@ public class FastMain {
     public FastMain(UHCRun main) {
         this.main = main;
         this.game = main.getGame();
-        this.orientation = new Orientation();
-        this.boards = new HashMap<>();
     }
 
     public void launchTask() {
